@@ -1,4 +1,4 @@
-package com.example.cookitup
+package com.example.cookitup.network
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

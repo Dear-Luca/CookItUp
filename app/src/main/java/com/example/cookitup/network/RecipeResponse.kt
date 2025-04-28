@@ -1,4 +1,4 @@
-package com.example.cookitup
+package com.example.cookitup.network
 
 data class RecipeResponse(
     val results: List<Recipe>

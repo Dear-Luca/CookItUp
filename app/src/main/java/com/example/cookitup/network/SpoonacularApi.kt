@@ -1,4 +1,4 @@
-package com.example.cookitup
+package com.example.cookitup.network
 
 import retrofit2.http.GET
 import retrofit2.http.Query
