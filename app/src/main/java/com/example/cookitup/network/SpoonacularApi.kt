@@ -1,5 +1,6 @@
 package com.example.cookitup.network
 
+import com.example.cookitup.model.RecipeResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
