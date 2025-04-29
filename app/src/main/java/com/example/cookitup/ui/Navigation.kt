@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.cookitup.model.Recipe
+import com.example.cookitup.ui.screens.recipes.Recipes
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipes
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipesViewModel
 import kotlinx.serialization.Serializable
@@ -49,8 +50,14 @@ fun NavGraph(
         composable<Routes.SearchRecipes> {
             val searchRecipesViewModel: SearchRecipesViewModel = viewModel()
             val searchRecipesState by searchRecipesViewModel.state.collectAsStateWithLifecycle()
-            SearchRecipes(searchRecipesState, searchRecipesViewModel.actions)
+            SearchRecipes(
+                searchRecipesState,
+                searchRecipesViewModel.actions,
+                navController
+            )
         }
-//        composable<Routes.Recipes> { Recipes() }
+        composable<Routes.Recipes> {
+            Recipes()
+        }
     }
 }

@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -24,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.cookitup.network.ApiClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +37,8 @@ import kotlinx.coroutines.withContext
 @Composable
 fun SearchRecipes(
     state: SearchRecipesState,
-    actions: SearchRecipesActions
+    actions: SearchRecipesActions,
+    navController: NavHostController
 ) {
     Scaffold { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
@@ -43,7 +47,7 @@ fun SearchRecipes(
                 OutlinedTextField(
                     value = text,
                     onValueChange = { text = it },
-                    placeholder = { Text("Enter an ingredient") }
+                    placeholder = { Text("Enter an ingredient", style = MaterialTheme.typography.bodyMedium) }
                 )
                 OutlinedButton(
                     onClick = {
@@ -52,7 +56,10 @@ fun SearchRecipes(
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Add")
+                    Text(
+                        "Add",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
             Spacer(modifier = Modifier.padding(20.dp))
@@ -71,21 +78,35 @@ fun SearchRecipes(
                             )
                             .padding(12.dp)
                     ) {
-                        Text(text = ingredient)
+                        Text(
+                            text = ingredient,
+                            style = MaterialTheme.typography.titleMedium
+                        )
                     }
                 }
+            }
+
+            Spacer(modifier = Modifier.padding(20.dp))
+            Button(
+                onClick = { },
+                modifier = Modifier.align(
+                    alignment = Alignment.CenterHorizontally
+                )
+            ) {
+                Text(
+                    "Search recipes",
+                    style = MaterialTheme.typography.titleLarge
+                )
             }
         }
     }
 }
 
-private fun search(food: String, function: (String) -> Unit) {
+private fun search(ingredients: List<String>, navController: NavHostController) {
     CoroutineScope(Dispatchers.IO).launch {
         try {
-            val response = ApiClient.retrofitService.searchRecipes(food)
-            val recipes = response.results.joinToString("\n") { it.title }
+            val response = ApiClient.retrofitService.searchRecipes(ingredients.joinToString(","))
             withContext(Dispatchers.Main) {
-                function(recipes)
             }
         } catch (e: Exception) {
             e.printStackTrace()
