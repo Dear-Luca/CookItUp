@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("plugin.serialization") version "2.1.20"
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
 }
 
@@ -66,6 +67,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
