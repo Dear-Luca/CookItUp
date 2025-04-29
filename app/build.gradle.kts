@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
-
 }
 
 android {
@@ -21,19 +20,18 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        //load spoonacular api key
+        // load spoonacular api key
         val keystoreFile = project.rootProject.file("local.properties")
         val properties = Properties()
         properties.load(keystoreFile.inputStream())
 
-        //return empty key in case something goes wrong
+        // return empty key in case something goes wrong
         val apiKey = properties.getProperty("API_KEY") ?: ""
         buildConfigField(
             type = "String",
             name = "API_KEY",
             value = apiKey
         )
-
     }
     buildTypes {
         release {
