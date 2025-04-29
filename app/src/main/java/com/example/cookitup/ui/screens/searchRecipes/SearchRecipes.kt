@@ -27,9 +27,9 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun SearchRecipes(
-    state : SearchRecipesState,
+    state: SearchRecipesState,
     actions: SearchRecipesActions
-){
+) {
     Scaffold { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
             var text by remember { mutableStateOf("") }
@@ -37,7 +37,7 @@ fun SearchRecipes(
                 OutlinedTextField(
                     value = text,
                     onValueChange = { text = it },
-                    label = { Text("Label") },
+                    placeholder = { Text("Enter an ingredient") }
                 )
                 Button(
                     onClick = {
@@ -50,7 +50,7 @@ fun SearchRecipes(
                 }
             }
             Spacer(modifier = Modifier.padding(20.dp))
-            
+
             LazyColumn {
                 items(state.ingredients) { ingredient ->
                     Text(ingredient)

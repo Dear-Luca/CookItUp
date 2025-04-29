@@ -5,10 +5,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-data class SearchRecipesState(val ingredients : List<String> = emptyList())
+data class SearchRecipesState(val ingredients: List<String> = emptyList())
 
-interface SearchRecipesActions{
-    fun addIngredient(ingredient : String)
+interface SearchRecipesActions {
+    fun addIngredient(ingredient: String)
 }
 
 class SearchRecipesViewModel : ViewModel() {
@@ -26,4 +26,3 @@ class SearchRecipesViewModel : ViewModel() {
         }
     }
 }
-
