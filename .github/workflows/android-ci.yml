@@ -25,20 +25,21 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       
+      # Step 3
       - name: Create local.properties
         run: |
           echo "API_KEY=${{ secrets.API_KEY }}" > local.properties
 
-      # Step 3
+      # Step 4
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # Step 4
+      # Step 5
       - name: Run ktlint
         run: |
           ./gradlew ktlintCheck
 
-      # Step 5
+      # Step 6
       - name: Build with Gradle
         run: ./gradlew build
       
