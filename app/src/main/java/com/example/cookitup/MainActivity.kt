@@ -22,7 +22,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.cookitup.network.ApiClient
+import com.example.cookitup.ui.NavGraph
 import com.example.cookitup.ui.theme.CookItUpTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,71 +37,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CookItUpTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
-                    var query by remember { mutableStateOf("") }
-                    var recipes by remember { mutableStateOf("") }
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(padding)
-                    ) {
-                        BasicTextField(
-                            value = query,
-                            onValueChange = { query = it },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Button(
-                            onClick = {
-                                search(
-                                    food = query,
-                                    function = {
-                                        recipes = it
-                                    }
-
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("Search Recipes")
-                        }
-                        Spacer(modifier = Modifier.padding(16.dp))
-                        Text(recipes)
-                        Spacer(modifier = Modifier.padding(20.dp))
-                        HelloContent()
-                    }
-                }
+                val navController = rememberNavController()
+                NavGraph(navController)
             }
         }
-    }
-
-    private fun search(food: String, function: (String) -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = ApiClient.retrofitService.searchRecipes(food)
-                val recipes = response.results.joinToString("\n") { it.title }
-                withContext(Dispatchers.Main) {
-                    function(recipes)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-}
-
-@Composable
-private fun HelloContent() {
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text(
-            text = "Hello!",
-            modifier = Modifier.padding(bottom = 8.dp),
-            style = MaterialTheme.typography.bodyMedium
-        )
-        OutlinedTextField(
-            value = "",
-            onValueChange = { },
-            label = { Text("Name") }
-        )
     }
 }
