@@ -6,11 +6,13 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 const val API_KEY = BuildConfig.API_KEY
+const val NUM_ITEMS = 20
 
 interface SpoonacularApi {
     @GET("recipes/findByIngredients")
     suspend fun searchRecipes(
         @Query("ingredients") ingredients: String,
+        @Query("number") number: Int = NUM_ITEMS,
         @Query("apiKey") apiKey: String = API_KEY
     ): List<Recipe>
 }

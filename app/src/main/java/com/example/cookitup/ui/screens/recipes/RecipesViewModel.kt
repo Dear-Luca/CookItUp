@@ -48,5 +48,5 @@ class RecipesViewModel : ViewModel() {
 private suspend fun getRecipes(ingredients: List<String>): List<Recipe> {
     val ingredientsList = ingredients.joinToString(",")
     return ApiClient.retrofitService
-        .searchRecipes(ingredientsList, API_KEY)
+        .searchRecipes(ingredientsList)
 }
