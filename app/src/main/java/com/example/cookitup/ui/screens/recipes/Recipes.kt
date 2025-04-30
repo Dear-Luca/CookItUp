@@ -1,7 +1,6 @@
 package com.example.cookitup.ui.screens.recipes
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,17 +8,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
@@ -31,14 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import com.example.cookitup.R
 import com.example.cookitup.model.Recipe
 
 @Composable
@@ -59,7 +49,7 @@ fun Recipes(
             }
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize()
             ) {
                 items(state.recipes.size) { index ->
                     val recipe = state.recipes[index]
@@ -71,12 +61,12 @@ fun Recipes(
 }
 
 @Composable
-fun RecipeItem(recipe : Recipe){
+fun RecipeItem(recipe: Recipe) {
     OutlinedCard(
         onClick = {},
         modifier = Modifier.fillMaxWidth().height(100.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         border = BorderStroke(1.dp, Color.Black),
         shape = MaterialTheme.shapes.medium,
@@ -85,7 +75,6 @@ fun RecipeItem(recipe : Recipe){
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Box(
                 modifier = Modifier
                     .weight(0.4f)
@@ -108,7 +97,7 @@ fun RecipeItem(recipe : Recipe){
                 Text(
                     text = recipe.title,
                     style = MaterialTheme.typography.titleMedium,
-                    maxLines = 2,
+                    maxLines = 2
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -121,6 +110,5 @@ fun RecipeItem(recipe : Recipe){
                 Spacer(modifier = Modifier.height(4.dp))
             }
         }
-
     }
 }

@@ -3,7 +3,6 @@ package com.example.cookitup.ui.screens.recipes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookitup.model.Recipe
-import com.example.cookitup.network.API_KEY
 import com.example.cookitup.network.ApiClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
