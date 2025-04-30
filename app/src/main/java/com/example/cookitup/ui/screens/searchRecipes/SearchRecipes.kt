@@ -27,11 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.cookitup.network.ApiClient
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.cookitup.ui.Routes
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -88,7 +84,7 @@ fun SearchRecipes(
 
             Spacer(modifier = Modifier.padding(20.dp))
             Button(
-                onClick = { },
+                onClick = { navController.navigate(Routes.Recipes(state.ingredients)) },
                 modifier = Modifier.align(
                     alignment = Alignment.CenterHorizontally
                 )
@@ -98,18 +94,6 @@ fun SearchRecipes(
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-        }
-    }
-}
-
-private fun search(ingredients: List<String>, navController: NavHostController) {
-    CoroutineScope(Dispatchers.IO).launch {
-        try {
-            val response = ApiClient.retrofitService.searchRecipes(ingredients.joinToString(","))
-            withContext(Dispatchers.Main) {
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 }

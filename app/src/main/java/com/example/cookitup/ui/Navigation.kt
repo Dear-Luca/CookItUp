@@ -8,7 +8,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.cookitup.model.Recipe
+import androidx.navigation.toRoute
+import com.example.cookitup.ui.screens.recipes.Recipes
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipes
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipesViewModel
 import kotlinx.serialization.Serializable
@@ -18,7 +19,7 @@ sealed interface Routes {
     data object SearchRecipes : Routes
 
     @Serializable
-    data class Recipes(val recipes: List<Recipe>) : Routes
+    data class Recipes(val ingredients: List<String>) : Routes
 
     @Serializable
     data object RecipeDetail : Routes
@@ -55,8 +56,9 @@ fun NavGraph(
                 navController
             )
         }
-//        composable<Routes.Recipes> {
-//            Recipes()
-//        }
+        composable<Routes.Recipes> { navBackStackEntry ->
+            val route: Routes.Recipes = navBackStackEntry.toRoute()
+            Recipes(route.ingredients)
+        }
     }
 }
