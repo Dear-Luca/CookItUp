@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,6 +13,7 @@ import com.example.cookitup.ui.screens.recipes.RecipesViewModel
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipes
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipesViewModel
 import kotlinx.serialization.Serializable
+import org.koin.androidx.compose.koinViewModel
 
 sealed interface Routes {
     @Serializable
@@ -23,7 +23,7 @@ sealed interface Routes {
     data class Recipes(val ingredients: List<String>) : Routes
 
     @Serializable
-    data object RecipeDetail : Routes
+    data class RecipeDetail(val id: String) : Routes
 
     @Serializable
     data object Login : Routes
@@ -49,7 +49,7 @@ fun NavGraph(
          */
 
         composable<Routes.SearchRecipes> {
-            val searchRecipesViewModel: SearchRecipesViewModel = viewModel()
+            val searchRecipesViewModel: SearchRecipesViewModel = koinViewModel()
             val searchRecipesState by searchRecipesViewModel.state.collectAsStateWithLifecycle()
             SearchRecipes(
                 searchRecipesState,
@@ -58,7 +58,7 @@ fun NavGraph(
             )
         }
         composable<Routes.Recipes> { navBackStackEntry ->
-            val recipesViewModel: RecipesViewModel = viewModel()
+            val recipesViewModel: RecipesViewModel = koinViewModel()
             val recipesState by recipesViewModel.state.collectAsStateWithLifecycle()
             val route: Routes.Recipes = navBackStackEntry.toRoute()
             Recipes(
@@ -67,6 +67,8 @@ fun NavGraph(
                 recipesViewModel.actions,
                 navController
             )
+        }
+        composable<Routes.RecipeDetail> {
         }
     }
 }

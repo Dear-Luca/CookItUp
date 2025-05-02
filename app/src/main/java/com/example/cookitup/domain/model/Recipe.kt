@@ -1,10 +1,7 @@
-package com.example.cookitup.data.remote.api
+package com.example.cookitup.domain.model
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class Recipe(
-    val id: Int,
+    val id: String,
     val title: String,
     val image: String
 )

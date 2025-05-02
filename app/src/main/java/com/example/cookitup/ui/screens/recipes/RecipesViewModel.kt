@@ -2,8 +2,8 @@ package com.example.cookitup.ui.screens.recipes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cookitup.model.Recipe
-import com.example.cookitup.network.ApiClient
+import com.example.cookitup.domain.model.Recipe
+import com.example.cookitup.domain.repository.RecipeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -17,7 +17,9 @@ interface RecipesActions {
     fun fetchRecipes(ingredients: List<String>)
 }
 
-class RecipesViewModel : ViewModel() {
+class RecipesViewModel(
+    private val repository: RecipeRepository
+) : ViewModel() {
     private val _state = MutableStateFlow(RecipesState())
     val state = _state.asStateFlow()
 
@@ -29,7 +31,7 @@ class RecipesViewModel : ViewModel() {
                 )
 
                 try {
-                    val recipes = getRecipes(ingredients)
+                    val recipes = repository.fetchRecipes(ingredients)
                     _state.value = _state.value.copy(
                         recipes = recipes,
                         isLoading = false
@@ -42,10 +44,4 @@ class RecipesViewModel : ViewModel() {
             }
         }
     }
-}
-
-private suspend fun getRecipes(ingredients: List<String>): List<Recipe> {
-    val ingredientsList = ingredients.joinToString(",")
-    return ApiClient.retrofitService
-        .searchRecipes(ingredientsList)
 }

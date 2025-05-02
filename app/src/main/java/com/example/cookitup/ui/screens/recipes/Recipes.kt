@@ -1,7 +1,6 @@
 package com.example.cookitup.ui.screens.recipes
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +28,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.example.cookitup.model.Recipe
+import com.example.cookitup.domain.model.Recipe
+import com.example.cookitup.ui.Routes
 
 @Composable
 fun Recipes(
@@ -53,7 +53,7 @@ fun Recipes(
             ) {
                 items(state.recipes.size) { index ->
                     val recipe = state.recipes[index]
-                    RecipeItem(recipe)
+                    RecipeItem(recipe, navController)
                 }
             }
         }
@@ -61,10 +61,10 @@ fun Recipes(
 }
 
 @Composable
-fun RecipeItem(recipe: Recipe) {
+fun RecipeItem(recipe: Recipe, navController: NavHostController) {
     OutlinedCard(
-        onClick = {},
-        modifier = Modifier.fillMaxWidth().height(100.dp),
+        onClick = { navController.navigate(Routes.RecipeDetail(recipe.id)) },
+        modifier = Modifier.fillMaxWidth().height(100.dp).padding(horizontal = 8.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
