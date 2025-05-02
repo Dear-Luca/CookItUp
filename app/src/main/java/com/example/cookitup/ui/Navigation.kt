@@ -8,6 +8,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.example.cookitup.domain.model.RecipeDetail
+import com.example.cookitup.ui.screens.recipeDetail.RecipeDetail
+import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailViewModel
 import com.example.cookitup.ui.screens.recipes.Recipes
 import com.example.cookitup.ui.screens.recipes.RecipesViewModel
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipes
@@ -68,7 +71,16 @@ fun NavGraph(
                 navController
             )
         }
-        composable<Routes.RecipeDetail> {
+        composable<Routes.RecipeDetail> { navBackStackEntry ->
+            val recipeDetailViewModel : RecipeDetailViewModel = koinViewModel()
+            val recipeDetailState by recipeDetailViewModel.state.collectAsStateWithLifecycle()
+            val route : Routes.RecipeDetail = navBackStackEntry.toRoute()
+            RecipeDetail(
+                route.id,
+                recipeDetailState,
+                recipeDetailViewModel.actions,
+                navController
+            )
         }
     }
 }
