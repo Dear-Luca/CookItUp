@@ -6,5 +6,5 @@ import com.example.cookitup.domain.model.RecipeDetail
 interface RecipeRepository {
     suspend fun fetchRecipes(ingredients: List<String>): List<Recipe>
 
-    suspend fun getRecipeDetail(id : String) : RecipeDetail
+    suspend fun getRecipeDetail(id: String): RecipeDetail
 }

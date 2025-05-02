@@ -72,9 +72,9 @@ fun NavGraph(
             )
         }
         composable<Routes.RecipeDetail> { navBackStackEntry ->
-            val recipeDetailViewModel : RecipeDetailViewModel = koinViewModel()
+            val recipeDetailViewModel: RecipeDetailViewModel = koinViewModel()
             val recipeDetailState by recipeDetailViewModel.state.collectAsStateWithLifecycle()
-            val route : Routes.RecipeDetail = navBackStackEntry.toRoute()
+            val route: Routes.RecipeDetail = navBackStackEntry.toRoute()
             RecipeDetail(
                 route.id,
                 recipeDetailState,

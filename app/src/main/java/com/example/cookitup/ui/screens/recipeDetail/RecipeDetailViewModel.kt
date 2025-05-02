@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.domain.repository.RecipeRepository
-import com.example.cookitup.ui.Routes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -20,7 +19,7 @@ interface RecipeDetailActions {
 
 class RecipeDetailViewModel(
     private val repository: RecipeRepository
-) : ViewModel(){
+) : ViewModel() {
     private val _state = MutableStateFlow<RecipeDetailState>(RecipeDetailState.Loading)
     val state = _state.asStateFlow()
 
@@ -30,8 +29,7 @@ class RecipeDetailViewModel(
                 try {
                     val recipeDetail = repository.getRecipeDetail(id)
                     _state.value = RecipeDetailState.Success(recipeDetail)
-
-                } catch (e: Exception){
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }

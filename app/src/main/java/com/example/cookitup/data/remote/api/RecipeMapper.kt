@@ -12,12 +12,12 @@ object RecipeMapper {
         )
     }
 
-    fun mapToDomain(dto: RecipeDetailDto) : RecipeDetail{
+    fun mapToDomain(dto: RecipeDetailDto): RecipeDetail {
         return RecipeDetail(
             title = dto.title,
             image = dto.imageUrl,
             time = dto.readyInMinutes,
-            servings = dto.servings,
+            servings = dto.servings
         )
     }
 }
