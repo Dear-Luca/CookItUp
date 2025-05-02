@@ -1,4 +1,4 @@
-package com.example.cookitup.model
+package com.example.cookitup.data.remote.api
 
 import kotlinx.serialization.Serializable
 

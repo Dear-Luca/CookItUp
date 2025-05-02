@@ -5,8 +5,7 @@ import com.example.cookitup.model.Recipe
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-const val API_KEY = BuildConfig.API_KEY
-const val NUM_ITEMS = 20
+
 
 interface SpoonacularApi {
     @GET("recipes/findByIngredients")
