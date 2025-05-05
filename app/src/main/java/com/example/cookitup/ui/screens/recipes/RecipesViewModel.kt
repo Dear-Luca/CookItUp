@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-data class RecipesState(
-    val recipes: List<Recipe> = emptyList(),
-    val isLoading: Boolean = false
-)
+sealed class RecipesState {
+    data class Success(val recipes : List<Recipe>) : RecipesState()
+    data object Loading : RecipesState()
+}
 
 interface RecipesActions {
     fun fetchRecipes(ingredients: List<String>)
@@ -20,22 +20,15 @@ interface RecipesActions {
 class RecipesViewModel(
     private val repository: RecipeRepository
 ) : ViewModel() {
-    private val _state = MutableStateFlow(RecipesState())
+    private val _state = MutableStateFlow<RecipesState>(RecipesState.Loading)
     val state = _state.asStateFlow()
 
     val actions = object : RecipesActions {
         override fun fetchRecipes(ingredients: List<String>) {
             viewModelScope.launch {
-                _state.value = _state.value.copy(
-                    isLoading = true
-                )
-
                 try {
                     val recipes = repository.fetchRecipes(ingredients)
-                    _state.value = _state.value.copy(
-                        recipes = recipes,
-                        isLoading = false
-                    )
+                    _state.value = RecipesState.Success(recipes)
                 } catch (e: Exception) {
                     // UnknownHostException
                     // HttpException
