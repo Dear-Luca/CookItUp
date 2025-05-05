@@ -19,13 +19,15 @@ fun RecipeDetail(
     navController: NavHostController
 ) {
     LaunchedEffect(id) {
-        actions.fetchRecipeDetail(id)
+        if (state is RecipeDetailState.Loading) {
+            actions.fetchRecipeDetail(id)
+        }
     }
 
     Scaffold { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
             when (state) {
-                RecipeDetailState.Loading -> CircularProgressIndicator(
+                is RecipeDetailState.Loading -> CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 is RecipeDetailState.Success -> TODO()

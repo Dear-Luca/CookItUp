@@ -39,7 +39,9 @@ fun Recipes(
     navController: NavHostController
 ) {
     LaunchedEffect(ingredients) {
-        actions.fetchRecipes(ingredients)
+        if (state is RecipesState.Loading) {
+            actions.fetchRecipes(ingredients)
+        }
     }
 
     Scaffold { paddingValues ->
