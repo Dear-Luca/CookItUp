@@ -51,7 +51,10 @@ fun Recipes(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(state.recipes.size) { index ->
+                items(
+                    count = state.recipes.size,
+                    key = { index -> state.recipes[index].id }
+                ) { index ->
                     val recipe = state.recipes[index]
                     RecipeItem(recipe, navController)
                 }
