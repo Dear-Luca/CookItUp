@@ -44,19 +44,23 @@ fun Recipes(
 
     Scaffold { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
-            if (state.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-            }
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(
-                    count = state.recipes.size,
-                    key = { index -> state.recipes[index].id }
-                ) { index ->
-                    val recipe = state.recipes[index]
-                    RecipeItem(recipe, navController)
+            when (state) {
+                RecipesState.Loading -> CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+                is RecipesState.Success -> {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        items(
+                            count = state.recipes.size,
+                            key = { index -> state.recipes[index].id }
+                        ) { index ->
+                            val recipe = state.recipes[index]
+                            RecipeItem(recipe, navController)
+                        }
+                    }
                 }
             }
         }

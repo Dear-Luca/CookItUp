@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 sealed class RecipesState {
-    data class Success(val recipes : List<Recipe>) : RecipesState()
+    data class Success(val recipes: List<Recipe>) : RecipesState()
     data object Loading : RecipesState()
 }
 
