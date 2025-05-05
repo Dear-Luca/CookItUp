@@ -29,6 +29,7 @@ fun RecipeDetail(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 is RecipeDetailState.Success -> TODO()
+                is RecipeDetailState.Error -> TODO()
             }
         }
     }

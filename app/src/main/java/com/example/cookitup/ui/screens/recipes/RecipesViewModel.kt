@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 sealed class RecipesState {
     data class Success(val recipes: List<Recipe>) : RecipesState()
     data object Loading : RecipesState()
+    data class Error(val message: String) : RecipesState()
 }
 
 interface RecipesActions {
@@ -32,7 +33,7 @@ class RecipesViewModel(
                 } catch (e: Exception) {
                     // UnknownHostException
                     // HttpException
-                    e.printStackTrace()
+                    _state.value = RecipesState.Error(e.message ?: "Error")
                 }
             }
         }

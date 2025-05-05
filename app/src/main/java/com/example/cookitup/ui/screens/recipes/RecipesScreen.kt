@@ -45,7 +45,7 @@ fun Recipes(
     Scaffold { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
             when (state) {
-                RecipesState.Loading -> CircularProgressIndicator(
+                is RecipesState.Loading -> CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 is RecipesState.Success -> {
@@ -62,6 +62,12 @@ fun Recipes(
                         }
                     }
                 }
+
+                is RecipesState.Error -> Text(
+                    text = state.message,
+                    color = Color.Red,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
             }
         }
     }
