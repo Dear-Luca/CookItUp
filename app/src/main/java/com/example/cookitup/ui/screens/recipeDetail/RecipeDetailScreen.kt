@@ -16,6 +16,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -62,16 +64,55 @@ fun RecipeInfo(state: RecipeDetailState.Success) {
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             AsyncImage(
                 model = state.detail.image,
                 contentDescription = "Image for ${state.detail.title}",
                 modifier = Modifier.fillMaxWidth()
             )
-            Text(state.detail.title, style = MaterialTheme.typography.titleLarge)
-            Text("Time to cook: ${state.detail.time}", style = MaterialTheme.typography.bodyMedium)
-            Text("Servings: ${state.detail.servings}", style = MaterialTheme.typography.bodyMedium)
+
+            Text(
+                state.detail.title,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle()) {
+                        append("Time to cook: ")
+                    }
+                    withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
+                        append(state.detail.time.toString())
+                    }
+                },
+                maxLines = 1
+            )
+
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle()) {
+                        append("Servings: ")
+                    }
+                    withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
+                        append(state.detail.servings.toString())
+                    }
+                },
+                maxLines = 1
+            )
+
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle()) {
+                        append("Dish types: ")
+                    }
+                    withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
+                        append(state.detail.types.joinToString(", "))
+                    }
+                },
+                maxLines = 2
+            )
         }
     }
 }

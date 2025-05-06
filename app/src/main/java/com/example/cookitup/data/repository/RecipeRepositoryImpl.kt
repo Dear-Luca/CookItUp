@@ -1,7 +1,7 @@
 package com.example.cookitup.data.repository
 
-import com.example.cookitup.data.remote.api.RecipeMapper
 import com.example.cookitup.data.remote.api.SpoonacularApi
+import com.example.cookitup.data.remote.dto.RecipeMapper
 import com.example.cookitup.domain.model.Recipe
 import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.domain.repository.RecipeRepository

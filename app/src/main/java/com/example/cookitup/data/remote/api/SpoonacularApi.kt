@@ -1,5 +1,7 @@
 package com.example.cookitup.data.remote.api
 
+import com.example.cookitup.data.remote.dto.RecipeDetailDto
+import com.example.cookitup.data.remote.dto.RecipeDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
