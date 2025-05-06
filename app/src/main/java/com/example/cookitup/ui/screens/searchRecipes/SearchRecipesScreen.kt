@@ -1,6 +1,8 @@
 package com.example.cookitup.ui.screens.searchRecipes
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -10,12 +12,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,62 +46,94 @@ fun SearchRecipes(
     navController: NavHostController
 ) {
     Scaffold { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
-            var text by remember { mutableStateOf("") }
-            Row(verticalAlignment = Alignment.CenterVertically) {
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                var text by remember { mutableStateOf("") }
+
                 OutlinedTextField(
                     value = text,
                     onValueChange = { text = it },
-                    placeholder = { Text("Enter an ingredient", style = MaterialTheme.typography.bodyMedium) }
+                    placeholder = { Text("Enter an ingredient") },
+                    modifier = Modifier.weight(1f),
+                    singleLine = true
                 )
-                OutlinedButton(
+                Button(
                     onClick = {
-                        actions.addIngredient(text)
-                        text = ""
-                    },
-                    modifier = Modifier.fillMaxWidth()
+                        if (text.isNotBlank()) {
+                            actions.addIngredient(text.trim())
+                            text = ""
+                        }
+                    }
                 ) {
-                    Text(
-                        "Add",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                    Text("Add")
                 }
             }
-            Spacer(modifier = Modifier.padding(20.dp))
 
             FlowRow(
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 state.ingredients.forEach { ingredient ->
-                    Box(
-                        modifier = Modifier
-                            .padding(vertical = 4.dp, horizontal = 4.dp)
-                            .border(
-                                width = 1.dp,
-                                color = Color.Gray,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .padding(12.dp)
+                    Surface(
+                        shape = RoundedCornerShape(50),
+                        tonalElevation = 2.dp,
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        modifier = Modifier.padding(2.dp)
                     ) {
-                        Text(
-                            text = ingredient,
-                            style = MaterialTheme.typography.titleMedium
-                        )
+                        Row(
+                            modifier = Modifier
+                                .padding(horizontal = 12.dp, vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = ingredient,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Remove $ingredient",
+                                modifier = Modifier
+                                    .size(16.dp)
+                                    .clickable { actions.deleteIngredient(ingredient) },
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.padding(20.dp))
+            Spacer(modifier = Modifier.weight(1f))
+
             Button(
-                onClick = { navController.navigate(Routes.Recipes(state.ingredients)) },
-                modifier = Modifier.align(
-                    alignment = Alignment.CenterHorizontally
-                )
+                onClick = {
+                    navController.navigate(Routes.Recipes(state.ingredients))
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                Text(
-                    "Search recipes",
-                    style = MaterialTheme.typography.titleLarge
-                )
+                Row {
+                    Text(
+                        text = "Search recipes",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.padding(horizontal = 4.dp))
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search ingredient",
+                    )
+                }
+
             }
         }
     }

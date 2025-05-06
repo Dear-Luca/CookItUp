@@ -9,6 +9,8 @@ data class SearchRecipesState(val ingredients: List<String> = emptyList())
 
 interface SearchRecipesActions {
     fun addIngredient(ingredient: String)
+
+    fun deleteIngredient(ingredient: String)
 }
 
 class SearchRecipesViewModel : ViewModel() {
@@ -21,6 +23,14 @@ class SearchRecipesViewModel : ViewModel() {
             _state.update { currentState ->
                 currentState.copy(
                     ingredients = currentState.ingredients + ingredient
+                )
+            }
+        }
+
+        override fun deleteIngredient(ingredient: String) {
+            _state.update { currentState ->
+                currentState.copy(
+                    ingredients = currentState.ingredients.filter { it != ingredient }
                 )
             }
         }
