@@ -5,5 +5,6 @@ data class RecipeDetail(
     val image: String,
     val time: Int,
     val servings: Int,
-    val types: List<String>
+    val types: List<String>,
+    val ingredients: List<Ingredient>
 )

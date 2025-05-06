@@ -7,5 +7,6 @@ data class RecipeDetailDto(
     @SerializedName("image") val imageUrl: String,
     @SerializedName("readyInMinutes") val readyInMinutes: Int,
     @SerializedName("servings") val servings: Int,
-    @SerializedName("dishTypes") val dishTypes: List<String>
+    @SerializedName("dishTypes") val dishTypes: List<String>,
+    @SerializedName("extendedIngredients") val extendedIngredients: List<IngredientDto>
 )

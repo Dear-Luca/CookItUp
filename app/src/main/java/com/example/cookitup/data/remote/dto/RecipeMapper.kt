@@ -21,11 +21,12 @@ object RecipeMapper {
             image = dto.imageUrl,
             time = dto.readyInMinutes,
             servings = dto.servings,
-            types = dto.dishTypes
+            types = dto.dishTypes,
+            ingredients = dto.extendedIngredients.map { mapToDomain(it) }
         )
     }
 
-    fun mapToDomain(dto: IngredientDto): Ingredient {
+    private fun mapToDomain(dto: IngredientDto): Ingredient {
         return Ingredient(
             id = dto.id.toString(),
             image = dto.imageUrl,
