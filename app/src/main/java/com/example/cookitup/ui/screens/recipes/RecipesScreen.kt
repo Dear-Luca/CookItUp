@@ -80,58 +80,6 @@ fun Recipes(
     }
 }
 
-// @Composable
-// fun RecipeItem(recipe: Recipe, navController: NavHostController) {
-//    OutlinedCard(
-//        onClick = { navController.navigate(Routes.RecipeDetail(recipe.id)) },
-//        modifier = Modifier.fillMaxWidth().height(100.dp).padding(horizontal = 8.dp),
-//        colors = CardDefaults.cardColors(
-//            containerColor = MaterialTheme.colorScheme.surface
-//        ),
-//        border = BorderStroke(1.dp, Color.Black),
-//        shape = MaterialTheme.shapes.medium,
-//        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-//    ) {
-//        Row(
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            Box(
-//                modifier = Modifier
-//                    .weight(0.4f)
-//                    .aspectRatio(1f)
-//                    .clip(MaterialTheme.shapes.small)
-//            ) {
-//                AsyncImage(
-//                    model = recipe.image,
-//                    contentDescription = "Image for ${recipe.title}",
-//                    contentScale = ContentScale.Crop,
-//                    modifier = Modifier.fillMaxSize()
-//                )
-//            }
-//            Column(
-//                modifier = Modifier
-//                    .weight(0.6f)
-//                    .padding(start = 12.dp),
-//                verticalArrangement = Arrangement.Center
-//            ) {
-//                Text(
-//                    text = recipe.title,
-//                    style = MaterialTheme.typography.titleMedium,
-//                    maxLines = 2
-//                )
-//
-//                Spacer(modifier = Modifier.height(4.dp))
-//
-//                Text(
-//                    text = "Subheader",
-//                    style = MaterialTheme.typography.bodySmall,
-//                    color = MaterialTheme.colorScheme.onSurfaceVariant
-//                )
-//                Spacer(modifier = Modifier.height(4.dp))
-//            }
-//        }
-//    }
-// }
 @Composable
 fun RecipeItem(recipe: Recipe, navController: NavHostController) {
     ElevatedCard(
@@ -160,7 +108,6 @@ fun RecipeItem(recipe: Recipe, navController: NavHostController) {
 
             )
 
-            // Text section
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -183,7 +130,6 @@ fun RecipeItem(recipe: Recipe, navController: NavHostController) {
                 )
             }
 
-            // Optional: Arrow icon for action
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
                 contentDescription = "View recipe",
