@@ -2,14 +2,21 @@ package com.example.cookitup.ui.screens.recipeDetail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.RestaurantMenu
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -19,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
@@ -56,84 +64,6 @@ fun RecipeDetail(
     }
 }
 
-// @Composable
-// fun RecipeInfo(state: RecipeDetailState.Success) {
-//    Card(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(8.dp),
-//        elevation = CardDefaults.cardElevation(
-//            defaultElevation = 6.dp
-//        )
-//    ) {
-//        Column(
-//            modifier = Modifier.padding(16.dp),
-//            verticalArrangement = Arrangement.spacedBy(4.dp)
-//        ) {
-//            AsyncImage(
-//                model = state.detail.image,
-//                contentDescription = "Image for ${state.detail.title}",
-//                modifier = Modifier.fillMaxWidth()
-//            )
-//
-//            Text(
-//                state.detail.title,
-//                style = MaterialTheme.typography.titleLarge,
-//                modifier = Modifier.padding(bottom = 4.dp)
-//            )
-//
-//            Text(
-//                text = buildAnnotatedString {
-//                    withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle()) {
-//                        append("Time to cook: ")
-//                    }
-//                    withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
-//                        append(state.detail.time.toString())
-//                    }
-//                },
-//                maxLines = 1
-//            )
-//
-//            Text(
-//                text = buildAnnotatedString {
-//                    withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle()) {
-//                        append("Servings: ")
-//                    }
-//                    withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
-//                        append(state.detail.servings.toString())
-//                    }
-//                },
-//                maxLines = 1
-//            )
-//
-//            Text(
-//                text = buildAnnotatedString {
-//                    withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle()) {
-//                        append("Dish types: ")
-//                    }
-//                    withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
-//                        append(state.detail.types.joinToString(", "))
-//                    }
-//                },
-//                maxLines = 2
-//            )
-//
-//            Text("Ingredients", style = MaterialTheme.typography.titleLarge)
-//            state.detail.ingredients.forEach {
-//                Text(
-//                    text = buildAnnotatedString {
-//                        withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle()){
-//                            append(it.name)
-//                        }
-//                        withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()){
-//                            append(it.measures.metric.amount + it.measures.metric.unit)
-//                        }
-//                    }
-//                )
-//            }
-//        }
-//    }
-// }
 @Composable
 fun RecipeInfo(state: RecipeDetailState.Success) {
     Card(
@@ -161,9 +91,9 @@ fun RecipeInfo(state: RecipeDetailState.Success) {
             )
 
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                LabeledText("Time to cook", "${state.detail.time} min")
-                LabeledText("Servings", state.detail.servings.toString())
-                LabeledText("Dish types", state.detail.types.joinToString(", "))
+                LabeledText("Time to cook", "${state.detail.time} min", icon = Icons.Filled.Timer)
+                LabeledText("Servings", state.detail.servings.toString(), icon = Icons.Filled.Person)
+                LabeledText("Dish types", state.detail.types.joinToString(", "), icon = Icons.Filled.RestaurantMenu)
             }
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -186,17 +116,29 @@ fun RecipeInfo(state: RecipeDetailState.Success) {
 }
 
 @Composable
-fun LabeledText(label: String, value: String) {
-    Text(
-        text = buildAnnotatedString {
-            withStyle(style = MaterialTheme.typography.titleSmall.toSpanStyle()) {
-                append("$label: ")
-            }
-            withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
-                append(value)
-            }
-        },
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis
-    )
+fun LabeledText(label: String, value: String, icon: ImageVector? = null) {
+    Row {
+        if (icon != null) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(end = 6.dp)
+                    .size(18.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+        Text(
+            text = buildAnnotatedString {
+                withStyle(style = MaterialTheme.typography.titleSmall.toSpanStyle()) {
+                    append("$label: ")
+                }
+                withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
+                    append(value)
+                }
+            },
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
 }
