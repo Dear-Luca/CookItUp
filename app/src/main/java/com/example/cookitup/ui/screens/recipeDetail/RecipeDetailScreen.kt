@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -15,8 +17,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -52,67 +56,147 @@ fun RecipeDetail(
     }
 }
 
+// @Composable
+// fun RecipeInfo(state: RecipeDetailState.Success) {
+//    Card(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(8.dp),
+//        elevation = CardDefaults.cardElevation(
+//            defaultElevation = 6.dp
+//        )
+//    ) {
+//        Column(
+//            modifier = Modifier.padding(16.dp),
+//            verticalArrangement = Arrangement.spacedBy(4.dp)
+//        ) {
+//            AsyncImage(
+//                model = state.detail.image,
+//                contentDescription = "Image for ${state.detail.title}",
+//                modifier = Modifier.fillMaxWidth()
+//            )
+//
+//            Text(
+//                state.detail.title,
+//                style = MaterialTheme.typography.titleLarge,
+//                modifier = Modifier.padding(bottom = 4.dp)
+//            )
+//
+//            Text(
+//                text = buildAnnotatedString {
+//                    withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle()) {
+//                        append("Time to cook: ")
+//                    }
+//                    withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
+//                        append(state.detail.time.toString())
+//                    }
+//                },
+//                maxLines = 1
+//            )
+//
+//            Text(
+//                text = buildAnnotatedString {
+//                    withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle()) {
+//                        append("Servings: ")
+//                    }
+//                    withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
+//                        append(state.detail.servings.toString())
+//                    }
+//                },
+//                maxLines = 1
+//            )
+//
+//            Text(
+//                text = buildAnnotatedString {
+//                    withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle()) {
+//                        append("Dish types: ")
+//                    }
+//                    withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
+//                        append(state.detail.types.joinToString(", "))
+//                    }
+//                },
+//                maxLines = 2
+//            )
+//
+//            Text("Ingredients", style = MaterialTheme.typography.titleLarge)
+//            state.detail.ingredients.forEach {
+//                Text(
+//                    text = buildAnnotatedString {
+//                        withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle()){
+//                            append(it.name)
+//                        }
+//                        withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()){
+//                            append(it.measures.metric.amount + it.measures.metric.unit)
+//                        }
+//                    }
+//                )
+//            }
+//        }
+//    }
+// }
 @Composable
 fun RecipeInfo(state: RecipeDetailState.Success) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
-        )
+            .padding(16.dp),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             AsyncImage(
                 model = state.detail.image,
                 contentDescription = "Image for ${state.detail.title}",
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
             )
 
             Text(
-                state.detail.title,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(bottom = 4.dp)
+                text = state.detail.title,
+                style = MaterialTheme.typography.headlineSmall
             )
 
-            Text(
-                text = buildAnnotatedString {
-                    withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle()) {
-                        append("Time to cook: ")
-                    }
-                    withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
-                        append(state.detail.time.toString())
-                    }
-                },
-                maxLines = 1
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                LabeledText("Time to cook", "${state.detail.time} min")
+                LabeledText("Servings", state.detail.servings.toString())
+                LabeledText("Dish types", state.detail.types.joinToString(", "))
+            }
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
             Text(
-                text = buildAnnotatedString {
-                    withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle()) {
-                        append("Servings: ")
-                    }
-                    withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
-                        append(state.detail.servings.toString())
-                    }
-                },
-                maxLines = 1
+                text = "Ingredients",
+                style = MaterialTheme.typography.titleMedium
             )
 
-            Text(
-                text = buildAnnotatedString {
-                    withStyle(style = MaterialTheme.typography.titleMedium.toSpanStyle()) {
-                        append("Dish types: ")
-                    }
-                    withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
-                        append(state.detail.types.joinToString(", "))
-                    }
-                },
-                maxLines = 2
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                state.detail.ingredients.forEach {
+                    LabeledText(
+                        label = it.name.replaceFirstChar(Char::uppercase),
+                        value = "${it.measures.metric.amount} ${it.measures.metric.unit}"
+                    )
+                }
+            }
         }
     }
+}
+
+@Composable
+fun LabeledText(label: String, value: String) {
+    Text(
+        text = buildAnnotatedString {
+            withStyle(style = MaterialTheme.typography.titleSmall.toSpanStyle()) {
+                append("$label: ")
+            }
+            withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
+                append(value)
+            }
+        },
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
 }
