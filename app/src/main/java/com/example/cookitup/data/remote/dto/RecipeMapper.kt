@@ -36,8 +36,13 @@ object RecipeMapper {
     }
 
     private fun mapToDomain(dto: MeasureUnitDto): MeasureUnit {
+        val roundedAmount = when {
+            dto.amount >= 1 -> dto.amount.toInt()
+            else -> "%.1f".format(dto.amount)
+        }
+
         return MeasureUnit(
-            amount = dto.amount.toString(),
+            amount = roundedAmount.toString(),
             unit = dto.unitShort
         )
     }
