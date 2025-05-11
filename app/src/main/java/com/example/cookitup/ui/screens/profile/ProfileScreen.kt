@@ -9,17 +9,19 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Profile(navController: NavHostController){
+fun Profile(navController: NavHostController) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
-        topBar = { TopBar(navController, "Profile", scrollBehavior) }
+        topBar = { TopBar(navController, "Profile", scrollBehavior) },
+        bottomBar = { BottomBar(navController) }
     ) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding)
-        ) {  }
+        ) { }
     }
 }

@@ -9,13 +9,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(navController: NavHostController, title: String) {
+fun TopBar(navController: NavHostController, title: String, scrollBehavior: TopAppBarScrollBehavior) {
     CenterAlignedTopAppBar(
         title = {
             Text(
@@ -35,6 +36,7 @@ fun TopBar(navController: NavHostController, title: String) {
                     Icon(Icons.AutoMirrored.Outlined.ArrowBack, "Previous screen")
                 }
             }
-        }
+        },
+        scrollBehavior = scrollBehavior
     )
 }
