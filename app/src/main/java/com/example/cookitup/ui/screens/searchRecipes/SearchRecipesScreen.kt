@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.cookitup.ui.Routes
+import com.example.cookitup.ui.screens.components.TopBar
 import com.example.cookitup.utils.NetworkUtils
 import kotlinx.coroutines.launch
 
@@ -53,7 +54,8 @@ fun SearchRecipes(
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
-        }
+        },
+        topBar = { TopBar(navController, "Home") }
     ) { paddingValues ->
         Column(
             modifier = Modifier

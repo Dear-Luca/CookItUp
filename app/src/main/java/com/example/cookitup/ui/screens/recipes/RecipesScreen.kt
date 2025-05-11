@@ -40,6 +40,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.cookitup.domain.model.Recipe
 import com.example.cookitup.ui.Routes
+import com.example.cookitup.ui.screens.components.TopBar
 import com.example.cookitup.utils.NetworkUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -63,7 +64,8 @@ fun Recipes(
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
-        }
+        },
+        topBar = { TopBar(navController, "Recipes") }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
             when (state) {

@@ -33,6 +33,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.cookitup.ui.screens.components.TopBar
 
 @Composable
 fun RecipeDetail(
@@ -47,7 +48,9 @@ fun RecipeDetail(
         }
     }
 
-    Scaffold { paddingValues ->
+    Scaffold(
+        topBar = { TopBar(navController, "Recipe Details") }
+    ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
             when (state) {
                 is RecipeDetailState.Loading -> CircularProgressIndicator(
