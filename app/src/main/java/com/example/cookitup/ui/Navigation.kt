@@ -9,6 +9,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.example.cookitup.domain.model.RecipeDetail
+import com.example.cookitup.ui.screens.favourites.Favourites
+import com.example.cookitup.ui.screens.profile.Profile
 import com.example.cookitup.ui.screens.recipeDetail.RecipeDetail
 import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailViewModel
 import com.example.cookitup.ui.screens.recipes.Recipes
@@ -35,7 +37,10 @@ sealed interface Routes {
     data object Register : Routes
 
     @Serializable
-    data object StartPage : Routes
+    data object Profile : Routes
+
+    @Serializable
+    data object Favourites : Routes
 }
 
 @Composable
@@ -81,6 +86,14 @@ fun NavGraph(
                 recipeDetailViewModel.actions,
                 navController
             )
+        }
+
+        composable<Routes.Favourites> {
+            Favourites(navController)
+        }
+
+        composable<Routes.Profile> {
+            Profile(navController)
         }
     }
 }
