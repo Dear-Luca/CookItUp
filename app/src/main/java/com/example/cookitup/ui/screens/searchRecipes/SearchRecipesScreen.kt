@@ -127,12 +127,14 @@ fun SearchRecipes(
 
             Button(
                 onClick = {
-                    scope.launch {
-                        NetworkUtils.checkConnectivity(
-                            context,
-                            snackbarHostState
-                        ) {
-                            navController.navigate(Routes.Recipes(state.ingredients))
+                    if (state.ingredients.isNotEmpty()) {
+                        scope.launch {
+                            NetworkUtils.checkConnectivity(
+                                context,
+                                snackbarHostState
+                            ) {
+                                navController.navigate(Routes.Recipes(state.ingredients))
+                            }
                         }
                     }
                 },
