@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class IngredientDto(
     @SerializedName("id") val id: Long,
-    @SerializedName("image") val imageUrl: String,
+    @SerializedName("image") val imageUrl: String?,
     @SerializedName("name") val name: String,
     @SerializedName("amount") val amount: Double,
     @SerializedName("measures") val measures: MeasuresDto

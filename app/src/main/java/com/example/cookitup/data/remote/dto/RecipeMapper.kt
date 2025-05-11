@@ -29,7 +29,7 @@ object RecipeMapper {
     private fun mapToDomain(dto: IngredientDto): Ingredient {
         return Ingredient(
             id = dto.id.toString(),
-            image = dto.imageUrl,
+            image = dto.imageUrl ?: "",
             name = dto.name,
             measures = mapToDomain(dto.measures)
         )
