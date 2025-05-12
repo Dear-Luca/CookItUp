@@ -1,4 +1,4 @@
-package com.example.cookitup.ui
+package com.example.cookitup.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -8,7 +8,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.ui.screens.favourites.Favourites
 import com.example.cookitup.ui.screens.profile.Profile
 import com.example.cookitup.ui.screens.recipeDetail.RecipeDetail
@@ -17,31 +16,7 @@ import com.example.cookitup.ui.screens.recipes.Recipes
 import com.example.cookitup.ui.screens.recipes.RecipesViewModel
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipes
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipesViewModel
-import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
-
-sealed interface Routes {
-    @Serializable
-    data object SearchRecipes : Routes
-
-    @Serializable
-    data class Recipes(val ingredients: List<String>) : Routes
-
-    @Serializable
-    data class RecipeDetail(val id: String) : Routes
-
-    @Serializable
-    data object Login : Routes
-
-    @Serializable
-    data object Register : Routes
-
-    @Serializable
-    data object Profile : Routes
-
-    @Serializable
-    data object Favourites : Routes
-}
 
 @Composable
 fun NavGraph(
