@@ -3,13 +3,14 @@ package com.example.cookitup.ui.screens.recipeDetail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookitup.domain.model.RecipeDetail
+import com.example.cookitup.domain.model.RecipeInstructions
 import com.example.cookitup.domain.repository.RecipeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 sealed class RecipeDetailState {
-    data class Success(val detail: RecipeDetail) : RecipeDetailState()
+    data class Success(val detail: RecipeDetail, val instructions: RecipeInstructions) : RecipeDetailState()
     data object Loading : RecipeDetailState()
     data class Error(val message: String) : RecipeDetailState()
 }
@@ -29,7 +30,8 @@ class RecipeDetailViewModel(
             viewModelScope.launch {
                 try {
                     val recipeDetail = repository.getRecipeDetail(id)
-                    _state.value = RecipeDetailState.Success(recipeDetail)
+                    val recipeInstructions = repository.getRecipeInstructions(id)
+                    _state.value = RecipeDetailState.Success(recipeDetail, recipeInstructions.first())
                 } catch (e: Exception) {
                     // UnknownHostException
                     // HttpException

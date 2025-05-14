@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.RestaurantMenu
@@ -91,7 +93,8 @@ fun RecipeInfo(state: RecipeDetailState.Success) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState(), true),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
@@ -132,6 +135,16 @@ fun RecipeInfo(state: RecipeDetailState.Success) {
                         value = "${it.measures.metric.amount} ${it.measures.metric.unit}"
                     )
                 }
+            }
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+            Text(
+                text = "Instructions",
+                style = MaterialTheme.typography.titleMedium
+            )
+            state.instructions.steps.forEach { step ->
+                Text(step.step)
             }
         }
     }

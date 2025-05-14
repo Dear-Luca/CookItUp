@@ -28,7 +28,7 @@ class RecipesViewModel(
         override fun fetchRecipes(ingredients: List<String>) {
             viewModelScope.launch {
                 try {
-                    val recipes = repository.fetchRecipes(ingredients)
+                    val recipes = repository.getRecipes(ingredients)
                     _state.value = RecipesState.Success(recipes)
                 } catch (e: Exception) {
                     // UnknownHostException

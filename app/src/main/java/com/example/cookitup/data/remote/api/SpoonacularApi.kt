@@ -2,6 +2,7 @@ package com.example.cookitup.data.remote.api
 
 import com.example.cookitup.data.remote.dto.RecipeDetailDto
 import com.example.cookitup.data.remote.dto.RecipeDto
+import com.example.cookitup.data.remote.dto.RecipeInstructionsDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -20,4 +21,11 @@ interface SpoonacularApi {
         @Query("includeNutrition") nutrition: Boolean = false,
         @Query("apiKey") apiKey: String = API_KEY
     ): RecipeDetailDto
+
+    @GET("recipes/{id}/analyzedInstructions")
+    suspend fun getRecipeInstructions(
+        @Path("id") id: Int,
+        @Query("stepBreakdown") stepBreakdown: Boolean = true,
+        @Query("apiKey") apiKey: String = API_KEY
+    ): List<RecipeInstructionsDto>
 }

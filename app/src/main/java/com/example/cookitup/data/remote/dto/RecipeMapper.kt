@@ -5,6 +5,8 @@ import com.example.cookitup.domain.model.MeasureUnit
 import com.example.cookitup.domain.model.Measures
 import com.example.cookitup.domain.model.Recipe
 import com.example.cookitup.domain.model.RecipeDetail
+import com.example.cookitup.domain.model.RecipeInstructions
+import com.example.cookitup.domain.model.Step
 
 object RecipeMapper {
     fun mapToDomain(dto: RecipeDto): Recipe {
@@ -23,6 +25,12 @@ object RecipeMapper {
             servings = dto.servings,
             types = dto.dishTypes,
             ingredients = dto.extendedIngredients.map { mapToDomain(it) }
+        )
+    }
+
+    fun mapToDomain(dto: RecipeInstructionsDto): RecipeInstructions {
+        return RecipeInstructions(
+            steps = dto.steps.map { Step(it.num.toString(), it.step) }
         )
     }
 
