@@ -13,6 +13,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.cookitup.ui.navigation.Routes
 import com.example.cookitup.ui.navigation.TopLevelRoute
 
 @Composable
@@ -49,12 +50,22 @@ fun BottomBar(navController: NavHostController) {
                     )
                 },
                 onClick = {
-                    navController.navigate(topLevelRoute.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+                    if (topLevelRoute is TopLevelRoute.Home) {
+                        val popped = navController.popBackStack(
+                            route = Routes.SearchRecipes,
+                            inclusive = false
+                        )
+                        if (!popped) {
+                            navController.navigate(Routes.SearchRecipes)
                         }
-                        launchSingleTop = true
-                        restoreState = true
+                    } else {
+                        navController.navigate(topLevelRoute.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
                 }
             )

@@ -33,25 +33,25 @@ sealed interface Routes {
     data object Favourites : Routes
 }
 
-sealed class TopLevelRoute<T : Routes>(
+sealed class TopLevelRoute(
     val name: String,
-    val route: T,
+    val route: Routes,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector
 ) {
-    data object Home : TopLevelRoute<Routes.SearchRecipes>(
+    data object Home : TopLevelRoute(
         name = "Home",
         route = Routes.SearchRecipes,
         selectedIcon = Icons.Filled.Home,
         unselectedIcon = Icons.Outlined.Home
     )
-    data object Profile : TopLevelRoute<Routes.Profile>(
+    data object Profile : TopLevelRoute(
         name = "Profile",
         route = Routes.Profile,
         selectedIcon = Icons.Filled.AccountCircle,
         unselectedIcon = Icons.Outlined.AccountCircle
     )
-    data object Favourites : TopLevelRoute<Routes.Favourites>(
+    data object Favourites : TopLevelRoute(
         name = "Favourites",
         route = Routes.Favourites,
         selectedIcon = Icons.Filled.Favorite,
