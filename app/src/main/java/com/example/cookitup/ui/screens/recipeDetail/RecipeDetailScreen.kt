@@ -14,17 +14,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.RestaurantMenu
 import androidx.compose.material.icons.filled.Timer
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -38,7 +35,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -64,7 +60,7 @@ fun RecipeDetail(
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = { TopBar(navController, stringResource(R.string.title_recipe_details), scrollBehavior) },
-        bottomBar = { BottomBar(navController) },
+        bottomBar = { BottomBar(navController) }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
             when (state) {
@@ -101,7 +97,7 @@ fun RecipeInfo(state: RecipeDetailState.Success) {
                 contentDescription = "Image for ${state.detail.title}",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(15.dp)),
+                    .clip(RoundedCornerShape(15.dp))
             )
 
             Text(
@@ -165,7 +161,7 @@ fun LabeledText(label: String, value: String, icon: ImageVector? = null) {
                 withStyle(style = MaterialTheme.typography.bodyMedium.toSpanStyle()) {
                     append(value)
                 }
-            },
+            }
         )
     }
 }

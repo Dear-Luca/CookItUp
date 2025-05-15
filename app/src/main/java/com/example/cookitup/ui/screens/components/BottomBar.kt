@@ -36,7 +36,7 @@ fun BottomBar(navController: NavHostController) {
                 selected = isSelected,
                 icon = {
                     Icon(
-                        imageVector = if(isSelected) topLevelRoute.selectedIcon else topLevelRoute.unselectedIcon,
+                        imageVector = if (isSelected) topLevelRoute.selectedIcon else topLevelRoute.unselectedIcon,
                         contentDescription = topLevelRoute.name
                     )
                 },

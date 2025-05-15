@@ -2,7 +2,6 @@ package com.example.cookitup.ui.screens.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,7 +42,7 @@ fun TopBar(navController: NavHostController, title: String, scrollBehavior: TopA
         },
         scrollBehavior = scrollBehavior,
         actions = {
-            if (title == stringResource(R.string.title_recipe_details)){
+            if (title == stringResource(R.string.title_recipe_details)) {
                 IconButton(onClick = {}) {
                     Icon(Icons.Outlined.FavoriteBorder, "Add to favourites")
                 }
