@@ -39,9 +39,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.cookitup.R
 import com.example.cookitup.domain.model.Recipe
 import com.example.cookitup.ui.navigation.Routes
 import com.example.cookitup.ui.screens.components.BottomBar
@@ -72,7 +74,7 @@ fun Recipes(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         },
-        topBar = { TopBar(navController, "Recipes", scrollBehavior) },
+        topBar = { TopBar(navController, stringResource(R.string.title_recipes), scrollBehavior) },
         bottomBar = { BottomBar(navController) }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {

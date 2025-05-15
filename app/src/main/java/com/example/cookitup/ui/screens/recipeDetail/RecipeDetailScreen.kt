@@ -24,6 +24,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -35,12 +36,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.cookitup.R
 import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.TopBar
 
@@ -60,17 +63,8 @@ fun RecipeDetail(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = { TopBar(navController, "Recipe Details", scrollBehavior) },
+        topBar = { TopBar(navController, stringResource(R.string.title_recipe_details), scrollBehavior) },
         bottomBar = { BottomBar(navController) },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {},
-                contentColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(Icons.Outlined.Favorite, "add to favourite")
-            }
-        }
-
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
             when (state) {
@@ -93,21 +87,21 @@ fun RecipeInfo(state: RecipeDetailState.Success) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(8.dp)
             .verticalScroll(rememberScrollState(), true),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             AsyncImage(
                 model = state.detail.image,
                 contentDescription = "Image for ${state.detail.title}",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(15.dp)),
             )
 
             Text(
@@ -121,10 +115,10 @@ fun RecipeInfo(state: RecipeDetailState.Success) {
                 LabeledText("Dish types", state.detail.types.joinToString(", "), icon = Icons.Filled.RestaurantMenu)
             }
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 6.dp))
 
             Text(
-                text = "Ingredients",
+                text = "Ingredients:",
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -140,11 +134,11 @@ fun RecipeInfo(state: RecipeDetailState.Success) {
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
             Text(
-                text = "Instructions",
+                text = "Instructions:",
                 style = MaterialTheme.typography.titleMedium
             )
             state.instructions.steps.forEach { step ->
-                Text(step.step)
+                LabeledText(step.num, step.step)
             }
         }
     }
@@ -172,8 +166,6 @@ fun LabeledText(label: String, value: String, icon: ImageVector? = null) {
                     append(value)
                 }
             },
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
         )
     }
 }

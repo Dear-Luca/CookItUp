@@ -38,8 +38,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.cookitup.R
 import com.example.cookitup.ui.navigation.Routes
 import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.TopBar
@@ -62,7 +64,7 @@ fun SearchRecipes(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         },
-        topBar = { TopBar(navController, "Home", scrollBehavior) },
+        topBar = { TopBar(navController, stringResource(R.string.title_home), scrollBehavior) },
         bottomBar = { BottomBar(navController) }
     ) { paddingValues ->
         Column(

@@ -8,7 +8,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import com.example.cookitup.R
 import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.TopBar
 
@@ -17,7 +19,7 @@ import com.example.cookitup.ui.screens.components.TopBar
 fun Favourites(navController: NavHostController) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
-        topBar = { TopBar(navController, "Favourites", scrollBehavior) },
+        topBar = { TopBar(navController, stringResource(R.string.title_favourites), scrollBehavior) },
         bottomBar = { BottomBar(navController) }
     ) { innerPadding ->
         Column(
