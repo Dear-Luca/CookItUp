@@ -5,7 +5,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.serialization.Serializable
@@ -33,20 +33,23 @@ sealed interface Routes {
     data object Favourites : Routes
 }
 
-sealed class TopLevelRoute<T : Routes>(val name: String, val route: T, val icon: ImageVector) {
+sealed class TopLevelRoute<T : Routes>(val name: String, val route: T, val selectedIcon: ImageVector, val unselectedIcon: ImageVector) {
     data object Home : TopLevelRoute<Routes.SearchRecipes>(
         name = "Home",
         route = Routes.SearchRecipes,
-        icon = Icons.Filled.Home
+        selectedIcon = Icons.Filled.Home,
+        unselectedIcon = Icons.Outlined.Home
     )
     data object Profile : TopLevelRoute<Routes.Profile>(
         name = "Profile",
         route = Routes.Profile,
-        icon = Icons.Filled.AccountCircle
+        selectedIcon = Icons.Filled.AccountCircle,
+        unselectedIcon = Icons.Outlined.AccountCircle
     )
     data object Favourites : TopLevelRoute<Routes.Favourites>(
         name = "Favourites",
         route = Routes.Favourites,
-        icon = Icons.Filled.Favorite
+        selectedIcon = Icons.Filled.Favorite,
+        unselectedIcon = Icons.Outlined.FavoriteBorder
     )
 }
