@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    kotlin("plugin.serialization") version "2.1.20"
+    kotlin("plugin.serialization") version "2.0.21"
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
     alias(libs.plugins.ksp)
 }
@@ -57,9 +57,20 @@ android {
     }
 }
 
+configurations.all {
+    resolutionStrategy {
+        force(libs.jetbrains.annotations)
+        exclude(group = "com.intellij", module = "annotations")
+    }
+}
+
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.core.ktx) {
+        exclude(group = "org.jetbrains", module = "annotations")
+    }
+    implementation(libs.androidx.lifecycle.runtime.ktx) {
+        exclude(group = "org.jetbrains", module = "annotations")
+    }
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -69,7 +80,6 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.navigation.compose.v290)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.coil.compose)
@@ -78,6 +88,8 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.compiler)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.jetbrains.annotations)
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
