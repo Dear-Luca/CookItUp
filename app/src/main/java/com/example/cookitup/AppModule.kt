@@ -35,7 +35,7 @@ val koinModule = module {
     }
 
     single<DbRepository> {
-        DbRepositoryImpl(recipesDAO = get())
+        DbRepositoryImpl(recipeDAO = get())
     }
 
     viewModel {

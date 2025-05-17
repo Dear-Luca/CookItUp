@@ -15,7 +15,7 @@ data class RecipeEntity(
     val image: String,
     val time: String,
     val servings: Int,
-    val dishTypes: List<String>
+    val dishTypes: String
 )
 
 @Entity(
