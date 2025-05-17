@@ -6,5 +6,5 @@ data class RecipeInstructions(
 
 data class Step(
     val num: String,
-    val step: String
+    val instruction: String
 )

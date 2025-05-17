@@ -134,7 +134,7 @@ fun RecipeInfo(state: RecipeDetailState.Success) {
                 style = MaterialTheme.typography.titleMedium
             )
             state.instructions.steps.forEach { step ->
-                LabeledText(step.num, step.step)
+                LabeledText(step.num, step.instruction)
             }
         }
     }
