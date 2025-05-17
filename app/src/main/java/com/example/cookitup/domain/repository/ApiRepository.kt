@@ -4,7 +4,7 @@ import com.example.cookitup.domain.model.Recipe
 import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.domain.model.RecipeInstructions
 
-interface RecipeRepository {
+interface ApiRepository {
     suspend fun getRecipes(ingredients: List<String>): List<Recipe>
 
     suspend fun getRecipeDetail(id: String): RecipeDetail

@@ -3,7 +3,7 @@ package com.example.cookitup.ui.screens.recipes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookitup.domain.model.Recipe
-import com.example.cookitup.domain.repository.RecipeRepository
+import com.example.cookitup.domain.repository.ApiRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -19,7 +19,7 @@ interface RecipesActions {
 }
 
 class RecipesViewModel(
-    private val repository: RecipeRepository
+    private val repository: ApiRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow<RecipesState>(RecipesState.Loading)
     val state = _state.asStateFlow()

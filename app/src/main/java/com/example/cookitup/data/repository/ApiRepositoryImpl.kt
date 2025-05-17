@@ -5,11 +5,11 @@ import com.example.cookitup.data.remote.dto.RecipeMapper
 import com.example.cookitup.domain.model.Recipe
 import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.domain.model.RecipeInstructions
-import com.example.cookitup.domain.repository.RecipeRepository
+import com.example.cookitup.domain.repository.ApiRepository
 
-class RecipeRepositoryImpl(
+class ApiRepositoryImpl(
     private val apiService: SpoonacularApi
-) : RecipeRepository {
+) : ApiRepository {
     override suspend fun getRecipes(ingredients: List<String>): List<Recipe> {
         return apiService.searchRecipes(ingredients.joinToString(",")).map { RecipeMapper.mapToDomain(it) }
     }
