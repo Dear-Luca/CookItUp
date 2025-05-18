@@ -16,11 +16,12 @@ import org.koin.dsl.module
 
 val koinModule = module {
     single<SpoonacularApi> { ApiClient.retrofitService }
-//    single { get<AppDatabase>().recipeIngredientEntityDao() }
-//    single { get<AppDatabase>().recipeIngredientEntityDao() }
-//    single { get<AppDatabase>().recipeIngredientCrossRef() }
 
     single { get<AppDatabase>().recipeEntityDao() }
+    single { get<AppDatabase>().recipeFullEntityDao() }
+    single { get<AppDatabase>().ingredientEntityDao() }
+    single { get<AppDatabase>().instructionEntityDao() }
+    single { get<AppDatabase>().recipeIngredientCrossRefDao() }
 
     single {
         Room.databaseBuilder(

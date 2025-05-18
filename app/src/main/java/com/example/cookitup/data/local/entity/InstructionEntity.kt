@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 
 @Entity(
-    "recipeInstruction",
+    "instruction",
     primaryKeys = ["recipeId", "number"],
     foreignKeys = [
         ForeignKey(
@@ -15,7 +15,7 @@ import androidx.room.ForeignKey
         )
     ]
 )
-data class RecipeInstructionEntity(
+data class InstructionEntity(
     val recipeId: Long,
     val number: Int,
     val instruction: String
