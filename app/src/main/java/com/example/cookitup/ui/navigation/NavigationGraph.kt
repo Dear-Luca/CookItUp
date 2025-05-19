@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.example.cookitup.ui.screens.favourites.Favourites
+import com.example.cookitup.ui.screens.favourites.FavouritesViewModel
 import com.example.cookitup.ui.screens.profile.Profile
 import com.example.cookitup.ui.screens.recipeDetail.RecipeDetail
 import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailViewModel
@@ -64,7 +65,9 @@ fun NavGraph(
         }
 
         composable<Routes.Favourites> {
-            Favourites(navController)
+            val favouritesViewModel: FavouritesViewModel = koinViewModel()
+            val favouritesState by favouritesViewModel.state.collectAsStateWithLifecycle()
+            Favourites(favouritesState, favouritesViewModel.actions, navController)
         }
 
         composable<Routes.Profile> {

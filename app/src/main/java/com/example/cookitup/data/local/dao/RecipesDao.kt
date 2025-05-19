@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecipeDao {
+    @Query("Select id, image, name  FROM recipe")
+    suspend fun getRecipes(): List<RecipeEntity>
+
     @Upsert
     suspend fun upsertRecipe(recipe: RecipeEntity)
 

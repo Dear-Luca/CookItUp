@@ -1,10 +1,9 @@
 package com.example.cookitup.ui.screens.recipes
 
-import androidx.compose.foundation.layout.Arrangement
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -23,12 +22,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.cookitup.R
+import com.example.cookitup.ui.navigation.Routes
 import com.example.cookitup.ui.screens.components.BottomBar
-import com.example.cookitup.ui.screens.components.RecipeItem
+import com.example.cookitup.ui.screens.components.RecipeItems
 import com.example.cookitup.ui.screens.components.TopBar
+import com.example.cookitup.utils.NetworkUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,26 +63,39 @@ fun Recipes(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 is RecipesState.Success -> {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        items(
-                            count = state.recipes.size,
-                            key = { index -> state.recipes[index].id }
-                        ) { index ->
-                            val recipe = state.recipes[index]
-                            RecipeItem(recipe, navController, scope, snackbarHostState, context)
-                        }
+                    // remember the callback
+                    val onRecipeClick = remember(navController, snackbarHostState, context, scope) {
+                        onClick(
+                            navController,
+                            scope,
+                            snackbarHostState,
+                            context
+                        )
                     }
+                    RecipeItems(
+                        state.recipes,
+                        onRecipeClick
+                    )
                 }
-
                 is RecipesState.Error -> Text(
                     text = state.message,
                     color = Color.Red,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             }
+        }
+    }
+}
+
+fun onClick(
+    navController: NavHostController,
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+    context: Context
+): (String) -> Unit = { recipeId ->
+    scope.launch {
+        NetworkUtils.checkConnectivity(context, snackbarHostState) {
+            navController.navigate(Routes.RecipeDetail(recipeId))
         }
     }
 }

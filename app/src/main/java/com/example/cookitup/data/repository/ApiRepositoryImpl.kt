@@ -1,7 +1,7 @@
 package com.example.cookitup.data.repository
 
 import com.example.cookitup.data.remote.api.SpoonacularApi
-import com.example.cookitup.data.remote.dto.RecipeMapper
+import com.example.cookitup.data.remote.dto.MapperDto
 import com.example.cookitup.domain.model.Recipe
 import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.domain.model.RecipeInstructions
@@ -11,14 +11,14 @@ class ApiRepositoryImpl(
     private val apiService: SpoonacularApi
 ) : ApiRepository {
     override suspend fun getRecipes(ingredients: List<String>): List<Recipe> {
-        return apiService.searchRecipes(ingredients.joinToString(",")).map { RecipeMapper.mapToDomain(it) }
+        return apiService.searchRecipes(ingredients.joinToString(",")).map { MapperDto.mapToDomain(it) }
     }
 
     override suspend fun getRecipeDetail(id: String): RecipeDetail {
-        return RecipeMapper.mapToDomain(apiService.getRecipeDetail(id.toInt()))
+        return MapperDto.mapToDomain(apiService.getRecipeDetail(id.toInt()))
     }
 
     override suspend fun getRecipeInstructions(id: String): List<RecipeInstructions> {
-        return apiService.getRecipeInstructions(id.toInt()).map { RecipeMapper.mapToDomain(it) }
+        return apiService.getRecipeInstructions(id.toInt()).map { MapperDto.mapToDomain(it) }
     }
 }

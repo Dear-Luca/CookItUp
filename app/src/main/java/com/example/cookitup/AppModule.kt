@@ -8,6 +8,7 @@ import com.example.cookitup.data.repository.ApiRepositoryImpl
 import com.example.cookitup.data.repository.DbRepositoryImpl
 import com.example.cookitup.domain.repository.ApiRepository
 import com.example.cookitup.domain.repository.DbRepository
+import com.example.cookitup.ui.screens.favourites.FavouritesViewModel
 import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailViewModel
 import com.example.cookitup.ui.screens.recipes.RecipesViewModel
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipesViewModel
@@ -49,5 +50,9 @@ val koinModule = module {
 
     viewModel {
         RecipeDetailViewModel(get())
+    }
+
+    viewModel {
+        FavouritesViewModel(get())
     }
 }

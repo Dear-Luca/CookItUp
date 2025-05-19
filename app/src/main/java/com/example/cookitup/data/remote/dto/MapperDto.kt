@@ -8,7 +8,7 @@ import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.domain.model.RecipeInstructions
 import com.example.cookitup.domain.model.Step
 
-object RecipeMapper {
+object MapperDto {
     fun mapToDomain(dto: RecipeDto): Recipe {
         return Recipe(
             id = dto.id.toString(),
