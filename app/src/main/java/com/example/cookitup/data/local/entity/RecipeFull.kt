@@ -3,7 +3,6 @@ package com.example.cookitup.data.local.entity
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import com.example.cookitup.domain.model.RecipeInstructions
 
 data class RecipeFull(
     @Embedded val recipe: RecipeEntity,
@@ -22,5 +21,5 @@ data class RecipeFull(
         parentColumn = "id",
         entityColumn = "recipeId"
     )
-    val instructions: List<RecipeInstructions>
+    val instructions: List<InstructionEntity>
 )
