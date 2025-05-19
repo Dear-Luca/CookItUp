@@ -49,7 +49,10 @@ val koinModule = module {
     }
 
     viewModel {
-        RecipeDetailViewModel(get())
+        RecipeDetailViewModel(
+            apiRepository = get(),
+            dbRepository = get()
+        )
     }
 
     viewModel {

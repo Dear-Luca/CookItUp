@@ -6,6 +6,8 @@ import com.example.cookitup.domain.model.Recipe
 import com.example.cookitup.domain.repository.DbRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 sealed class FavouritesState {
@@ -27,12 +29,16 @@ class FavouritesViewModel(
     val actions = object : FavouritesActions {
         override fun fetchRecipes() {
             viewModelScope.launch {
-                try {
-                    val recipes = repository.getRecipes()
-                    _state.value = FavouritesState.Success(recipes)
-                } catch (e: Exception) {
-                    _state.value = FavouritesState.Error(e.message ?: "Error")
-                }
+                repository.getRecipes()
+                    .onStart {
+                        _state.value = FavouritesState.Loading
+                    }
+                    .catch { e ->
+                        _state.value = FavouritesState.Error(e.message ?: "Error")
+                    }
+                    .collect { recipes ->
+                        _state.value = FavouritesState.Success(recipes)
+                    }
             }
         }
     }

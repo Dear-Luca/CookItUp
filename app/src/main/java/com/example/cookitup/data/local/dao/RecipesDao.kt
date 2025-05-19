@@ -11,8 +11,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RecipeDao {
-    @Query("Select * FROM recipe")
-    suspend fun getRecipes(): List<RecipeEntity>
+    @Query("SELECT * FROM RECIPE")
+    fun getRecipes(): Flow<List<RecipeEntity>>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM recipe WHERE id = :id)")
+    fun isFavourite(id: Long): Flow<Boolean>
 
     @Upsert
     suspend fun upsertRecipe(recipe: RecipeEntity)

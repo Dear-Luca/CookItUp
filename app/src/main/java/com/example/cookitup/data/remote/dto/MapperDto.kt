@@ -24,7 +24,8 @@ object MapperDto {
             time = dto.readyInMinutes,
             servings = dto.servings,
             types = dto.dishTypes,
-            ingredients = dto.extendedIngredients.map { mapToDomain(it) }
+            ingredients = dto.extendedIngredients.map { mapToDomain(it) },
+            id = dto.id.toString()
         )
     }
 

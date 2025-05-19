@@ -6,5 +6,6 @@ data class RecipeDetail(
     val time: Int,
     val servings: Int,
     val types: List<String>,
-    val ingredients: List<Ingredient>
+    val ingredients: List<Ingredient>,
+    val id: String
 )

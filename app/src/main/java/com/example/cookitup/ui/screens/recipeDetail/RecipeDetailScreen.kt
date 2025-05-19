@@ -3,8 +3,13 @@ package com.example.cookitup.ui.screens.recipeDetail
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -33,12 +38,23 @@ fun RecipeDetail(
     LaunchedEffect(id) {
         if (state is RecipeDetailState.Loading) {
             actions.fetchRecipeDetail(id)
+            actions.observeFavourite(id)
         }
     }
+
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = { TopBar(navController, stringResource(R.string.title_recipe_details), scrollBehavior) },
+        topBar = {
+            TopBar(
+                navController,
+                stringResource(R.string.title_recipe_details),
+                scrollBehavior,
+                actions = {
+                    ToggleFavourite(state, actions)
+                }
+            )
+        },
         bottomBar = { BottomBar(navController) }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
@@ -53,6 +69,24 @@ fun RecipeDetail(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun ToggleFavourite(
+    state: RecipeDetailState,
+    actions: RecipeDetailActions
+) {
+    if (state is RecipeDetailState.Success) {
+        val isFavourite = state.isFavourite
+        IconButton(
+            onClick = { actions.toggleFavourites() }
+        ) {
+            Icon(
+                imageVector = if (isFavourite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                contentDescription = if (isFavourite) "Remove from favourites" else "Add to favourites"
+            )
         }
     }
 }
