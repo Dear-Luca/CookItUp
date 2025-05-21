@@ -29,7 +29,7 @@ class FavouritesViewModel(
     val actions = object : FavouritesActions {
         override fun fetchRecipes() {
             viewModelScope.launch {
-                repository.getRecipes()
+                repository.getFavourites()
                     .onStart {
                         _state.value = FavouritesState.Loading
                     }

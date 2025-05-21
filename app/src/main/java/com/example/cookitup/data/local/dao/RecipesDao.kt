@@ -14,6 +14,9 @@ interface RecipeDao {
     @Query("SELECT * FROM RECIPE")
     fun getRecipes(): Flow<List<RecipeEntity>>
 
+    @Query("SELECT * FROM RECIPE WHERE id = :id")
+    suspend fun getRecipe(id: Long): RecipeEntity
+
     @Query("SELECT EXISTS(SELECT 1 FROM recipe WHERE id = :id)")
     fun isFavourite(id: Long): Flow<Boolean>
 
@@ -27,6 +30,6 @@ interface RecipeDao {
 @Dao
 interface RecipeFullDao {
     @Transaction
-    @Query("SELECT * FROM recipe")
-    fun getFavourites(): Flow<List<RecipeFull>>
+    @Query("SELECT * FROM recipe WHERE id = :id")
+    suspend fun getRecipeFullById(id: String): RecipeFull
 }

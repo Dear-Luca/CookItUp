@@ -3,7 +3,6 @@ package com.example.cookitup.ui.screens.recipeDetail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookitup.domain.model.RecipeDetail
-import com.example.cookitup.domain.model.RecipeInstructions
 import com.example.cookitup.domain.repository.ApiRepository
 import com.example.cookitup.domain.repository.DbRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +13,6 @@ import kotlinx.coroutines.launch
 sealed class RecipeDetailState {
     data class Success(
         val detail: RecipeDetail,
-        val instructions: RecipeInstructions,
         val isFavourite: Boolean
     ) : RecipeDetailState()
     data object Loading : RecipeDetailState()
@@ -41,13 +39,17 @@ class RecipeDetailViewModel(
         override fun fetchRecipeDetail(id: String) {
             viewModelScope.launch {
                 try {
-                    val recipeDetail = apiRepository.getRecipeDetail(id)
-                    val recipeInstructions = apiRepository.getRecipeInstructions(id)
-                    val isFavouriteInitial = dbRepository.isFavourite(id).first()
+                    val isFavourite = dbRepository.isFavourite(id).first()
+
+                    val recipeDetail = if (isFavourite) {
+                        dbRepository.getRecipeFull(id)
+                    } else {
+                        apiRepository.getRecipeDetail(id)
+                    }
+
                     _state.value = RecipeDetailState.Success(
                         recipeDetail,
-                        recipeInstructions.first(),
-                        isFavouriteInitial
+                        isFavourite
                     )
                 } catch (e: Exception) {
                     // UnknownHostException
@@ -61,14 +63,15 @@ class RecipeDetailViewModel(
             val currentState = _state.value
             if (currentState is RecipeDetailState.Success) {
                 viewModelScope.launch {
-                    try {
-                        if (currentState.isFavourite) {
-                            dbRepository.deleteRecipe(currentState.detail)
-                        } else {
-                            dbRepository.upsertRecipe(currentState.detail)
+                    if (currentState.isFavourite) {
+                        dbRepository.deleteRecipe(currentState.detail)
+                    } else {
+                        dbRepository.upsertRecipe(currentState.detail)
+                        dbRepository.upsertInstructions(currentState.detail.instructions, currentState.detail.id)
+                        dbRepository.upsertIngredients(currentState.detail.ingredients)
+                        currentState.detail.ingredients.forEach {
+                            dbRepository.upsertCrossRef(currentState.detail.id, it.id)
                         }
-                    } catch (e: Exception) {
-                        _state.value = RecipeDetailState.Error(e.message ?: "Error")
                     }
                 }
             }

@@ -17,15 +17,16 @@ object MapperDto {
         )
     }
 
-    fun mapToDomain(dto: RecipeDetailDto): RecipeDetail {
+    fun mapToDomain(dto: RecipeDetailDto, instructions: RecipeInstructions): RecipeDetail {
         return RecipeDetail(
             title = dto.title,
             image = dto.imageUrl,
-            time = dto.readyInMinutes,
+            time = dto.readyInMinutes.toString(),
             servings = dto.servings,
             types = dto.dishTypes,
             ingredients = dto.extendedIngredients.map { mapToDomain(it) },
-            id = dto.id.toString()
+            id = dto.id.toString(),
+            instructions = instructions
         )
     }
 

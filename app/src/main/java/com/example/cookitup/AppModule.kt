@@ -29,7 +29,7 @@ val koinModule = module {
             get(),
             AppDatabase::class.java,
             AppDatabase.DB_NAME
-        ).build()
+        ).fallbackToDestructiveMigration(false).build()
     }
 
     single<ApiRepository> {
@@ -37,7 +37,13 @@ val koinModule = module {
     }
 
     single<DbRepository> {
-        DbRepositoryImpl(recipeDAO = get())
+        DbRepositoryImpl(
+            recipeDAO = get(),
+            instructionDao = get(),
+            crossRefDao = get(),
+            recipeFullDao = get(),
+            ingredientDao = get()
+        )
     }
 
     viewModel {

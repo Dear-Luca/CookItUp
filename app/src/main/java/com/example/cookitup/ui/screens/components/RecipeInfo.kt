@@ -84,7 +84,8 @@ fun RecipeInfo(state: RecipeDetailState.Success) {
                 text = "Instructions:",
                 style = MaterialTheme.typography.titleMedium
             )
-            state.instructions.steps.forEach { step ->
+
+            state.detail.instructions.steps.forEach { step ->
                 LabeledText(step.num, step.instruction)
             }
         }
