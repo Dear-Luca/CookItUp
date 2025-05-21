@@ -86,7 +86,6 @@ fun RecipeItem(
                     .aspectRatio(1.3f)
                     .padding(4.dp)
                     .clip(RoundedCornerShape(12.dp))
-
             )
 
             Column(
