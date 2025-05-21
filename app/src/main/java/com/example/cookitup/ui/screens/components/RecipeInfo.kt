@@ -23,10 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailState
 
 @Composable
@@ -44,7 +47,11 @@ fun RecipeInfo(state: RecipeDetailState.Success) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             AsyncImage(
-                model = state.detail.image,
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(state.detail.image)
+                    .diskCachePolicy(CachePolicy.ENABLED)
+                    .memoryCachePolicy(CachePolicy.ENABLED)
+                    .build(),
                 contentDescription = "Image for ${state.detail.title}",
                 modifier = Modifier
                     .fillMaxWidth()

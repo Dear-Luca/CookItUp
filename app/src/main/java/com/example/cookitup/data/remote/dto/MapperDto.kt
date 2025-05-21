@@ -12,19 +12,19 @@ object MapperDto {
     fun mapToDomain(dto: RecipeDto): Recipe {
         return Recipe(
             id = dto.id.toString(),
-            image = dto.imageUrl,
-            title = dto.title
+            image = dto.imageUrl.orEmpty(),
+            title = dto.title.orEmpty()
         )
     }
 
     fun mapToDomain(dto: RecipeDetailDto, instructions: RecipeInstructions): RecipeDetail {
         return RecipeDetail(
-            title = dto.title,
-            image = dto.imageUrl,
+            title = dto.title ?: "",
+            image = dto.imageUrl.orEmpty(),
             time = dto.readyInMinutes.toString(),
-            servings = dto.servings,
-            types = dto.dishTypes,
-            ingredients = dto.extendedIngredients.map { mapToDomain(it) },
+            servings = dto.servings ?: 0,
+            types = dto.dishTypes.orEmpty(),
+            ingredients = dto.extendedIngredients.orEmpty().map { mapToDomain(it) },
             id = dto.id.toString(),
             instructions = instructions
         )
@@ -32,7 +32,7 @@ object MapperDto {
 
     fun mapToDomain(dto: RecipeInstructionsDto): RecipeInstructions {
         return RecipeInstructions(
-            steps = dto.steps.map { Step(it.num.toString(), it.step) }
+            steps = dto.steps.orEmpty().map { Step(it.num.toString(), it.step.orEmpty()) }
         )
     }
 
@@ -40,21 +40,24 @@ object MapperDto {
         return Ingredient(
             id = dto.id.toString(),
             image = dto.imageUrl ?: "",
-            name = dto.name,
+            name = dto.name.orEmpty(),
             measures = mapToDomain(dto.measures)
         )
     }
 
     private fun mapToDomain(dto: MeasureUnitDto): MeasureUnit {
-        val roundedAmount = when {
-            dto.amount >= 1 -> dto.amount.toInt()
-            else -> "%.1f".format(dto.amount)
+        if (dto.amount != null) {
+            val roundedAmount = when {
+                dto.amount >= 1 -> dto.amount.toInt()
+                else -> "%.1f".format(dto.amount)
+            }
+            return MeasureUnit(
+                amount = roundedAmount.toString(),
+                unit = dto.unitShort.orEmpty()
+            )
+        } else {
+            return MeasureUnit("", "")
         }
-
-        return MeasureUnit(
-            amount = roundedAmount.toString(),
-            unit = dto.unitShort
-        )
     }
 
     private fun mapToDomain(dto: MeasuresDto): Measures {

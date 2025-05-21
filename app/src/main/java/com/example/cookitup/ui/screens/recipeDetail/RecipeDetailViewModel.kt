@@ -38,24 +38,18 @@ class RecipeDetailViewModel(
     val actions = object : RecipeDetailActions {
         override fun fetchRecipeDetail(id: String) {
             viewModelScope.launch {
-                try {
-                    val isFavourite = dbRepository.isFavourite(id).first()
+                val isFavourite = dbRepository.isFavourite(id).first()
 
-                    val recipeDetail = if (isFavourite) {
-                        dbRepository.getRecipeFull(id)
-                    } else {
-                        apiRepository.getRecipeDetail(id)
-                    }
-
-                    _state.value = RecipeDetailState.Success(
-                        recipeDetail,
-                        isFavourite
-                    )
-                } catch (e: Exception) {
-                    // UnknownHostException
-                    // HttpException
-                    _state.value = RecipeDetailState.Error(e.message ?: "Error")
+                val recipeDetail = if (isFavourite) {
+                    dbRepository.getRecipeFull(id)
+                } else {
+                    apiRepository.getRecipeDetail(id)
                 }
+
+                _state.value = RecipeDetailState.Success(
+                    recipeDetail,
+                    isFavourite
+                )
             }
         }
 
