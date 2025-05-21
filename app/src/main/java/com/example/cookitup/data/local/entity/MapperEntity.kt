@@ -57,7 +57,7 @@ object MapperEntity {
             image = domain.image,
             time = domain.time,
             servings = domain.servings,
-            dishTypes = domain.types.joinToString { "," }
+            dishTypes = domain.types.joinToString(",")
         )
     }
 
