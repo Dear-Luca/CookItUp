@@ -49,7 +49,10 @@ import coil.request.ImageRequest
 import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailState
 
 @Composable
-fun RecipeInfo(state: RecipeDetailState.Success) {
+fun RecipeInfo(
+    state: RecipeDetailState.Success,
+    onClickSimilar: (String) -> Unit
+) {
     var isInstructionsListExpanded by remember { mutableStateOf(false) }
     var isIngredientsListExpanded by remember { mutableStateOf(false) }
     Card(
@@ -152,7 +155,7 @@ fun RecipeInfo(state: RecipeDetailState.Success) {
             }
         }
         Button(
-            onClick = {},
+            onClick = { onClickSimilar(state.detail.id) },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text("Similar Recipes")

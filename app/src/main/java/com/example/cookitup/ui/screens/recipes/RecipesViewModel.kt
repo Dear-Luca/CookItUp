@@ -16,6 +16,8 @@ sealed class RecipesState {
 
 interface RecipesActions {
     fun fetchRecipes(ingredients: List<String>)
+
+    fun fetchSimilarRecipes(id: String)
 }
 
 class RecipesViewModel(
@@ -33,6 +35,25 @@ class RecipesViewModel(
                 } catch (e: Exception) {
                     // UnknownHostException
                     // HttpException
+                    // TooManyRequest 429 error
+                    // http error 402
+                    _state.value = RecipesState.Error(e.message ?: "Error")
+                }
+            }
+        }
+
+        override fun fetchSimilarRecipes(id: String) {
+            viewModelScope.launch {
+                _state.value = RecipesState.Loading
+                try {
+                    val recipeIds = repository.getSimilarRecipes(id)
+                    val recipes = recipeIds.map { id ->
+                        repository.getRecipeDetail(id.toString())
+                    }.map { detail ->
+                        Recipe(detail.id, detail.title, detail.image)
+                    }
+                    _state.value = RecipesState.Success(recipes)
+                } catch (e: Exception) {
                     _state.value = RecipesState.Error(e.message ?: "Error")
                 }
             }

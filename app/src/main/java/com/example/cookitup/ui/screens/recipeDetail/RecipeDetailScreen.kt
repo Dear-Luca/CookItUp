@@ -23,6 +23,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.example.cookitup.R
+import com.example.cookitup.ui.navigation.Routes
 import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.RecipeInfo
 import com.example.cookitup.ui.screens.components.TopBar
@@ -62,7 +63,9 @@ fun RecipeDetail(
                 is RecipeDetailState.Loading -> CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
-                is RecipeDetailState.Success -> RecipeInfo(state)
+                is RecipeDetailState.Success -> RecipeInfo(state, onClickSimilar = { similarId ->
+                    navController.navigate(Routes.Recipes(null, similarId))
+                })
                 is RecipeDetailState.Error -> Text(
                     text = state.message,
                     color = Color.Red,

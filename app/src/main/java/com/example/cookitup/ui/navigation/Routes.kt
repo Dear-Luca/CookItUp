@@ -15,7 +15,7 @@ sealed interface Routes {
     data object SearchRecipes : Routes
 
     @Serializable
-    data class Recipes(val ingredients: List<String>) : Routes
+    data class Recipes(val ingredients: List<String>?, val similarRecipesId: String?) : Routes
 
     @Serializable
     data class RecipeDetail(val id: String) : Routes

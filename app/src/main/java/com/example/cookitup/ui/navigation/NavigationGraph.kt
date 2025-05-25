@@ -47,6 +47,7 @@ fun NavGraph(
             val route: Routes.Recipes = navBackStackEntry.toRoute()
             Recipes(
                 route.ingredients,
+                route.similarRecipesId,
                 recipesState,
                 recipesViewModel.actions,
                 navController

@@ -35,16 +35,26 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Recipes(
-    ingredients: List<String>,
+    ingredients: List<String>?,
+    similarRecipesId: String?,
     state: RecipesState,
     actions: RecipesActions,
     navController: NavHostController
 ) {
-    LaunchedEffect(ingredients) {
-        if (state is RecipesState.Loading) {
-            actions.fetchRecipes(ingredients)
+    if (ingredients != null) {
+        LaunchedEffect(ingredients) {
+            if (state is RecipesState.Loading) {
+                actions.fetchRecipes(ingredients)
+            }
         }
     }
+
+    if (similarRecipesId != null) {
+        LaunchedEffect(similarRecipesId) {
+            actions.fetchSimilarRecipes(similarRecipesId)
+        }
+    }
+
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }

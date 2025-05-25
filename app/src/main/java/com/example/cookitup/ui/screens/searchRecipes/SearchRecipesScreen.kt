@@ -145,7 +145,7 @@ fun SearchRecipes(
                                 context,
                                 snackbarHostState
                             ) {
-                                navController.navigate(Routes.Recipes(state.ingredients))
+                                navController.navigate(Routes.Recipes(state.ingredients, null))
                             }
                         }
                     }
