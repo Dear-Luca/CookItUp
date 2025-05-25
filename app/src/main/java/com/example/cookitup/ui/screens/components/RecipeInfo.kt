@@ -1,5 +1,11 @@
 package com.example.cookitup.ui.screens.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,9 +17,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.RestaurantMenu
 import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -21,6 +30,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -36,6 +50,8 @@ import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailState
 
 @Composable
 fun RecipeInfo(state: RecipeDetailState.Success) {
+    var isInstructionsListExpanded by remember { mutableStateOf(false) }
+    var isIngredientsListExpanded by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -75,31 +91,71 @@ fun RecipeInfo(state: RecipeDetailState.Success) {
             }
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 6.dp))
+            Row(
+                modifier = Modifier.clickable { isIngredientsListExpanded = !isIngredientsListExpanded },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Ingredients",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Icon(
+                    imageVector = if (isIngredientsListExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                    contentDescription = if (isIngredientsListExpanded) "Collapse" else "Expand"
+                )
+            }
 
-            Text(
-                text = "Ingredients:",
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                state.detail.ingredients.forEach {
-                    LabeledText(
-                        label = it.name.replaceFirstChar(Char::uppercase),
-                        value = "${it.measures.metric.amount} ${it.measures.metric.unit}"
-                    )
+            AnimatedVisibility(
+                visible = isIngredientsListExpanded,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically()
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    state.detail.ingredients.forEach {
+                        LabeledText(
+                            label = it.name.replaceFirstChar(Char::uppercase),
+                            value = "${it.measures.metric.amount} ${it.measures.metric.unit}"
+                        )
+                    }
                 }
             }
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-
-            Text(
-                text = "Instructions:",
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            state.detail.instructions.steps.forEach { step ->
-                LabeledText(step.num, step.instruction)
+            Row(
+                modifier = Modifier.clickable { isInstructionsListExpanded = !isInstructionsListExpanded },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Instructions",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Icon(
+                    imageVector = if (isInstructionsListExpanded) {
+                        Icons.Default.ExpandLess
+                    } else {
+                        Icons.Default.ExpandMore
+                    },
+                    contentDescription = if (isInstructionsListExpanded) "Collapse" else "Expand"
+                )
             }
+
+            AnimatedVisibility(
+                visible = isInstructionsListExpanded,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically()
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    state.detail.instructions.steps.forEach { step ->
+                        LabeledText(step.num, step.instruction)
+                    }
+                }
+            }
+        }
+        Button(
+            onClick = {},
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) {
+            Text("Similar Recipes")
         }
     }
 }
