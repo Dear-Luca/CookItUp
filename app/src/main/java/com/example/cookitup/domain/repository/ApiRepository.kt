@@ -7,4 +7,6 @@ interface ApiRepository {
     suspend fun getRecipes(ingredients: List<String>): List<Recipe>
 
     suspend fun getRecipeDetail(id: String): RecipeDetail
+
+    suspend fun getSimilarRecipes(id: String): List<Long>
 }

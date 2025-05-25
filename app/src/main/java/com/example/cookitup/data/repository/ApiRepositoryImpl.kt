@@ -22,4 +22,9 @@ class ApiRepositoryImpl(
             MapperDto.mapToDomain(apiService.getRecipeDetail(id.toInt()), instructions[0])
         }
     }
+
+    override suspend fun getSimilarRecipes(id: String): List<Long> {
+        val recipeIds = apiService.getSimilarRecipes(id.toInt()).map { it.id }
+        return recipeIds
+    }
 }
