@@ -98,7 +98,7 @@ fun RecipeItem(
                 Text(
                     text = recipe.title,
                     style = MaterialTheme.typography.titleMedium,
-                    maxLines = 2
+                    maxLines = 3
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
