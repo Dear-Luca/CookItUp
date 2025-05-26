@@ -50,8 +50,8 @@ fun Recipes(
     }
 
     if (similarRecipesId != null) {
-        if (state is RecipesState.Loading) {
-            LaunchedEffect(similarRecipesId) {
+        LaunchedEffect(similarRecipesId) {
+            if (state is RecipesState.Loading) {
                 actions.fetchSimilarRecipes(similarRecipesId)
             }
         }

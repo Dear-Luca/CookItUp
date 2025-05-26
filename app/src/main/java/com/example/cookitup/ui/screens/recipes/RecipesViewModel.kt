@@ -28,8 +28,8 @@ class RecipesViewModel(
 
     val actions = object : RecipesActions {
         override fun fetchRecipes(ingredients: List<String>) {
-            _state.value = RecipesState.Loading
             viewModelScope.launch {
+                _state.value = RecipesState.Loading
                 try {
                     val recipes = repository.getRecipes(ingredients)
                     _state.value = RecipesState.Success(recipes)
