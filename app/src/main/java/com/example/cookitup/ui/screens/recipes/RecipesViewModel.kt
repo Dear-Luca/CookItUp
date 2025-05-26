@@ -28,6 +28,7 @@ class RecipesViewModel(
 
     val actions = object : RecipesActions {
         override fun fetchRecipes(ingredients: List<String>) {
+            _state.value = RecipesState.Loading
             viewModelScope.launch {
                 try {
                     val recipes = repository.getRecipes(ingredients)
