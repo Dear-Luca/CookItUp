@@ -8,5 +8,5 @@ interface ApiRepository {
 
     suspend fun getRecipeDetail(id: String): RecipeDetail
 
-    suspend fun getSimilarRecipes(id: String): List<Long>
+    suspend fun getSimilarRecipes(id: String): List<Recipe>
 }

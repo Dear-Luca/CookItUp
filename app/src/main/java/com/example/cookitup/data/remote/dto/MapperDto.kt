@@ -1,5 +1,7 @@
 package com.example.cookitup.data.remote.dto
 
+import android.util.Log
+import com.example.cookitup.data.remote.api.IMAGES_ENDPOINT
 import com.example.cookitup.domain.model.Ingredient
 import com.example.cookitup.domain.model.MeasureUnit
 import com.example.cookitup.domain.model.Measures
@@ -63,6 +65,20 @@ object MapperDto {
     private fun mapToDomain(dto: MeasuresDto): Measures {
         return Measures(
             metric = mapToDomain(dto.metric)
+        )
+    }
+
+    fun mapToDomain(dto: SimilarRecipesDto): Recipe {
+        val image = if (dto.image != null) {
+            IMAGES_ENDPOINT + dto.image
+        } else {
+            ""
+        }
+        Log.i(null, image)
+        return Recipe(
+            id = dto.id.toString(),
+            image = image,
+            title = dto.title.orEmpty()
         )
     }
 }

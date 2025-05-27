@@ -47,12 +47,7 @@ class RecipesViewModel(
             viewModelScope.launch {
                 _state.value = RecipesState.Loading
                 try {
-                    val recipeIds = repository.getSimilarRecipes(id)
-                    val recipes = recipeIds.map { id ->
-                        repository.getRecipeDetail(id.toString())
-                    }.map { detail ->
-                        Recipe(detail.id, detail.title, detail.image)
-                    }
+                    val recipes = repository.getSimilarRecipes(id)
                     _state.value = RecipesState.Success(recipes)
                 } catch (e: Exception) {
                     _state.value = RecipesState.Error(e.message ?: "Error")
