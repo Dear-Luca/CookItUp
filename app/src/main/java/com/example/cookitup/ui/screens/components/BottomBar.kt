@@ -50,21 +50,33 @@ fun BottomBar(navController: NavHostController) {
                     )
                 },
                 onClick = {
-                    if (topLevelRoute is TopLevelRoute.Home) {
-                        val popped = navController.popBackStack(
-                            route = Routes.SearchRecipes,
-                            inclusive = false
-                        )
-                        if (!popped) {
-                            navController.navigate(Routes.SearchRecipes)
-                        }
-                    } else {
-                        navController.navigate(topLevelRoute.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                    when (topLevelRoute) {
+                        is TopLevelRoute.Home -> {
+                            val popped = navController.popBackStack(
+                                route = Routes.SearchRecipes,
+                                inclusive = false
+                            )
+                            if (!popped) {
+                                navController.navigate(Routes.SearchRecipes)
                             }
-                            launchSingleTop = true
-                            restoreState = true
+                        }
+                        is TopLevelRoute.Favourites -> {
+                            val popped = navController.popBackStack(
+                                route = Routes.Favourites,
+                                inclusive = false
+                            )
+                            if (!popped) {
+                                navController.navigate(Routes.Favourites)
+                            }
+                        }
+                        else -> {
+                            navController.navigate(topLevelRoute.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         }
                     }
                 }
