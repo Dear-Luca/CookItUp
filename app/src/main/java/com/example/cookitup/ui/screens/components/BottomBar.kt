@@ -10,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.cookitup.ui.navigation.Routes
@@ -69,15 +68,24 @@ fun BottomBar(navController: NavHostController) {
                                 navController.navigate(Routes.Favourites)
                             }
                         }
-                        else -> {
-                            navController.navigate(topLevelRoute.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
+                        is TopLevelRoute.Profile -> {
+                            val popped = navController.popBackStack(
+                                route = Routes.Profile,
+                                inclusive = false
+                            )
+                            if (!popped) {
+                                navController.navigate(Routes.Profile)
                             }
                         }
+//                        else -> {
+//                            navController.navigate(topLevelRoute.route) {
+//                                popUpTo(navController.graph.findStartDestination().id) {
+//                                    saveState = true
+//                                }
+//                                launchSingleTop = true
+//                                restoreState = true
+//                            }
+//                        }
                     }
                 }
             )
