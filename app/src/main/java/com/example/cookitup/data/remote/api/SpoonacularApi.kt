@@ -15,27 +15,27 @@ interface SpoonacularApi {
         @Query("number") number: Int = NUM_ITEMS,
         @Query("ranking") ranking: Int = 1,
         @Query("ignorePantry") ignorePantry: Boolean = true,
-        @Query("apiKey") apiKey: String = API_KEY
+        @Query("apiKey") apiKey: String = SPOONACULAR_API_KEY
     ): List<RecipeDto>
 
     @GET("recipes/{id}/information")
     suspend fun getRecipeDetail(
         @Path("id") id: Int,
         @Query("includeNutrition") nutrition: Boolean = false,
-        @Query("apiKey") apiKey: String = API_KEY
+        @Query("apiKey") apiKey: String = SPOONACULAR_API_KEY
     ): RecipeDetailDto
 
     @GET("recipes/{id}/analyzedInstructions")
     suspend fun getRecipeInstructions(
         @Path("id") id: Int,
         @Query("stepBreakdown") stepBreakdown: Boolean = true,
-        @Query("apiKey") apiKey: String = API_KEY
+        @Query("apiKey") apiKey: String = SPOONACULAR_API_KEY
     ): List<RecipeInstructionsDto>
 
     @GET("recipes/{id}/similar")
     suspend fun getSimilarRecipes(
         @Path("id") id: Int,
         @Query("number") number: Int = NUM_ITEMS,
-        @Query("apiKey") apiKey: String = API_KEY
+        @Query("apiKey") apiKey: String = SPOONACULAR_API_KEY
     ): List<SimilarRecipesDto>
 }

@@ -28,11 +28,18 @@ android {
         properties.load(keystoreFile.inputStream())
 
         // return empty key in case something goes wrong
-        val apiKey = properties.getProperty("API_KEY") ?: ""
+        val spooncularApiKey = properties.getProperty("SPOONACULAR_API_KEY") ?: ""
         buildConfigField(
             type = "String",
-            name = "API_KEY",
-            value = "\"$apiKey\""
+            name = "SPOONACULAR_API_KEY",
+            value = "\"$spooncularApiKey\""
+        )
+
+        val supabaseApiKey = properties.getProperty("SUPABASE_API_KEY") ?: ""
+        buildConfigField(
+            type = "String",
+            name = "SUPABASE_API_KEY",
+            value = "\"$supabaseApiKey\""
         )
     }
     buildTypes {
