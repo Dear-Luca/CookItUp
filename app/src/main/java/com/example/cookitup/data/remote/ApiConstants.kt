@@ -1,4 +1,4 @@
-package com.example.cookitup.data.remote.api
+package com.example.cookitup.data.remote
 
 import com.example.cookitup.BuildConfig
 

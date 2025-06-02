@@ -1,7 +1,7 @@
 package com.example.cookitup.data.remote.dto
 
 import android.util.Log
-import com.example.cookitup.data.remote.api.IMAGES_ENDPOINT
+import com.example.cookitup.data.remote.IMAGES_ENDPOINT
 import com.example.cookitup.domain.model.Ingredient
 import com.example.cookitup.domain.model.MeasureUnit
 import com.example.cookitup.domain.model.Measures

@@ -1,5 +1,6 @@
 package com.example.cookitup.data.remote.api
 
+import com.example.cookitup.data.remote.BASE_URL
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

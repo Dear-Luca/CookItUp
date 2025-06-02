@@ -1,5 +1,7 @@
 package com.example.cookitup.data.remote.api
 
+import com.example.cookitup.data.remote.NUM_ITEMS
+import com.example.cookitup.data.remote.SPOONACULAR_API_KEY
 import com.example.cookitup.data.remote.dto.RecipeDetailDto
 import com.example.cookitup.data.remote.dto.RecipeDto
 import com.example.cookitup.data.remote.dto.RecipeInstructionsDto
