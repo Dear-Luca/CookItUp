@@ -8,7 +8,7 @@ sealed class AuthResult {
 }
 
 interface AuthRepository {
-    suspend fun signUp(email: String, password: String): AuthResult
+    suspend fun signUp(email: String, password: String, username: String): AuthResult
     suspend fun signIn(email: String, password: String): AuthResult
     suspend fun signOut(): Boolean
 }
