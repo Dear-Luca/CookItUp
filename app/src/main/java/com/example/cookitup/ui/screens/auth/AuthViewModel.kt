@@ -61,7 +61,10 @@ class AuthViewModel(
             viewModelScope.launch {
                 try {
                     repository.signIn(email, password)
-                } catch (e: Exception) {
+                }
+                // Invalid email address: AuthRestException
+                // Weak password: AuthWeakPasswordException
+                catch (e: Exception) {
                     _state.value = AuthState.Error(e.message ?: "Error")
                 }
             }
