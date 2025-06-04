@@ -104,8 +104,8 @@ fun AuthForm(
 
                         Button(
                             onClick = {
-                                if (email.isBlank() || password.isBlank()) {
-                                    errorMessage = "Email and password can't be empty"
+                                if (email.isBlank() || password.isBlank() || username.isBlank()) {
+                                    errorMessage = "Fields can't be empty"
                                 }
                                 if (isLoginMode) {
                                     actions.singInUser(email.trim(), password.trim())
