@@ -21,10 +21,7 @@ sealed interface Routes {
     data class RecipeDetail(val id: String) : Routes
 
     @Serializable
-    data object Login : Routes
-
-    @Serializable
-    data object Register : Routes
+    data object Auth : Routes
 
     @Serializable
     data object Profile : Routes

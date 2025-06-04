@@ -5,9 +5,12 @@ import com.example.cookitup.data.local.db.AppDatabase
 import com.example.cookitup.data.remote.api.ApiClient
 import com.example.cookitup.data.remote.api.SpoonacularApi
 import com.example.cookitup.data.repository.ApiRepositoryImpl
+import com.example.cookitup.data.repository.AuthRepositoryImpl
 import com.example.cookitup.data.repository.DbRepositoryImpl
 import com.example.cookitup.domain.repository.ApiRepository
+import com.example.cookitup.domain.repository.AuthRepository
 import com.example.cookitup.domain.repository.DbRepository
+import com.example.cookitup.ui.screens.auth.AuthViewModel
 import com.example.cookitup.ui.screens.favourites.FavouritesViewModel
 import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailViewModel
 import com.example.cookitup.ui.screens.recipes.RecipesViewModel
@@ -34,6 +37,10 @@ val koinModule = module {
 
     single<ApiRepository> {
         ApiRepositoryImpl(apiService = get())
+    }
+
+    single<AuthRepository> {
+        AuthRepositoryImpl()
     }
 
     single<DbRepository> {
@@ -63,5 +70,9 @@ val koinModule = module {
 
     viewModel {
         FavouritesViewModel(get())
+    }
+
+    viewModel {
+        AuthViewModel(get())
     }
 }

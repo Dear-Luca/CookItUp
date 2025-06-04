@@ -8,6 +8,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.example.cookitup.ui.screens.auth.Auth
+import com.example.cookitup.ui.screens.auth.AuthViewModel
 import com.example.cookitup.ui.screens.favourites.Favourites
 import com.example.cookitup.ui.screens.favourites.FavouritesViewModel
 import com.example.cookitup.ui.screens.profile.Profile
@@ -26,12 +28,11 @@ fun NavGraph(
 ) {
     NavHost(
         navController,
-        startDestination = Routes.SearchRecipes
+        startDestination = Routes.Auth
     ) {
         /*
         Creating the navigation graph
          */
-
         composable<Routes.SearchRecipes> {
             val searchRecipesViewModel: SearchRecipesViewModel = koinViewModel()
             val searchRecipesState by searchRecipesViewModel.state.collectAsStateWithLifecycle()
@@ -73,6 +74,12 @@ fun NavGraph(
 
         composable<Routes.Profile> {
             Profile(navController)
+        }
+
+        composable<Routes.Auth> {
+            val authViewModel: AuthViewModel = koinViewModel()
+            val authState by authViewModel.state.collectAsStateWithLifecycle()
+            Auth(navController, authState, authViewModel.actions)
         }
     }
 }

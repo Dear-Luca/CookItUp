@@ -11,10 +11,10 @@ import kotlinx.serialization.json.put
 class AuthRepositoryImpl(
     private val client: SupabaseClient = Supabase.client
 ) : AuthRepository {
-    override suspend fun signUp(email: String, password: String, username: String) {
+    override suspend fun signUp(emailUser: String, passwordUser: String, username: String) {
         client.auth.signUpWith(Email) {
-            this.email = email
-            this.password = password
+            email = emailUser
+            password = passwordUser
             data = buildJsonObject {
                 put("username", username)
             }
@@ -29,6 +29,5 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun signOut() {
-        TODO("Not yet implemented")
     }
 }
