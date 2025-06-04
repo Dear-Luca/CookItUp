@@ -29,5 +29,6 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun signOut() {
+        client.auth.signOut()
     }
 }

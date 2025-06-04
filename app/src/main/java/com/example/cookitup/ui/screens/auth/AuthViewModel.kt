@@ -83,7 +83,9 @@ class AuthViewModel(
         }
 
         override fun singOutUser() {
-            TODO("Not yet implemented")
+            viewModelScope.launch {
+                repository.signOut()
+            }
         }
     }
 }
