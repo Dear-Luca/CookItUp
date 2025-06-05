@@ -9,6 +9,7 @@ import com.example.cookitup.domain.model.Recipe
 import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.domain.model.RecipeInstructions
 import com.example.cookitup.domain.model.Step
+import com.example.cookitup.domain.model.User
 
 object MapperDto {
     fun mapToDomain(dto: RecipeDto): Recipe {
@@ -79,6 +80,15 @@ object MapperDto {
             id = dto.id.toString(),
             image = image,
             title = dto.title.orEmpty()
+        )
+    }
+
+    fun mapToDomain(dto: UserDto, email: String?): User {
+        return User(
+            id = dto.id,
+            email = email ?: "",
+            username = dto.username,
+            image = dto.image
         )
     }
 }

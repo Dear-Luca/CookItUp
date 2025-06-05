@@ -12,6 +12,7 @@ import com.example.cookitup.domain.repository.AuthRepository
 import com.example.cookitup.domain.repository.DbRepository
 import com.example.cookitup.ui.screens.auth.AuthViewModel
 import com.example.cookitup.ui.screens.favourites.FavouritesViewModel
+import com.example.cookitup.ui.screens.profile.ProfileViewModel
 import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailViewModel
 import com.example.cookitup.ui.screens.recipes.RecipesViewModel
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipesViewModel
@@ -74,5 +75,9 @@ val koinModule = module {
 
     viewModel {
         AuthViewModel(get())
+    }
+
+    viewModel {
+        ProfileViewModel()
     }
 }

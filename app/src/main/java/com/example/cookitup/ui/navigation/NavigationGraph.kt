@@ -13,6 +13,7 @@ import com.example.cookitup.ui.screens.auth.AuthViewModel
 import com.example.cookitup.ui.screens.favourites.Favourites
 import com.example.cookitup.ui.screens.favourites.FavouritesViewModel
 import com.example.cookitup.ui.screens.profile.Profile
+import com.example.cookitup.ui.screens.profile.ProfileViewModel
 import com.example.cookitup.ui.screens.recipeDetail.RecipeDetail
 import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailViewModel
 import com.example.cookitup.ui.screens.recipes.Recipes
@@ -73,7 +74,9 @@ fun NavGraph(
         }
 
         composable<Routes.Profile> {
-            Profile(navController)
+            val profileViewModel: ProfileViewModel = koinViewModel()
+            val profileState by profileViewModel.state.collectAsStateWithLifecycle()
+            Profile(navController, profileState, profileViewModel.actions)
         }
 
         composable<Routes.Auth> {
