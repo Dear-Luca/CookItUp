@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.example.cookitup.R
 import com.example.cookitup.ui.screens.components.BottomBar
+import com.example.cookitup.ui.screens.components.SettingsComponent
 import com.example.cookitup.ui.screens.components.TopBar
 import com.example.cookitup.ui.screens.components.UserCard
 
@@ -33,7 +34,17 @@ fun Profile(
     }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
-        topBar = { TopBar(navController, stringResource(R.string.title_profile), scrollBehavior) },
+        topBar = {
+            TopBar(
+                navController,
+                stringResource(R.string.title_profile),
+                scrollBehavior,
+                actions = {
+                    SettingsComponent(state, actions)
+                }
+
+            )
+        },
         bottomBar = { BottomBar(navController) }
     ) { innerPadding ->
         Column(
