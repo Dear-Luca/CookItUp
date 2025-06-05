@@ -1,6 +1,7 @@
 package com.example.cookitup.ui.screens.profile
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,7 +37,7 @@ fun Profile(
         bottomBar = { BottomBar(navController) }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding).fillMaxSize()
         ) {
             when (state) {
                 is ProfileState.Loading ->
