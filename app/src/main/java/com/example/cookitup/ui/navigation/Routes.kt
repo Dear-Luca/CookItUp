@@ -30,7 +30,7 @@ sealed interface Routes {
     data object Favourites : Routes
 
     @Serializable
-    data object Settings : Routes
+    data class Settings(val user: String?) : Routes
 }
 
 sealed class TopLevelRoute(

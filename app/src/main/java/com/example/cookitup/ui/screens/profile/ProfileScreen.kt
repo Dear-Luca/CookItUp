@@ -28,6 +28,7 @@ import com.example.cookitup.ui.screens.components.SettingsComponent
 import com.example.cookitup.ui.screens.components.TopBar
 import com.example.cookitup.ui.screens.components.UserCard
 import com.example.cookitup.utils.NetworkUtils
+import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +57,13 @@ fun Profile(
                 stringResource(R.string.title_profile),
                 actions = {
                     SettingsComponent(
-                        onSettingsClick = { navController.navigate(Routes.Settings) }
+                        onSettingsClick = {
+                            navController.navigate(
+                                Routes.Settings(
+                                    if (state is ProfileState.Success) Json.encodeToString(state.user) else null
+                                )
+                            )
+                        }
                     )
                 },
                 scrollBehavior = scrollBehavior
