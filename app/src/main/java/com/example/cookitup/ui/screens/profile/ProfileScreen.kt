@@ -6,21 +6,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.example.cookitup.R
+import com.example.cookitup.ui.navigation.Routes
 import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.SettingsComponent
 import com.example.cookitup.ui.screens.components.TopBar
 import com.example.cookitup.ui.screens.components.UserCard
+import com.example.cookitup.utils.NetworkUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,18 +35,30 @@ fun Profile(
     state: ProfileState,
     actions: ProfileActions
 ) {
+    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(Unit) {
-        actions.getCurrentUser()
+        NetworkUtils.checkConnectivity(
+            context,
+            snackbarHostState
+        ) {
+            actions.getCurrentUser()
+        }
     }
+
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopBar(
                 navController,
                 stringResource(R.string.title_profile),
                 scrollBehavior,
                 actions = {
-                    SettingsComponent(state, actions)
+                    SettingsComponent(
+                        onSettingsClick = { navController.navigate(Routes.Settings) }
+                    )
                 }
 
             )
