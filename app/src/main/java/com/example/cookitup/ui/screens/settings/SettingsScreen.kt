@@ -8,6 +8,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.example.cookitup.R
@@ -22,7 +23,8 @@ fun Settings(navController: NavHostController) {
         topBar = {
             TopBar(navController, stringResource(R.string.title_settings), scrollBehavior)
         },
-        bottomBar = { BottomBar(navController) }
+        bottomBar = { BottomBar(navController) },
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues)
