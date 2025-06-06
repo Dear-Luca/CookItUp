@@ -159,7 +159,7 @@ fun RecipeInfo(
 }
 
 @Composable
-private fun RecipeHeader(
+fun RecipeHeader(
     imageUrl: String,
     title: String
 ) {
