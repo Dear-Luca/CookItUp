@@ -151,4 +151,15 @@ fun Settings(
             }
         }
     }
+    // Dialog to change username
+    if (showUsernameDialog) {
+        UsernameDialog(
+            currentUsername = user?.username ?: "",
+            onDismiss = { showUsernameDialog = false },
+            onConfirm = {
+                showUsernameDialog = false
+                // TODO
+            }
+        )
+    }
 }
