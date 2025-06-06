@@ -1,4 +1,4 @@
-package com.example.cookitup.ui.screens.components
+package com.example.cookitup.ui.screens.settings
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings

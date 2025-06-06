@@ -1,4 +1,4 @@
-package com.example.cookitup.ui.screens.components
+package com.example.cookitup.ui.screens.recipes
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

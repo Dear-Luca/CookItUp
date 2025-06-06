@@ -1,4 +1,4 @@
-package com.example.cookitup.ui.screens.components
+package com.example.cookitup.ui.screens.recipeDetail
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -6,8 +6,6 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailActions
-import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailState
 
 @Composable
 fun ToggleFavourite(

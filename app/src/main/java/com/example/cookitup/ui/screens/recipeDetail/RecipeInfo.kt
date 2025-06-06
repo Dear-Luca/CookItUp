@@ -1,4 +1,4 @@
-package com.example.cookitup.ui.screens.components
+package com.example.cookitup.ui.screens.recipeDetail
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -63,7 +63,6 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.cookitup.domain.model.Ingredient
 import com.example.cookitup.domain.model.Step
-import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailState
 
 @Composable
 fun RecipeInfo(

@@ -26,7 +26,6 @@ import androidx.navigation.NavHostController
 import com.example.cookitup.R
 import com.example.cookitup.ui.navigation.Routes
 import com.example.cookitup.ui.screens.components.BottomBar
-import com.example.cookitup.ui.screens.components.RecipeItems
 import com.example.cookitup.ui.screens.components.TopBar
 import com.example.cookitup.utils.NetworkUtils
 import kotlinx.coroutines.CoroutineScope

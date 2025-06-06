@@ -1,4 +1,4 @@
-package com.example.cookitup.ui.screens.components
+package com.example.cookitup.ui.screens.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
