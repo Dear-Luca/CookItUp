@@ -20,7 +20,7 @@ import androidx.navigation.NavHostController
 fun TopBar(
     navController: NavHostController,
     title: String,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     CenterAlignedTopAppBar(
