@@ -20,6 +20,7 @@ import com.example.cookitup.ui.screens.recipes.Recipes
 import com.example.cookitup.ui.screens.recipes.RecipesViewModel
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipes
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipesViewModel
+import com.example.cookitup.ui.screens.settings.Settings
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -83,6 +84,10 @@ fun NavGraph(
             val authViewModel: AuthViewModel = koinViewModel()
             val authState by authViewModel.state.collectAsStateWithLifecycle()
             Auth(navController, authState, authViewModel.actions)
+        }
+
+        composable<Routes.Settings> {
+            Settings(navController)
         }
     }
 }

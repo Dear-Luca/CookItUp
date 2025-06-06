@@ -28,6 +28,9 @@ sealed interface Routes {
 
     @Serializable
     data object Favourites : Routes
+
+    @Serializable
+    data object Settings : Routes
 }
 
 sealed class TopLevelRoute(

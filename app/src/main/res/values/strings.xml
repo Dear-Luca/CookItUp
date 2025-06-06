@@ -5,4 +5,5 @@
     <string name="title_recipe_details">Recipe Details</string>
     <string name="title_favourites">Favourites</string>
     <string name="title_profile">Profile</string>
+    <string name="title_settings">Settings</string>
 </resources>
