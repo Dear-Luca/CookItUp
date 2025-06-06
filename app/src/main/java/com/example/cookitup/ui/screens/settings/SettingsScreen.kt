@@ -66,8 +66,12 @@ import com.example.cookitup.ui.screens.components.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Settings(navController: NavHostController, user: User?) {
-    var selectedTheme by remember { mutableStateOf("system") }
+fun Settings(
+    navController: NavHostController,
+    user: User?,
+    currentTheme: Theme,
+    actions: SettingsActions
+) {
     var notificationsEnabled by remember { mutableStateOf(true) }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
@@ -119,8 +123,8 @@ fun Settings(navController: NavHostController, user: User?) {
                             subtitle = "Choose your preferred theme"
                         ) {
                             ThemeSelector(
-                                selectedTheme = selectedTheme,
-                                onThemeSelected = { selectedTheme = it }
+                                selectedTheme = currentTheme,
+                                onThemeSelected = { actions.changeTheme(it) }
                             )
                         }
                         SettingsItem(
@@ -209,6 +213,7 @@ fun SettingsItem(
     isDangerous: Boolean = false,
     trailingContent: @Composable (() -> Unit)? = null
 ) {
+    // makes the composable clickable
     val clickableModifier = if (onClick != null) {
         Modifier.clickable { onClick() }
     } else {
@@ -295,16 +300,16 @@ fun SettingsItem(
 
 @Composable
 fun ThemeSelector(
-    selectedTheme: String,
-    onThemeSelected: (String) -> Unit
+    selectedTheme: Theme,
+    onThemeSelected: (Theme) -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         listOf(
-            "light" to Icons.Default.LightMode,
-            "dark" to Icons.Default.DarkMode,
-            "system" to Icons.Default.Settings
+            Theme.Light to Icons.Default.LightMode,
+            Theme.Dark to Icons.Default.DarkMode,
+            Theme.System to Icons.Default.Settings
         ).forEach { (theme, icon) ->
             val isSelected = selectedTheme == theme
 
@@ -327,7 +332,7 @@ fun ThemeSelector(
             ) {
                 Icon(
                     imageVector = icon,
-                    contentDescription = theme,
+                    contentDescription = theme.toString(),
                     tint = if (isSelected) {
                         MaterialTheme.colorScheme.onPrimaryContainer
                     } else {
@@ -337,7 +342,7 @@ fun ThemeSelector(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = theme.replaceFirstChar { it.uppercase() },
+                    text = theme.toString(),
                     style = MaterialTheme.typography.labelSmall,
                     color = if (isSelected) {
                         MaterialTheme.colorScheme.onPrimaryContainer

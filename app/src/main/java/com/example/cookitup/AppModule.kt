@@ -1,11 +1,14 @@
 package com.example.cookitup
 
+import android.content.Context
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import com.example.cookitup.data.local.db.AppDatabase
 import com.example.cookitup.data.remote.api.ApiClient
 import com.example.cookitup.data.remote.api.SpoonacularApi
 import com.example.cookitup.data.repository.ApiRepositoryImpl
 import com.example.cookitup.data.repository.AuthRepositoryImpl
+import com.example.cookitup.data.repository.DataStoreRepositoryImpl
 import com.example.cookitup.data.repository.DbRepositoryImpl
 import com.example.cookitup.domain.repository.ApiRepository
 import com.example.cookitup.domain.repository.AuthRepository
@@ -16,8 +19,12 @@ import com.example.cookitup.ui.screens.profile.ProfileViewModel
 import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailViewModel
 import com.example.cookitup.ui.screens.recipes.RecipesViewModel
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipesViewModel
+import com.example.cookitup.ui.screens.settings.SettingsViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+
+val Context.dataStore
+    by preferencesDataStore("theme")
 
 val koinModule = module {
     single<SpoonacularApi> { ApiClient.retrofitService }
@@ -27,6 +34,8 @@ val koinModule = module {
     single { get<AppDatabase>().ingredientEntityDao() }
     single { get<AppDatabase>().instructionEntityDao() }
     single { get<AppDatabase>().recipeIngredientCrossRefDao() }
+
+    single { get<Context>().dataStore }
 
     single {
         Room.databaseBuilder(
@@ -54,6 +63,8 @@ val koinModule = module {
         )
     }
 
+    single { DataStoreRepositoryImpl(get()) }
+
     viewModel {
         RecipesViewModel(repository = get())
     }
@@ -79,5 +90,9 @@ val koinModule = module {
 
     viewModel {
         ProfileViewModel()
+    }
+
+    viewModel {
+        SettingsViewModel(get())
     }
 }

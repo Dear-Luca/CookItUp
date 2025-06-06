@@ -22,6 +22,7 @@ import com.example.cookitup.ui.screens.recipes.RecipesViewModel
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipes
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipesViewModel
 import com.example.cookitup.ui.screens.settings.Settings
+import com.example.cookitup.ui.screens.settings.SettingsViewModel
 import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 
@@ -89,6 +90,8 @@ fun NavGraph(
         }
 
         composable<Routes.Settings> { navBackStackEntry ->
+            val settingsViewModel: SettingsViewModel = koinViewModel()
+            val settingsState by settingsViewModel.state.collectAsStateWithLifecycle()
             val route: Routes.Settings = navBackStackEntry.toRoute()
             val user: User? = route.user?.let { json ->
                 try {
@@ -97,7 +100,7 @@ fun NavGraph(
                     null
                 }
             }
-            Settings(navController, user)
+            Settings(navController, user, settingsState.theme, settingsViewModel.actions)
         }
     }
 }
