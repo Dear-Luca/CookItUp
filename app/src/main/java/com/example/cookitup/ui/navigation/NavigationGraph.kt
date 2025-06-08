@@ -8,7 +8,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.example.cookitup.domain.model.User
 import com.example.cookitup.ui.screens.auth.Auth
 import com.example.cookitup.ui.screens.auth.AuthViewModel
 import com.example.cookitup.ui.screens.favourites.Favourites
@@ -22,10 +21,8 @@ import com.example.cookitup.ui.screens.recipes.RecipesViewModel
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipes
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipesViewModel
 import com.example.cookitup.ui.screens.settings.Settings
-import com.example.cookitup.ui.screens.settings.SettingsViewModel
-import kotlinx.serialization.json.Json
+import com.example.cookitup.ui.screens.settings.ThemeViewModel
 import org.koin.androidx.compose.koinViewModel
-
 @Composable
 fun NavGraph(
     navController: NavHostController,
@@ -89,18 +86,22 @@ fun NavGraph(
             Auth(navController, authState, authViewModel.actions)
         }
 
-        composable<Routes.Settings> { navBackStackEntry ->
-            val settingsViewModel: SettingsViewModel = koinViewModel()
+        composable<Routes.Settings> {
+            val settingsViewModel: ThemeViewModel = koinViewModel()
             val settingsState by settingsViewModel.state.collectAsStateWithLifecycle()
-            val route: Routes.Settings = navBackStackEntry.toRoute()
-            val user: User? = route.user?.let { json ->
-                try {
-                    Json.decodeFromString(User.serializer(), json)
-                } catch (e: Exception) {
-                    null
-                }
-            }
-            Settings(navController, user, settingsState.theme, settingsViewModel.actions)
+
+            val profileViewModel: ProfileViewModel = koinViewModel()
+            val profileState by profileViewModel.state.collectAsStateWithLifecycle()
+            val updatedState by profileViewModel.updateState.collectAsStateWithLifecycle()
+
+            Settings(
+                navController,
+                profileState,
+                updatedState,
+                settingsState,
+                settingsViewModel.actions,
+                profileViewModel.actions
+            )
         }
     }
 }

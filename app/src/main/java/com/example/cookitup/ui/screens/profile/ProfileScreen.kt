@@ -27,7 +27,6 @@ import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.TopBar
 import com.example.cookitup.ui.screens.settings.SettingsComponent
 import com.example.cookitup.utils.NetworkUtils
-import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,9 +57,7 @@ fun Profile(
                     SettingsComponent(
                         onSettingsClick = {
                             navController.navigate(
-                                Routes.Settings(
-                                    if (state is ProfileState.Success) Json.encodeToString(state.user) else null
-                                )
+                                Routes.Settings
                             )
                         }
                     )

@@ -8,25 +8,26 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-data class State(val theme: Theme)
+data class ThemeState(val theme: Theme)
 
-interface SettingsActions {
+interface ThemeActions {
     fun changeTheme(theme: Theme)
 }
 
-class SettingsViewModel(
-    private val repository: DataStoreRepositoryImpl
+class ThemeViewModel(
+    private val dataStoreRepository: DataStoreRepositoryImpl
 ) : ViewModel() {
-    val state = repository.theme.map { State(it) }.stateIn(
+
+    val state = dataStoreRepository.theme.map { ThemeState(it) }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
-        initialValue = State(Theme.System)
+        initialValue = ThemeState(Theme.System)
     )
 
-    val actions = object : SettingsActions {
+    val actions = object : ThemeActions {
         override fun changeTheme(theme: Theme) {
             viewModelScope.launch {
-                repository.setTheme(theme)
+                dataStoreRepository.setTheme(theme)
             }
         }
     }

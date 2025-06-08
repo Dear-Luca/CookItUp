@@ -3,7 +3,7 @@ package com.example.cookitup.ui.screens.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookitup.data.remote.supabase.Supabase
-import com.example.cookitup.domain.repository.AuthRepository
+import com.example.cookitup.domain.repository.SupabaseRepository
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.status.SessionStatus
@@ -28,7 +28,7 @@ interface AuthActions {
 }
 
 class AuthViewModel(
-    private val repository: AuthRepository,
+    private val repository: SupabaseRepository,
     private val client: SupabaseClient = Supabase.client
 ) : ViewModel() {
 

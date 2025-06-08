@@ -18,45 +18,80 @@ import androidx.compose.material.icons.filled.Scale
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.cookitup.R
-import com.example.cookitup.domain.model.User
 import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.TopBar
+import com.example.cookitup.ui.screens.profile.ProfileActions
+import com.example.cookitup.ui.screens.profile.ProfileState
+import com.example.cookitup.ui.screens.profile.UpdateState
+import com.example.cookitup.utils.NetworkUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Settings(
     navController: NavHostController,
-    user: User?,
-    currentTheme: Theme,
-    actions: SettingsActions
+    profileState: ProfileState,
+    updateState: UpdateState,
+    currentTheme: ThemeState,
+    themeActions: ThemeActions,
+    accountActions: ProfileActions
 ) {
+    val context = LocalContext.current
     var notificationsEnabled by remember { mutableStateOf(true) }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(Unit) {
+        NetworkUtils.checkConnectivity(
+            context,
+            snackbarHostState
+        ) {
+            accountActions.getCurrentUser()
+        }
+    }
+    LaunchedEffect(updateState) {
+        when (updateState) {
+            is UpdateState.Success -> {
+                snackbarHostState.showSnackbar("Operation completed successfully")
+                accountActions.clearUpdateState()
+            }
+            is UpdateState.Error -> {
+                snackbarHostState.showSnackbar("Error: ${updateState.message}")
+                accountActions.clearUpdateState()
+            }
+            UpdateState.Loading, UpdateState.Idle -> { }
+        }
+    }
 
     // dialog states
     var showUsernameDialog by remember { mutableStateOf(false) }
+    var showEmailDialog by remember { mutableStateOf(false) }
+    var showPasswordDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopBar(navController, stringResource(R.string.title_settings), scrollBehavior)
         },
         bottomBar = { BottomBar(navController) },
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues)
@@ -72,20 +107,20 @@ fun Settings(
                         SettingsItem(
                             icon = Icons.Default.Person,
                             title = "Change Username",
-                            subtitle = user?.username ?: "",
+                            subtitle = if (profileState is ProfileState.Success) profileState.user.username else "",
                             onClick = { showUsernameDialog = true }
                         )
                         SettingsItem(
                             icon = Icons.Default.Email,
                             title = "Change Email",
-                            subtitle = user?.email ?: "",
-                            onClick = { /* Handle change email */ }
+                            subtitle = if (profileState is ProfileState.Success) profileState.user.email else "",
+                            onClick = { showEmailDialog = true }
                         )
                         SettingsItem(
                             icon = Icons.Default.Lock,
                             title = "Change Password",
                             subtitle = "Update your password",
-                            onClick = { /* Handle change password */ },
+                            onClick = { showPasswordDialog = true },
                             isLast = true
                         )
                     }
@@ -100,8 +135,8 @@ fun Settings(
                             subtitle = "Choose your preferred theme"
                         ) {
                             ThemeSelector(
-                                selectedTheme = currentTheme,
-                                onThemeSelected = { actions.changeTheme(it) }
+                                selectedTheme = currentTheme.theme,
+                                onThemeSelected = { themeActions.changeTheme(it) }
                             )
                         }
                         SettingsItem(
@@ -154,10 +189,31 @@ fun Settings(
     // Dialog to change username
     if (showUsernameDialog) {
         UsernameDialog(
-            currentUsername = user?.username ?: "",
+            currentUsername = if (profileState is ProfileState.Success) profileState.user.username else "",
             onDismiss = { showUsernameDialog = false },
-            onConfirm = {
+            isLoading = updateState is UpdateState.Loading,
+            onConfirm = { newUsername ->
+                accountActions.updateUsername(newUsername)
                 showUsernameDialog = false
+            }
+        )
+    }
+    if (showEmailDialog) {
+        EmailDialog(
+            currentEmail = if (profileState is ProfileState.Success) profileState.user.email else "",
+            onDismiss = { showEmailDialog = false },
+            onConfirm = {
+                showEmailDialog = false
+                // TODO
+            }
+        )
+    }
+
+    if (showPasswordDialog) {
+        PasswordDialog(
+            onDismiss = { showPasswordDialog = false },
+            onConfirm = { oldPassword, newPassword ->
+                showPasswordDialog = false
                 // TODO
             }
         )

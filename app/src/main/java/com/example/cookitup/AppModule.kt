@@ -7,19 +7,19 @@ import com.example.cookitup.data.local.db.AppDatabase
 import com.example.cookitup.data.remote.api.ApiClient
 import com.example.cookitup.data.remote.api.SpoonacularApi
 import com.example.cookitup.data.repository.ApiRepositoryImpl
-import com.example.cookitup.data.repository.AuthRepositoryImpl
 import com.example.cookitup.data.repository.DataStoreRepositoryImpl
 import com.example.cookitup.data.repository.DbRepositoryImpl
+import com.example.cookitup.data.repository.SupabaseRepositoryImpl
 import com.example.cookitup.domain.repository.ApiRepository
-import com.example.cookitup.domain.repository.AuthRepository
 import com.example.cookitup.domain.repository.DbRepository
+import com.example.cookitup.domain.repository.SupabaseRepository
 import com.example.cookitup.ui.screens.auth.AuthViewModel
 import com.example.cookitup.ui.screens.favourites.FavouritesViewModel
 import com.example.cookitup.ui.screens.profile.ProfileViewModel
 import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailViewModel
 import com.example.cookitup.ui.screens.recipes.RecipesViewModel
 import com.example.cookitup.ui.screens.searchRecipes.SearchRecipesViewModel
-import com.example.cookitup.ui.screens.settings.SettingsViewModel
+import com.example.cookitup.ui.screens.settings.ThemeViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -49,8 +49,8 @@ val koinModule = module {
         ApiRepositoryImpl(apiService = get())
     }
 
-    single<AuthRepository> {
-        AuthRepositoryImpl()
+    single<SupabaseRepository> {
+        SupabaseRepositoryImpl()
     }
 
     single<DbRepository> {
@@ -89,10 +89,10 @@ val koinModule = module {
     }
 
     viewModel {
-        ProfileViewModel()
+        ProfileViewModel(get())
     }
 
     viewModel {
-        SettingsViewModel(get())
+        ThemeViewModel(get())
     }
 }
