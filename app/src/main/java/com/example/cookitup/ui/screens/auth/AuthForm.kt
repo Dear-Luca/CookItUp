@@ -197,7 +197,7 @@ fun AuthForm(
                                         text = if (loginMode) {
                                             "Log in"
                                         } else {
-                                            "Sing up"
+                                            "Sign up"
                                         },
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
@@ -413,7 +413,7 @@ fun AuthForm(
                                     }
                                 } else {
                                     Text(
-                                        text = if (isLoginMode) "Log in" else "Sing up",
+                                        text = if (isLoginMode) "Log in" else "Sign up",
                                         style = MaterialTheme.typography.titleMedium,
                                         fontWeight = FontWeight.Medium
                                     )
@@ -434,7 +434,7 @@ fun AuthForm(
                             ) {
                                 Text(
                                     text = if (isLoginMode) {
-                                        "Don't you have an account? Sing up"
+                                        "Don't you have an account? Sign up"
                                     } else {
                                         "Already have an account? Log in"
                                     },
