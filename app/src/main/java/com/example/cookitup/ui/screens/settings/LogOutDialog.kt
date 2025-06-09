@@ -21,7 +21,7 @@ fun LogOutDialog(
         text = {
             Column {
                 Text(
-                    text = "Are you sure you want logout",
+                    text = "Are you sure you want logout?",
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
