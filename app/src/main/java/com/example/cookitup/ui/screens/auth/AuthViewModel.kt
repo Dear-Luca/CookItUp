@@ -83,7 +83,7 @@ class AuthViewModel(
                 try {
                     repository.signUp(email, password, username)
                 } catch (e: Exception) {
-                    _state.value = AuthState.Error("Invalid email address")
+                    _state.value = AuthState.Error("Invalid ")
                 }
             }
         }

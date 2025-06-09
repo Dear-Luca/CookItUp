@@ -26,7 +26,6 @@ fun UsernameDialog(
     var username by remember { mutableStateOf(currentUsername) }
     var isError by remember { mutableStateOf(false) }
 
-    // Validazione username
     val isUsernameValid = username.isNotBlank() &&
         username.length <= 20 &&
         username != currentUsername

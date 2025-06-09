@@ -8,7 +8,6 @@ interface SupabaseRepository {
     suspend fun signIn(email: String, password: String)
     suspend fun signOut()
     suspend fun getCurrentUser(): User
-    suspend fun checkEmail(email: String)
 
     // update user
     suspend fun checkUsername(username: String): Boolean

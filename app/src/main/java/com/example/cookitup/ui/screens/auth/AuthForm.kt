@@ -47,6 +47,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,7 +67,7 @@ fun AuthForm(
     state: AuthState,
     actions: AuthActions
 ) {
-    var isLoginMode by remember { mutableStateOf(true) }
+    var isLoginMode by rememberSaveable { mutableStateOf(true) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
@@ -373,11 +374,13 @@ fun AuthForm(
                                                 username.length > 20 ->
                                                     errorMessage = "Username must be less than 20 characters"
 
-                                                else -> actions.signUpUser(
-                                                    email.trim(),
-                                                    password.trim(),
-                                                    username.trim()
-                                                )
+                                                else -> {
+                                                    actions.signUpUser(
+                                                        email.trim(),
+                                                        password.trim(),
+                                                        username.trim()
+                                                    )
+                                                }
                                             }
                                         }
                                     }
@@ -399,7 +402,7 @@ fun AuthForm(
                                         CircularProgressIndicator(
                                             modifier = Modifier.size(20.dp),
                                             strokeWidth = 2.dp,
-                                            color = MaterialTheme.colorScheme.onPrimary
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Text(

@@ -12,6 +12,9 @@ object Supabase {
         SUPABASE_API_KEY
     ) {
         install(Postgrest)
-        install(Auth)
+        install(Auth) {
+            host = "login-callback"
+            scheme = "cook-it-up"
+        }
     }
 }

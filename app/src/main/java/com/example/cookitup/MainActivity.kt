@@ -8,15 +8,18 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
+import com.example.cookitup.data.remote.supabase.Supabase
 import com.example.cookitup.ui.navigation.NavGraph
 import com.example.cookitup.ui.screens.settings.Theme
 import com.example.cookitup.ui.screens.settings.ThemeViewModel
 import com.example.cookitup.ui.theme.CookItUpTheme
+import io.github.jan.supabase.auth.handleDeeplinks
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Supabase.client.handleDeeplinks(intent)
         enableEdgeToEdge()
         setContent {
             val settingsViewModel: ThemeViewModel = getViewModel()
