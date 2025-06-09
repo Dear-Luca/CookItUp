@@ -15,7 +15,7 @@ interface SpoonacularApi {
     suspend fun searchRecipes(
         @Query("ingredients") ingredients: String,
         @Query("number") number: Int = NUM_ITEMS,
-        @Query("ranking") ranking: Int = 1,
+        @Query("ranking") ranking: Int = 2,
         @Query("ignorePantry") ignorePantry: Boolean = true,
         @Query("apiKey") apiKey: String = SPOONACULAR_API_KEY
     ): List<RecipeDto>
