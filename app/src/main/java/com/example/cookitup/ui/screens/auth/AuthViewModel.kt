@@ -14,17 +14,17 @@ import kotlinx.coroutines.launch
 
 sealed class AuthState {
     data object Initializing : AuthState()
-
-//    data object Loading : AuthState()
+    data object Loading : AuthState()
     data class Authenticated(val session: UserSession) : AuthState()
     data object NotAuthenticated : AuthState()
     data class Error(val message: String) : AuthState()
 }
 
 interface AuthActions {
-    fun singInUser(email: String, password: String)
-    fun singUpUser(email: String, password: String, username: String)
-    fun singOutUser()
+    fun signInUser(email: String, password: String)
+    fun signUpUser(email: String, password: String, username: String)
+    fun signOutUser()
+    fun clearError()
 }
 
 class AuthViewModel(
@@ -32,7 +32,7 @@ class AuthViewModel(
     private val client: SupabaseClient = Supabase.client
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<AuthState>(AuthState.NotAuthenticated)
+    private val _state = MutableStateFlow<AuthState>(AuthState.Initializing)
     val state = _state.asStateFlow()
 
     init {
@@ -47,44 +47,60 @@ class AuthViewModel(
                         val session = status.session
                         _state.value = AuthState.Authenticated(session)
                     }
-                    SessionStatus.Initializing -> _state.value = AuthState.Initializing
-                    is SessionStatus.NotAuthenticated -> _state.value = AuthState.NotAuthenticated
-                    is SessionStatus.RefreshFailure -> _state.value = AuthState.Error("Refresh failed: ${status.cause}")
+                    SessionStatus.Initializing -> {
+                        if (_state.value !is AuthState.Loading && _state.value !is AuthState.Error) {
+                            _state.value = AuthState.Initializing
+                        }
+                    }
+                    is SessionStatus.NotAuthenticated -> {
+                        if (_state.value !is AuthState.Loading) {
+                            _state.value = AuthState.NotAuthenticated
+                        }
+                    }
+                    is SessionStatus.RefreshFailure -> {
+                        _state.value = AuthState.Error("Session expired: ${status.cause}")
+                    }
                 }
             }
         }
     }
 
     val actions = object : AuthActions {
-        override fun singInUser(email: String, password: String) {
-//            _state.value = AuthState.Loading
+        override fun signInUser(email: String, password: String) {
             viewModelScope.launch {
+                _state.value = AuthState.Loading
                 try {
                     repository.signIn(email, password)
-                }
-                // Invalid email address: AuthRestException
-                // Weak password: AuthWeakPasswordException
-                catch (e: Exception) {
-                    _state.value = AuthState.Error(e.message ?: "Error")
+                } catch (e: Exception) {
+                    _state.value = AuthState.Error("Invalid credentials")
                 }
             }
         }
 
-        override fun singUpUser(email: String, password: String, username: String) {
-//            _state.value = AuthState.Loading
+        override fun signUpUser(email: String, password: String, username: String) {
             viewModelScope.launch {
-                repository.signUp(email, password, username)
+                _state.value = AuthState.Loading
                 try {
                     repository.signUp(email, password, username)
                 } catch (e: Exception) {
-                    _state.value = AuthState.Error(e.message ?: "Error")
+                    _state.value = AuthState.Error("Invalid email address")
                 }
             }
         }
 
-        override fun singOutUser() {
+        override fun signOutUser() {
             viewModelScope.launch {
-                repository.signOut()
+                try {
+                    repository.signOut()
+                } catch (e: Exception) {
+                    _state.value = AuthState.NotAuthenticated
+                }
+            }
+        }
+
+        override fun clearError() {
+            if (_state.value is AuthState.Error) {
+                _state.value = AuthState.NotAuthenticated
             }
         }
     }

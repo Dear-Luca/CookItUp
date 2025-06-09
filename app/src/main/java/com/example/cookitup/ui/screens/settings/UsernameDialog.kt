@@ -28,7 +28,6 @@ fun UsernameDialog(
 
     // Validazione username
     val isUsernameValid = username.isNotBlank() &&
-        username.length >= 3 &&
         username.length <= 20 &&
         username != currentUsername
 
@@ -52,7 +51,6 @@ fun UsernameDialog(
                     isError = username.isNotBlank() && !isUsernameValid,
                     supportingText = when {
                         username.isBlank() -> { { Text("Username cannot be empty") } }
-                        username.length < 3 -> { { Text("Username must be at least 3 characters") } }
                         username.length > 20 -> { { Text("Username must be less than 20 characters") } }
                         username == currentUsername -> { { Text("Enter a different username") } }
                         else -> null

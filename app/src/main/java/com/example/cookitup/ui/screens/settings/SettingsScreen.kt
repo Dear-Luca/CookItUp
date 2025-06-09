@@ -37,6 +37,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.cookitup.R
+import com.example.cookitup.ui.navigation.Routes
+import com.example.cookitup.ui.screens.auth.AuthActions
+import com.example.cookitup.ui.screens.auth.AuthState
 import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.TopBar
 import com.example.cookitup.ui.screens.profile.ProfileActions
@@ -51,8 +54,10 @@ fun Settings(
     profileState: ProfileState,
     updateState: UpdateState,
     currentTheme: ThemeState,
+    authState: AuthState,
     themeActions: ThemeActions,
-    accountActions: ProfileActions
+    accountActions: ProfileActions,
+    authActions: AuthActions
 ) {
     val context = LocalContext.current
     var notificationsEnabled by remember { mutableStateOf(true) }
@@ -79,11 +84,19 @@ fun Settings(
             UpdateState.Loading, UpdateState.Idle -> { }
         }
     }
+    LaunchedEffect(authState) {
+        if (authState is AuthState.NotAuthenticated) {
+            navController.navigate(Routes.Auth) {
+                popUpTo(0) { inclusive = true }
+            }
+        }
+    }
 
     // dialog states
     var showUsernameDialog by remember { mutableStateOf(false) }
     var showEmailDialog by remember { mutableStateOf(false) }
     var showPasswordDialog by remember { mutableStateOf(false) }
+    var showLogOutDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -167,19 +180,19 @@ fun Settings(
                 item {
                     SettingsSection(title = "ACCOUNT ACTIONS") {
                         SettingsItem(
-                            icon = Icons.Default.Delete,
-                            title = "Delete Account",
-                            subtitle = "Permanently delete your account and data",
-                            onClick = { /* Handle delete account */ },
-                            isDangerous = true
-                        )
-                        SettingsItem(
                             icon = Icons.AutoMirrored.Filled.Logout,
                             title = "Logout",
                             subtitle = "Sign out of your account",
-                            onClick = { /* Handle logout */ },
+                            onClick = { showLogOutDialog = true },
                             isDangerous = true,
                             isLast = true
+                        )
+                        SettingsItem(
+                            icon = Icons.Default.Delete,
+                            title = "Delete Account",
+                            subtitle = "Permanently delete your account and data",
+                            onClick = { },
+                            isDangerous = true
                         )
                     }
                 }
@@ -215,6 +228,15 @@ fun Settings(
             onConfirm = { oldPassword, newPassword ->
                 showPasswordDialog = false
                 // TODO
+            }
+        )
+    }
+
+    if (showLogOutDialog) {
+        LogOutDialog(
+            onDismiss = { showLogOutDialog = false },
+            onConfirm = {
+                authActions.signOutUser()
             }
         )
     }

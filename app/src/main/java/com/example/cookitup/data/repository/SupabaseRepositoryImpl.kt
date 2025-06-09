@@ -47,6 +47,10 @@ class SupabaseRepositoryImpl(
         return MapperDto.mapToDomain(userDto, currentUser.email)
     }
 
+    override suspend fun checkEmail(email: String) {
+        // TODO
+    }
+
     override suspend fun checkUsername(username: String): Boolean {
         val response = client.from("users")
             .select(columns = Columns.list("username")) {

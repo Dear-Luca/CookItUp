@@ -44,15 +44,6 @@ fun PasswordDialog(
     fun validatePasswords(): Boolean {
         var isValid = true
 
-        // validation current password
-//        if (currentPassword.isBlank()) {
-//            currentPasswordError = "Current password is required"
-//            isValid = false
-//        } else {
-//            currentPasswordError = ""
-//        }
-
-        // Validazione nuova password
         when {
             newPassword.length < 6 -> {
                 newPasswordError = "Password must be at least 6 characters"
@@ -79,7 +70,6 @@ fun PasswordDialog(
             }
         }
 
-        // Validazione conferma password
         if (confirmPassword != newPassword) {
             confirmPasswordError = "Passwords do not match"
             isValid = false

@@ -94,13 +94,18 @@ fun NavGraph(
             val profileState by profileViewModel.state.collectAsStateWithLifecycle()
             val updatedState by profileViewModel.updateState.collectAsStateWithLifecycle()
 
+            val authViewModel: AuthViewModel = koinViewModel()
+            val authState by authViewModel.state.collectAsStateWithLifecycle()
+
             Settings(
                 navController,
                 profileState,
                 updatedState,
                 settingsState,
+                authState,
                 settingsViewModel.actions,
-                profileViewModel.actions
+                profileViewModel.actions,
+                authViewModel.actions
             )
         }
     }
