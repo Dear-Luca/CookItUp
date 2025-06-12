@@ -17,21 +17,20 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Dining
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.FoodBank
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.RestaurantMenu
-import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material3.Button
@@ -74,12 +73,12 @@ fun RecipeInfo(
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(16.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(12.dp)
     ) {
         item {
             RecipeHeader(
-                imageUrl = state.detail.image,
+                image = state.detail.image,
                 title = state.detail.title
             )
         }
@@ -98,13 +97,12 @@ fun RecipeInfo(
                 itemCount = state.detail.ingredients.size,
                 isExpanded = isIngredientsExpanded,
                 onToggle = { isIngredientsExpanded = !isIngredientsExpanded },
-                icon = Icons.Filled.ShoppingCart
+                icon = Icons.Filled.FoodBank
             ) {
-                LazyColumn(
-                    modifier = Modifier.heightIn(max = 300.dp),
+                Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    itemsIndexed(state.detail.ingredients) { index, ingredient ->
+                    state.detail.ingredients.forEachIndexed { index, ingredient ->
                         IngredientItem(
                             ingredient = ingredient,
                             index = index + 1
@@ -114,7 +112,6 @@ fun RecipeInfo(
             }
         }
 
-        // Instructions section
         item {
             ExpandableSection(
                 title = "Instructions",
@@ -123,11 +120,10 @@ fun RecipeInfo(
                 onToggle = { isInstructionsExpanded = !isInstructionsExpanded },
                 icon = Icons.Outlined.Menu
             ) {
-                LazyColumn(
-                    modifier = Modifier.heightIn(max = 400.dp),
+                Column(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    itemsIndexed(state.detail.instructions.steps) { index, step ->
+                    state.detail.instructions.steps.forEachIndexed { index, step ->
                         InstructionStep(
                             step = step,
                             stepNumber = index + 1
@@ -137,7 +133,6 @@ fun RecipeInfo(
             }
         }
 
-        // Similar recipes button
         item {
             Button(
                 onClick = { onClickSimilar(state.detail.id) },
@@ -147,8 +142,8 @@ fun RecipeInfo(
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Filled.RestaurantMenu,
-                    contentDescription = null,
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = "search",
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -160,7 +155,7 @@ fun RecipeInfo(
 
 @Composable
 fun RecipeHeader(
-    imageUrl: String,
+    image: String,
     title: String
 ) {
     Card(
@@ -171,7 +166,7 @@ fun RecipeHeader(
         Box {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(imageUrl)
+                    .data(image)
                     .diskCachePolicy(CachePolicy.ENABLED)
                     .memoryCachePolicy(CachePolicy.ENABLED)
                     .crossfade(true)
@@ -196,7 +191,6 @@ fun RecipeHeader(
                     )
             )
 
-            // Title
             Text(
                 text = title,
                 style = MaterialTheme.typography.headlineMedium.copy(
@@ -215,24 +209,6 @@ fun RecipeHeader(
                 overflow = TextOverflow.Ellipsis
 
             )
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .background(Color.Black.copy(alpha = 0.5f))
-//                    .align(Alignment.BottomStart)
-//                    .padding(8.dp)
-//
-//            ) {
-//                Text(
-//                    text = title,
-//                    color = Color.White,
-//                    style = MaterialTheme.typography.titleMedium,
-//                    fontWeight = FontWeight.Bold,
-//                    maxLines = 2,
-//                    overflow = TextOverflow.Ellipsis,
-//                    modifier = Modifier.padding(4.dp)
-//                )
-//            }
         }
     }
 }
@@ -267,7 +243,7 @@ private fun RecipeQuickInfo(
 
         item {
             QuickInfoCard(
-                icon = Icons.Filled.RestaurantMenu,
+                icon = Icons.Filled.Dining,
                 label = "Type",
                 value = dishTypes.firstOrNull() ?: "Recipe",
                 color = MaterialTheme.colorScheme.primary
@@ -291,7 +267,7 @@ private fun QuickInfoCard(
         shape = RoundedCornerShape(16.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
+            modifier = Modifier.fillMaxSize().padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
         ) {
@@ -331,7 +307,7 @@ private fun ExpandableSection(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
-            modifier = Modifier.padding(20.dp)
+            modifier = Modifier.padding(8.dp)
         ) {
             Row(
                 modifier = Modifier
@@ -403,9 +379,9 @@ private fun IngredientItem(
     ) {
         Box(
             modifier = Modifier
-                .size(32.dp)
+                .size(30.dp)
                 .background(
-                    MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
                     CircleShape
                 ),
             contentAlignment = Alignment.Center
@@ -452,17 +428,17 @@ private fun InstructionStep(
     ) {
         Box(
             modifier = Modifier
-                .size(40.dp)
+                .size(30.dp)
                 .background(
-                    MaterialTheme.colorScheme.secondary,
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
                     CircleShape
                 ),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = stepNumber.toString(),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSecondary,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
         }
