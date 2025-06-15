@@ -12,4 +12,5 @@ interface SupabaseRepository {
     // update user
     suspend fun checkUsername(username: String): Boolean
     suspend fun updateUsername(newUsername: String)
+    suspend fun updatePassword(newPassword: String)
 }

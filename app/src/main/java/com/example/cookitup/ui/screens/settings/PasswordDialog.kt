@@ -27,17 +27,14 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PasswordDialog(
     onDismiss: () -> Unit,
-    onConfirm: (String, String) -> Unit
+    onConfirm: (String) -> Unit
 ) {
-    var currentPassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
 
-    var showCurrentPassword by remember { mutableStateOf(false) }
     var showNewPassword by remember { mutableStateOf(false) }
     var showConfirmPassword by remember { mutableStateOf(false) }
 
-    var currentPasswordError by remember { mutableStateOf("") }
     var newPasswordError by remember { mutableStateOf("") }
     var confirmPasswordError by remember { mutableStateOf("") }
 
@@ -59,10 +56,6 @@ fun PasswordDialog(
             }
             !newPassword.any { it.isLowerCase() } -> {
                 newPasswordError = "Password must contain at least one lowercase letter"
-                isValid = false
-            }
-            newPassword == currentPassword -> {
-                newPasswordError = "New password must be different from current password"
                 isValid = false
             }
             else -> {
@@ -94,44 +87,6 @@ fun PasswordDialog(
                     text = "Enter your current password and choose a new one",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                // Current Password Field
-                OutlinedTextField(
-                    value = currentPassword,
-                    onValueChange = {
-                        currentPassword = it
-                    },
-                    label = { Text("Current Password") },
-                    visualTransformation = if (showCurrentPassword) {
-                        VisualTransformation.None
-                    } else {
-                        PasswordVisualTransformation()
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = { showCurrentPassword = !showCurrentPassword }) {
-                            Icon(
-                                imageVector = if (showCurrentPassword) {
-                                    Icons.Default.VisibilityOff
-                                } else {
-                                    Icons.Default.Visibility
-                                },
-                                contentDescription = if (showCurrentPassword) {
-                                    "Hide password"
-                                } else {
-                                    "Show password"
-                                }
-                            )
-                        }
-                    },
-                    isError = currentPasswordError.isNotEmpty(),
-                    supportingText = if (currentPasswordError.isNotEmpty()) {
-                        { Text(currentPasswordError) }
-                    } else {
-                        null
-                    },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
                 )
 
                 // New Password Field
@@ -221,11 +176,10 @@ fun PasswordDialog(
             TextButton(
                 onClick = {
                     if (validatePasswords()) {
-                        onConfirm(currentPassword, newPassword)
+                        onConfirm(newPassword)
                     }
                 },
-                enabled = currentPassword.isNotBlank() &&
-                    newPassword.isNotBlank() &&
+                enabled = newPassword.isNotBlank() &&
                     confirmPassword.isNotBlank()
             ) {
                 Text("Save")

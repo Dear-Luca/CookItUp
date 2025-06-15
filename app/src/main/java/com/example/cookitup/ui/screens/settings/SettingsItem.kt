@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 fun SettingsItem(
     icon: ImageVector,
     title: String,
-    subtitle: String? = null,
+    subtitle: String,
     onClick: (() -> Unit)? = null,
     isLast: Boolean = false,
     isDangerous: Boolean = false,
@@ -90,13 +90,11 @@ fun SettingsItem(
                         MaterialTheme.colorScheme.onSurface
                     }
                 )
-                if (subtitle != null) {
-                    Text(
-                        text = subtitle,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
 
             if (trailingContent != null) {

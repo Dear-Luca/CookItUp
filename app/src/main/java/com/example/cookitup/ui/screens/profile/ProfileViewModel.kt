@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookitup.domain.model.User
 import com.example.cookitup.domain.repository.SupabaseRepository
+import io.github.jan.supabase.exceptions.RestException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -25,6 +26,8 @@ interface ProfileActions {
     fun getCurrentUser()
 
     fun updateUsername(newUsername: String)
+
+    fun updatePassword(newPassword: String)
 
     fun clearUpdateState()
 }
@@ -66,6 +69,23 @@ class ProfileViewModel(
                     }
                 } catch (e: Exception) {
                     _state.value = ProfileState.Error(e.message ?: "Error")
+                }
+            }
+        }
+
+        override fun updatePassword(newPassword: String) {
+            viewModelScope.launch {
+                try {
+                    repository.updatePassword(newPassword)
+                    _updateState.value = UpdateState.Success
+                } catch (e: RestException) {
+                    when (e.error) {
+                        "same_password" -> _updateState.value = UpdateState.Error(
+                            "new Password should be different from the previous one"
+                        )
+                    }
+                } catch (e: Exception) {
+                    _updateState.value = UpdateState.Error("Error")
                 }
             }
         }

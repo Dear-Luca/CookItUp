@@ -63,4 +63,10 @@ class SupabaseRepositoryImpl(
                 filter { eq("id", currentUser!!.id) }
             }
     }
+
+    override suspend fun updatePassword(newPassword: String) {
+        client.auth.updateUser {
+            password = newPassword
+        }
+    }
 }

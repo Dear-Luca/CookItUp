@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Palette
@@ -94,7 +93,6 @@ fun Settings(
 
     // dialog states
     var showUsernameDialog by remember { mutableStateOf(false) }
-    var showEmailDialog by remember { mutableStateOf(false) }
     var showPasswordDialog by remember { mutableStateOf(false) }
     var showLogOutDialog by remember { mutableStateOf(false) }
 
@@ -122,12 +120,6 @@ fun Settings(
                             title = "Change Username",
                             subtitle = if (profileState is ProfileState.Success) profileState.user.username else "",
                             onClick = { showUsernameDialog = true }
-                        )
-                        SettingsItem(
-                            icon = Icons.Default.Email,
-                            title = "Change Email",
-                            subtitle = if (profileState is ProfileState.Success) profileState.user.email else "",
-                            onClick = { showEmailDialog = true }
                         )
                         SettingsItem(
                             icon = Icons.Default.Lock,
@@ -211,23 +203,12 @@ fun Settings(
             }
         )
     }
-    if (showEmailDialog) {
-        EmailDialog(
-            currentEmail = if (profileState is ProfileState.Success) profileState.user.email else "",
-            onDismiss = { showEmailDialog = false },
-            onConfirm = {
-                showEmailDialog = false
-                // TODO
-            }
-        )
-    }
-
     if (showPasswordDialog) {
         PasswordDialog(
             onDismiss = { showPasswordDialog = false },
-            onConfirm = { oldPassword, newPassword ->
+            onConfirm = { newPassword ->
+                accountActions.updatePassword(newPassword)
                 showPasswordDialog = false
-                // TODO
             }
         )
     }
