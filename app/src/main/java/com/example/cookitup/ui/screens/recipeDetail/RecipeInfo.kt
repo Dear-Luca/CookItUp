@@ -70,6 +70,7 @@ import com.example.cookitup.domain.model.Step
 @Composable
 fun RecipeInfo(
     state: RecipeDetailState.Success,
+    onClickCook: (state: RecipeDetailState.Success) -> Unit,
     onClickSimilar: (String) -> Unit
 ) {
     var isInstructionsExpanded by remember { mutableStateOf(false) }
@@ -165,7 +166,7 @@ fun RecipeInfo(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
                 Button(
-                    onClick = {},
+                    onClick = { onClickCook(state) },
                     modifier = Modifier
                         .padding(vertical = 8.dp)
                         .width(175.dp),
