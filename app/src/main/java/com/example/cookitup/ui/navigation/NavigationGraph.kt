@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.example.cookitup.ui.screens.auth.Auth
 import com.example.cookitup.ui.screens.auth.AuthViewModel
+import com.example.cookitup.ui.screens.cookRecipe.CookRecipe
 import com.example.cookitup.ui.screens.favourites.Favourites
 import com.example.cookitup.ui.screens.favourites.FavouritesViewModel
 import com.example.cookitup.ui.screens.profile.Profile
@@ -106,6 +107,12 @@ fun NavGraph(
                 settingsViewModel.actions,
                 profileViewModel.actions,
                 authViewModel.actions
+            )
+        }
+
+        composable<Routes.CookRecipe> {
+            CookRecipe(
+                navController
             )
         }
     }
