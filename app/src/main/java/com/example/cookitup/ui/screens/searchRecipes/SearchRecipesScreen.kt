@@ -318,7 +318,7 @@ private fun IngredientChip(
 
             Surface(
                 shape = CircleShape,
-                color = MaterialTheme.colorScheme.error.copy(alpha = 0.1f),
+                color = MaterialTheme.colorScheme.errorContainer,
                 modifier = Modifier
                     .size(20.dp)
                     .clickable { onRemove() }

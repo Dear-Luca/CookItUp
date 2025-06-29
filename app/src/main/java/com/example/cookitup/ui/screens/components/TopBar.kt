@@ -27,7 +27,8 @@ fun TopBar(
         title = {
             Text(
                 title,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(

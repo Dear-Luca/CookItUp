@@ -7,7 +7,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
@@ -37,7 +36,8 @@ fun BottomBar(navController: NavHostController) {
                 icon = {
                     Icon(
                         imageVector = if (isSelected) topLevelRoute.selectedIcon else topLevelRoute.unselectedIcon,
-                        contentDescription = topLevelRoute.name
+                        contentDescription = topLevelRoute.name,
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 },
                 label = {
@@ -45,7 +45,13 @@ fun BottomBar(navController: NavHostController) {
                         text = topLevelRoute.name,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Gray
+                        color = if (isSelected) {
+                            MaterialTheme.colorScheme.onSurface
+                        } else {
+                            MaterialTheme.colorScheme.onSurface.copy(
+                                alpha = 0.7f
+                            )
+                        }
                     )
                 },
                 onClick = {
