@@ -11,6 +11,7 @@ import androidx.navigation.toRoute
 import com.example.cookitup.ui.screens.auth.Auth
 import com.example.cookitup.ui.screens.auth.AuthViewModel
 import com.example.cookitup.ui.screens.cookRecipe.CookRecipe
+import com.example.cookitup.ui.screens.cookRecipe.CookRecipeViewModel
 import com.example.cookitup.ui.screens.favourites.Favourites
 import com.example.cookitup.ui.screens.favourites.FavouritesViewModel
 import com.example.cookitup.ui.screens.profile.Profile
@@ -69,6 +70,19 @@ fun NavGraph(
             )
         }
 
+        composable<Routes.CookRecipe> { navBackStackEntry ->
+            val cookRecipeViewModel: CookRecipeViewModel = koinViewModel()
+
+            val route: Routes.CookRecipe = navBackStackEntry.toRoute()
+            val id = route.id
+
+            CookRecipe(
+                navController,
+                id,
+                cookRecipeViewModel.actions
+            )
+        }
+
         composable<Routes.Favourites> {
             val favouritesViewModel: FavouritesViewModel = koinViewModel()
             val favouritesState by favouritesViewModel.state.collectAsStateWithLifecycle()
@@ -107,12 +121,6 @@ fun NavGraph(
                 settingsViewModel.actions,
                 profileViewModel.actions,
                 authViewModel.actions
-            )
-        }
-
-        composable<Routes.CookRecipe> {
-            CookRecipe(
-                navController
             )
         }
     }

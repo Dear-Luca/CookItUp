@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.domain.repository.ApiRepository
+import com.example.cookitup.domain.repository.CacheRepository
 import com.example.cookitup.domain.repository.DbRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,7 +31,8 @@ interface RecipeDetailActions {
 
 class RecipeDetailViewModel(
     private val apiRepository: ApiRepository,
-    private val dbRepository: DbRepository
+    private val dbRepository: DbRepository,
+    private val cacheRepository: CacheRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow<RecipeDetailState>(RecipeDetailState.Loading)
     val state = _state.asStateFlow()
@@ -51,6 +53,7 @@ class RecipeDetailViewModel(
                         recipeDetail,
                         isFavourite
                     )
+                    cacheRepository.cacheRecipeInstructions(recipeDetail.id, recipeDetail.instructions)
                 } catch (e: Exception) {
                     _state.value = RecipeDetailState.Error(e.message ?: "Unknown")
                 }

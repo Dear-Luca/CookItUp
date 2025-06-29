@@ -33,7 +33,7 @@ sealed interface Routes {
     data object Settings : Routes
 
     @Serializable
-    data object CookRecipe : Routes
+    data class CookRecipe(val id: String) : Routes
 }
 
 sealed class TopLevelRoute(

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -18,7 +19,10 @@ import com.example.cookitup.ui.screens.components.TopBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CookRecipe(
-    navController: NavHostController
+    navController: NavHostController,
+    id: String,
+    actions: CookRecipeActions
+
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
@@ -33,6 +37,9 @@ fun CookRecipe(
         Column(
             modifier = Modifier.padding(paddingValues)
         ) {
+            actions.getInstructions(id).steps.forEach {
+                Text(it.instruction)
+            }
         }
     }
 }
