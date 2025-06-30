@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
-import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -27,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
@@ -39,23 +37,19 @@ fun RecipeItems(
     recipes: List<Recipe>,
     onClick: (String) -> Unit
 ) {
-    if (recipes.isEmpty()) {
-        NoRecipesFound()
-    } else {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(
-                count = recipes.size,
-                key = { index -> recipes[index].id }
-            ) { index ->
-                val recipe = recipes[index]
-                RecipeItem(
-                    recipe,
-                    onClick
-                )
-            }
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items(
+            count = recipes.size,
+            key = { index -> recipes[index].id }
+        ) { index ->
+            val recipe = recipes[index]
+            RecipeItem(
+                recipe,
+                onClick
+            )
         }
     }
 }
@@ -119,37 +113,5 @@ fun RecipeItem(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-    }
-}
-
-@Composable
-fun NoRecipesFound() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Default.SearchOff,
-            contentDescription = "No recipes found",
-            modifier = Modifier.size(32.dp),
-            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-        )
-
-        Text(
-            text = "No recipes found",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurface,
-            textAlign = TextAlign.Center
-        )
-
-        Text(
-            text = "Try different ingredients or check your spelling",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-            textAlign = TextAlign.Center
-        )
     }
 }

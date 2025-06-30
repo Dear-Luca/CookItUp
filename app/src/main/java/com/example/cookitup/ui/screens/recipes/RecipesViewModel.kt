@@ -33,6 +33,9 @@ class RecipesViewModel(
                 try {
                     val recipes = repository.getRecipes(ingredients)
                     _state.value = RecipesState.Success(recipes)
+                    if (recipes.isEmpty()) {
+                        _state.value = RecipesState.Error("No recipe found")
+                    }
                 } catch (e: Exception) {
                     // UnknownHostException
                     // HttpException
@@ -44,11 +47,15 @@ class RecipesViewModel(
         }
 
         override fun fetchSimilarRecipes(id: String) {
+            _state.value = RecipesState.Loading
             viewModelScope.launch {
-                _state.value = RecipesState.Loading
                 try {
                     val recipes = repository.getSimilarRecipes(id)
-                    _state.value = RecipesState.Success(recipes)
+                    if (recipes.isEmpty()) {
+                        _state.value = RecipesState.Error("No recipe found")
+                    } else {
+                        _state.value = RecipesState.Success(recipes)
+                    }
                 } catch (e: Exception) {
                     _state.value = RecipesState.Error(e.message ?: "Error")
                 }
