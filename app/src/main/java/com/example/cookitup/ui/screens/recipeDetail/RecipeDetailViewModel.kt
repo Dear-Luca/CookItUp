@@ -40,6 +40,7 @@ class RecipeDetailViewModel(
     val actions = object : RecipeDetailActions {
         override fun fetchRecipeDetail(id: String) {
             viewModelScope.launch {
+                _state.value = RecipeDetailState.Loading
                 try {
                     val isFavourite = dbRepository.isFavourite(id).first()
 

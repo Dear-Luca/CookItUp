@@ -5,7 +5,7 @@ import com.example.cookitup.domain.model.RecipeInstructions
 import com.example.cookitup.domain.repository.CacheRepository
 
 interface CookRecipeActions {
-    fun getInstructions(id: String): RecipeInstructions
+    fun getInstructions(id: String): RecipeInstructions?
 }
 
 class CookRecipeViewModel(
@@ -13,7 +13,7 @@ class CookRecipeViewModel(
 ) : ViewModel() {
 
     val actions = object : CookRecipeActions {
-        override fun getInstructions(id: String): RecipeInstructions {
+        override fun getInstructions(id: String): RecipeInstructions? {
             return cacheRepository.getRecipeInstructions(id)
         }
     }

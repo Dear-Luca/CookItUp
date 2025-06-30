@@ -9,7 +9,7 @@ class CacheRepositoryImpl : CacheRepository {
         instructionCache[id] = instructions
     }
 
-    override fun getRecipeInstructions(id: String): RecipeInstructions {
-        return instructionCache[id]!!
+    override fun getRecipeInstructions(id: String): RecipeInstructions? {
+        return instructionCache[id]
     }
 }
