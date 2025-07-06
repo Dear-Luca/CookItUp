@@ -12,7 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.FileProvider
 import java.io.File
 
-interface CameraLauncher{
+interface CameraLauncher {
     val capturedImageUri: Uri
     fun captureImage()
 }
@@ -27,7 +27,7 @@ fun rememberCameraLauncher(
 
     val cameraActivityLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.TakePicture()
-    ) { pictureTaken->
+    ) { pictureTaken ->
         if (!pictureTaken) return@rememberLauncherForActivityResult
         capturedImageUri = imageUri
         onPictureTaken(capturedImageUri)
