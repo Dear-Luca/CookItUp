@@ -369,6 +369,11 @@ fun AuthForm(
                                                     errorMessage = "Password must contain at least one letter"
                                                 }
 
+                                                !password.any { it.isUpperCase() } -> {
+                                                    errorMessage = "Password must" +
+                                                        " contain at least one upper case letter"
+                                                }
+
                                                 username.isEmpty() -> errorMessage = "Insert a username"
 
                                                 username.length > 20 ->

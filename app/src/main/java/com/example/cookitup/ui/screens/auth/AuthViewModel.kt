@@ -81,9 +81,14 @@ class AuthViewModel(
             viewModelScope.launch {
                 _state.value = AuthState.Loading
                 try {
-                    repository.signUp(email, password, username)
+                    val isAvailable = repository.checkEmail(email)
+                    if (isAvailable) {
+                        repository.signUp(email, password, username)
+                    } else {
+                        _state.value = AuthState.Error("Email already registered")
+                    }
                 } catch (e: Exception) {
-                    _state.value = AuthState.Error("Invalid ")
+                    _state.value = AuthState.Error(e.message ?: "An error occurred")
                 }
             }
         }

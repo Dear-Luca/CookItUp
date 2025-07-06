@@ -69,4 +69,12 @@ class SupabaseRepositoryImpl(
             password = newPassword
         }
     }
+
+    override suspend fun checkEmail(email: String): Boolean {
+        val response = client.from("users")
+            .select(columns = Columns.list("email")) {
+                filter { eq("email", email) }
+            }
+        return response.data == "[]"
+    }
 }
