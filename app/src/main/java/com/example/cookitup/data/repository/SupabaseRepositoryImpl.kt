@@ -1,5 +1,7 @@
 package com.example.cookitup.data.repository
 
+import android.util.Log
+import com.example.cookitup.data.remote.SUPABASE_SERVICE_ROLE_KEY
 import com.example.cookitup.data.remote.dto.MapperDto
 import com.example.cookitup.data.remote.dto.UserDto
 import com.example.cookitup.data.remote.supabase.Supabase
@@ -35,6 +37,12 @@ class SupabaseRepositoryImpl(
 
     override suspend fun signOut() {
         client.auth.signOut()
+    }
+
+    override suspend fun deleteCurrentUser() {
+        val uuid = client.auth.retrieveUserForCurrentSession().id
+        client.auth.importAuthToken(SUPABASE_SERVICE_ROLE_KEY)
+        client.auth.admin.deleteUser(uuid)
     }
 
     override suspend fun getCurrentUser(): User {

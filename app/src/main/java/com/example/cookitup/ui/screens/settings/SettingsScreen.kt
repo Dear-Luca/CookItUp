@@ -95,6 +95,7 @@ fun Settings(
     var showUsernameDialog by remember { mutableStateOf(false) }
     var showPasswordDialog by remember { mutableStateOf(false) }
     var showLogOutDialog by remember { mutableStateOf(false) }
+    var showDeleteUserDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -183,7 +184,7 @@ fun Settings(
                             icon = Icons.Default.Delete,
                             title = "Delete Account",
                             subtitle = "Permanently delete your account and data",
-                            onClick = { },
+                            onClick = { showDeleteUserDialog = true },
                             isDangerous = true
                         )
                     }
@@ -221,4 +222,15 @@ fun Settings(
             }
         )
     }
+
+    if (showDeleteUserDialog){
+        DeleteUserDialog(
+            onDismiss = {showDeleteUserDialog = false},
+            onConfirm = {
+                accountActions.deleteCurrentUser()
+                authActions.signOutUser()
+            }
+        )
+    }
 }
+

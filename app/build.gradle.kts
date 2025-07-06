@@ -41,6 +41,13 @@ android {
             name = "SUPABASE_API_KEY",
             value = "\"$supabaseApiKey\""
         )
+
+        val supabaseServiceRoleKey = properties.getProperty("SUPABASE_SERVICE_ROLE_KEY") ?: ""
+        buildConfigField(
+            type = "String",
+            name = "SUPABASE_SERVICE_ROLE_KEY",
+            value = "\"$supabaseServiceRoleKey\""
+        )
     }
     buildTypes {
         release {
