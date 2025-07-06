@@ -93,21 +93,18 @@ class ProfileViewModel(
         }
 
         override fun deleteCurrentUser() {
-
             viewModelScope.launch {
                 try {
                     repository.deleteCurrentUser()
                     _updateState.value = UpdateState.Success
-                } catch (e: Exception){
+                } catch (e: Exception) {
                     _state.value = ProfileState.Error("An error occurred")
                 }
             }
-
         }
 
         override fun clearUpdateState() {
             _updateState.value = UpdateState.Idle
         }
-
     }
 }

@@ -223,9 +223,9 @@ fun Settings(
         )
     }
 
-    if (showDeleteUserDialog){
+    if (showDeleteUserDialog) {
         DeleteUserDialog(
-            onDismiss = {showDeleteUserDialog = false},
+            onDismiss = { showDeleteUserDialog = false },
             onConfirm = {
                 accountActions.deleteCurrentUser()
                 authActions.signOutUser()
@@ -233,4 +233,3 @@ fun Settings(
         )
     }
 }
-

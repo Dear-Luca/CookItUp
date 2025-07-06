@@ -1,6 +1,5 @@
 package com.example.cookitup.data.repository
 
-import android.util.Log
 import com.example.cookitup.data.remote.SUPABASE_SERVICE_ROLE_KEY
 import com.example.cookitup.data.remote.dto.MapperDto
 import com.example.cookitup.data.remote.dto.UserDto

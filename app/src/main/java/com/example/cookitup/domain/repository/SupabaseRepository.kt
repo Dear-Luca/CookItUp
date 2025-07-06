@@ -9,7 +9,7 @@ interface SupabaseRepository {
     suspend fun getCurrentUser(): User
     suspend fun checkEmail(email: String): Boolean
 
-    //sign/log out
+    // sign/log out
     suspend fun signOut()
     suspend fun deleteCurrentUser()
 
