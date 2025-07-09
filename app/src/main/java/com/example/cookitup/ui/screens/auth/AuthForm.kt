@@ -40,6 +40,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -47,12 +49,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -61,6 +65,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.cookitup.utils.NetworkUtils
+import kotlinx.coroutines.launch
 
 @Composable
 fun AuthForm(
@@ -77,6 +83,10 @@ fun AuthForm(
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val emailPattern = android.util.Patterns.EMAIL_ADDRESS
+
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     // Handle errors
     LaunchedEffect(state) {
@@ -108,6 +118,13 @@ fun AuthForm(
                 )
             )
     ) {
+        // Add SnackbarHost at the bottom of the Box
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp)
+        )
         when (state) {
             AuthState.Initializing -> {
                 Box(
@@ -348,8 +365,19 @@ fun AuthForm(
                                     when (isLoginMode) {
                                         true -> {
                                             when {
+                                                email.isBlank() || !emailPattern.matcher(email).matches() ->
+                                                    errorMessage = "Insert a valid email"
                                                 password.isBlank() -> errorMessage = "Insert a valid password"
-                                                else -> actions.signInUser(email.trim(), password.trim())
+                                                else -> {
+                                                    scope.launch {
+                                                        NetworkUtils.checkConnectivity(
+                                                            context,
+                                                            snackbarHostState
+                                                        ) {
+                                                            actions.signInUser(email.trim(), password.trim())
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                         false -> {
@@ -370,8 +398,8 @@ fun AuthForm(
                                                 }
 
                                                 !password.any { it.isUpperCase() } -> {
-                                                    errorMessage = "Password must" +
-                                                        " contain at least one upper case letter"
+                                                    errorMessage = "Password must contain at " +
+                                                        "least one upper case letter"
                                                 }
 
                                                 username.isEmpty() -> errorMessage = "Insert a username"
@@ -380,11 +408,18 @@ fun AuthForm(
                                                     errorMessage = "Username must be less than 20 characters"
 
                                                 else -> {
-                                                    actions.signUpUser(
-                                                        email.trim(),
-                                                        password.trim(),
-                                                        username.trim()
-                                                    )
+                                                    scope.launch {
+                                                        NetworkUtils.checkConnectivity(
+                                                            context,
+                                                            snackbarHostState
+                                                        ) {
+                                                            actions.signUpUser(
+                                                                email.trim(),
+                                                                password.trim(),
+                                                                username.trim()
+                                                            )
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -411,7 +446,7 @@ fun AuthForm(
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Text(
-                                            text = if (isLoginMode) "Access..." else "Registration...",
+                                            text = if (isLoginMode) "Access..." else "Verify your email...",
                                             style = MaterialTheme.typography.titleMedium,
                                             fontWeight = FontWeight.Medium
                                         )
