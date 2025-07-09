@@ -45,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -55,6 +56,8 @@ import com.example.cookitup.R
 import com.example.cookitup.domain.model.RecipeInstructions
 import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.TopBar
+import com.example.cookitup.utils.rememberCameraLauncher
+import com.example.cookitup.utils.saveImageToStorage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,6 +71,7 @@ fun CookRecipe(
     var currentStep by rememberSaveable { mutableIntStateOf(0) }
     val instructions = actions.getInstructions(id) ?: RecipeInstructions(emptyList())
     val steps = instructions.steps
+    val ctx = LocalContext.current
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -292,11 +296,13 @@ fun CookRecipe(
                 ),
                 shape = RoundedCornerShape(16.dp)
             ) {
+                val cameraLauncher = rememberCameraLauncher(
+                    onPictureTaken = { imageUri ->
+                        saveImageToStorage(imageUri, ctx.contentResolver)
+                    }
+                )
                 Button(
-                    onClick = {
-                        // Handle photo capture
-                        // You can implement camera functionality here
-                    },
+                    onClick = cameraLauncher::captureImage,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
