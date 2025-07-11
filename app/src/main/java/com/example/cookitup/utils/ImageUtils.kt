@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.SystemClock
 import android.provider.MediaStore
+import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
 
 fun uriToBitmap(imageUri: Uri, contentResolver: ContentResolver): Bitmap {
@@ -44,4 +45,13 @@ fun saveImageToStorage(
     outputStream.close()
 
     return savedImageUri
+}
+
+fun saveImageToDB(imageUri: Uri, contentResolver: ContentResolver, updateProfileImage: (String, ByteArray) -> Unit) {
+    val bitmap = uriToBitmap(imageUri, contentResolver)
+    val baos = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+    val imageBytes = baos.toByteArray()
+    val fileName = "IMG_${SystemClock.uptimeMillis()}"
+    updateProfileImage(fileName, imageBytes)
 }

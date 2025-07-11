@@ -2,9 +2,11 @@ package com.example.cookitup.ui.screens.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cookitup.data.remote.supabase.Supabase
 import com.example.cookitup.domain.model.User
 import com.example.cookitup.domain.repository.SupabaseRepository
 import io.github.jan.supabase.exceptions.RestException
+import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -32,6 +34,8 @@ interface ProfileActions {
     fun clearUpdateState()
 
     fun deleteCurrentUser()
+
+    fun updateProfileImage(fileName: String?, imageBytes: ByteArray)
 }
 
 class ProfileViewModel(
@@ -99,6 +103,20 @@ class ProfileViewModel(
                     _updateState.value = UpdateState.Success
                 } catch (e: Exception) {
                     _state.value = ProfileState.Error("An error occurred")
+                }
+            }
+        }
+
+        override fun updateProfileImage(fileName: String?, imageBytes: ByteArray) {
+            viewModelScope.launch {
+                try {
+                    if (fileName != null) {
+                        Supabase.client.storage.from("avatar").upload(fileName, imageBytes) {
+                            upsert = true
+                        }
+                    }
+                } catch (e: Exception) {
+                    _state.value = ProfileState.Error(e.message ?: "An error occured")
                 }
             }
         }

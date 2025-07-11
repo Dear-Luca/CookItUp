@@ -34,7 +34,7 @@ import com.example.cookitup.domain.model.User
 @Composable
 fun UserCard(
     user: User,
-    onImageEditClick: () -> Unit = {}
+    onImageEditClick: () -> Unit
 ) {
     Column(
         modifier = Modifier

@@ -27,6 +27,9 @@ import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.TopBar
 import com.example.cookitup.ui.screens.settings.SettingsComponent
 import com.example.cookitup.utils.NetworkUtils
+import com.example.cookitup.utils.rememberCameraLauncher
+import com.example.cookitup.utils.saveImageToDB
+import com.example.cookitup.utils.saveImageToStorage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,6 +41,13 @@ fun Profile(
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val cameraLauncher = rememberCameraLauncher(
+        onPictureTaken = { imageUri ->
+            saveImageToStorage(imageUri, context.contentResolver)
+            saveImageToDB(imageUri, context.contentResolver, actions::updateProfileImage)
+        }
+    )
+
     LaunchedEffect(Unit) {
         NetworkUtils.checkConnectivity(
             context,
@@ -82,7 +92,11 @@ fun Profile(
                     color = Color.Red,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
-                is ProfileState.Success -> UserCard(state.user)
+                is ProfileState.Success -> UserCard(
+                    state.user
+                ) {
+                    cameraLauncher.captureImage()
+                }
             }
         }
     }
