@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.cookitup.domain.model.User
 import com.example.cookitup.utils.rememberCameraLauncher
@@ -59,6 +60,8 @@ fun UserCard(
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(user.image)
+                        .diskCachePolicy(CachePolicy.DISABLED)
+                        .memoryCachePolicy(CachePolicy.DISABLED)
                         .crossfade(true)
                         .build(),
                     contentDescription = "Image profile",
