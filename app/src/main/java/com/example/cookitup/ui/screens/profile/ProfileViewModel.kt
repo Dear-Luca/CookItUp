@@ -24,15 +24,10 @@ sealed class UpdateState {
 
 interface ProfileActions {
     fun getCurrentUser()
-
     fun updateUsername(newUsername: String)
-
     fun updatePassword(newPassword: String)
-
     fun clearUpdateState()
-
     fun deleteCurrentUser()
-
     fun updateProfileImage(fileName: String?, imageBytes: ByteArray)
 }
 
@@ -109,10 +104,15 @@ class ProfileViewModel(
             viewModelScope.launch {
                 try {
                     if (fileName != null) {
+                        // Update the image in the repository
                         repository.updateImage(fileName, imageBytes)
+
+                        // Refresh the user data to get the updated image path
+                        val updatedUser = repository.getCurrentUser()
+                        _state.value = ProfileState.Success(updatedUser)
                     }
                 } catch (e: Exception) {
-                    _state.value = ProfileState.Error(e.message ?: "An error occured")
+                    _state.value = ProfileState.Error(e.message ?: "An error occurred")
                 }
             }
         }

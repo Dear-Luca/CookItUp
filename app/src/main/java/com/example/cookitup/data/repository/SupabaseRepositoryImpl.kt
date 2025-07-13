@@ -82,6 +82,22 @@ class SupabaseRepositoryImpl(
         Supabase.client.storage.from("avatars").upload(fileName, imageBytes) {
             upsert = true
         }
+
+        val publicUrlResult = Supabase.client
+            .storage
+            .from("avatars").publicUrl(fileName)
+
+        val currentUser = client.auth.currentUserOrNull()
+
+        client.from("users")
+            .update(mapOf("image" to publicUrlResult)) {
+                filter { eq("id", currentUser!!.id) }
+            }
+    }
+
+    override suspend fun getProfileImage(image: String): ByteArray {
+        val result = Supabase.client.storage.from("avatars").downloadAuthenticated(image)
+        return result
     }
 
     override suspend fun checkEmail(email: String): Boolean {

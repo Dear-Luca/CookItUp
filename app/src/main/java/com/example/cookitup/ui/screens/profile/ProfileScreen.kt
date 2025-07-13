@@ -34,7 +34,7 @@ import com.example.cookitup.utils.NetworkUtils
 @Composable
 fun Profile(
     navController: NavHostController,
-    state: ProfileState,
+    profileState: ProfileState,
     actions: ProfileActions
 ) {
     val context = LocalContext.current
@@ -77,19 +77,19 @@ fun Profile(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            when (state) {
+            when (profileState) {
                 is ProfileState.Loading ->
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     )
 
                 is ProfileState.Error -> Text(
-                    text = state.message,
+                    text = profileState.message,
                     color = Color.Red,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 is ProfileState.Success -> UserCard(
-                    state.user,
+                    profileState.user,
                     actions
                 )
             }

@@ -18,4 +18,5 @@ interface SupabaseRepository {
     suspend fun updateUsername(newUsername: String)
     suspend fun updatePassword(newPassword: String)
     suspend fun updateImage(fileName: String, imageBytes: ByteArray)
+    suspend fun getProfileImage(image: String): ByteArray
 }
