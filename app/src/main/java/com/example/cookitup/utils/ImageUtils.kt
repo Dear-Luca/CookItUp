@@ -47,11 +47,16 @@ fun saveImageToStorage(
     return savedImageUri
 }
 
-fun saveImageToDB(imageUri: Uri, contentResolver: ContentResolver, updateProfileImage: (String, ByteArray) -> Unit) {
+fun saveImageToDB(
+    imageUri: Uri,
+    contentResolver: ContentResolver,
+    userId: String,
+    updateProfileImage: (String, ByteArray) -> Unit
+) {
     val bitmap = uriToBitmap(imageUri, contentResolver)
     val baos = ByteArrayOutputStream()
     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
     val imageBytes = baos.toByteArray()
-    val fileName = "IMG_${SystemClock.uptimeMillis()}"
-    updateProfileImage(fileName, imageBytes)
+    val filePath = "$userId/profile.jpg"
+    updateProfileImage(filePath, imageBytes)
 }

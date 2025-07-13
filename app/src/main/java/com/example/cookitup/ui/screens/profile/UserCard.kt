@@ -30,12 +30,23 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.cookitup.domain.model.User
+import com.example.cookitup.utils.rememberCameraLauncher
+import com.example.cookitup.utils.saveImageToDB
+import com.example.cookitup.utils.saveImageToStorage
 
 @Composable
 fun UserCard(
     user: User,
-    onImageEditClick: () -> Unit
+    actions: ProfileActions
 ) {
+    val context = LocalContext.current
+    val cameraLauncher = rememberCameraLauncher(
+        onPictureTaken = { imageUri ->
+            saveImageToStorage(imageUri, context.contentResolver)
+            saveImageToDB(imageUri, context.contentResolver, user.id, actions::updateProfileImage)
+        }
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -87,7 +98,7 @@ fun UserCard(
             }
 
             FloatingActionButton(
-                onClick = onImageEditClick,
+                onClick = cameraLauncher::captureImage,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .size(40.dp),

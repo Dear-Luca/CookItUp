@@ -11,6 +11,7 @@ import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.storage.storage
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
@@ -74,6 +75,12 @@ class SupabaseRepositoryImpl(
     override suspend fun updatePassword(newPassword: String) {
         client.auth.updateUser {
             password = newPassword
+        }
+    }
+
+    override suspend fun updateImage(fileName: String, imageBytes: ByteArray) {
+        Supabase.client.storage.from("avatars").upload(fileName, imageBytes) {
+            upsert = true
         }
     }
 
