@@ -67,6 +67,7 @@ import com.example.cookitup.R
 import com.example.cookitup.ui.navigation.Routes
 import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.TopBar
+import com.example.cookitup.ui.screens.settings.SettingsComponent
 import com.example.cookitup.utils.NetworkUtils
 import kotlinx.coroutines.launch
 
@@ -86,7 +87,21 @@ fun SearchRecipes(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         },
-        topBar = { TopBar(navController, stringResource(R.string.title_home)) },
+        topBar = {
+            TopBar(
+                navController,
+                stringResource(R.string.title_home),
+                actions = {
+                    SettingsComponent(
+                        onSettingsClick = {
+                            navController.navigate(
+                                Routes.Settings
+                            )
+                        }
+                    )
+                }
+            )
+        },
         bottomBar = { BottomBar(navController) }
     ) { paddingValues ->
         Box(

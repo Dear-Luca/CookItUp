@@ -22,6 +22,7 @@ import com.example.cookitup.ui.navigation.Routes
 import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.TopBar
 import com.example.cookitup.ui.screens.recipes.RecipeItems
+import com.example.cookitup.ui.screens.settings.SettingsComponent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +36,22 @@ fun Favourites(
     }
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
-        topBar = { TopBar(navController, stringResource(R.string.title_favourites), scrollBehavior) },
+        topBar = {
+            TopBar(
+                navController,
+                stringResource(R.string.title_favourites),
+                scrollBehavior,
+                actions = {
+                    SettingsComponent(
+                        onSettingsClick = {
+                            navController.navigate(
+                                Routes.Settings
+                            )
+                        }
+                    )
+                }
+            )
+        },
         bottomBar = { BottomBar(navController) },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
