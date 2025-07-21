@@ -19,6 +19,7 @@ fun BottomBar(navController: NavHostController) {
     val topLevelRoutes = listOf(
         TopLevelRoute.Home,
         TopLevelRoute.Favourites,
+        TopLevelRoute.People,
         TopLevelRoute.Profile
     )
     NavigationBar(
@@ -83,15 +84,16 @@ fun BottomBar(navController: NavHostController) {
                                 navController.navigate(Routes.Profile)
                             }
                         }
-//                        else -> {
-//                            navController.navigate(topLevelRoute.route) {
-//                                popUpTo(navController.graph.findStartDestination().id) {
-//                                    saveState = true
-//                                }
-//                                launchSingleTop = true
-//                                restoreState = true
-//                            }
-//                        }
+
+                        is TopLevelRoute.People -> {
+                            val popped = navController.popBackStack(
+                                route = Routes.People,
+                                inclusive = false
+                            )
+                            if (!popped) {
+                                navController.navigate(Routes.People)
+                            }
+                        }
                     }
                 }
             )

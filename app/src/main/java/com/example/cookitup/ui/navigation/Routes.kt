@@ -4,9 +4,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.PeopleAlt
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.PeopleOutline
 import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.serialization.Serializable
 
@@ -37,6 +39,9 @@ sealed interface Routes {
 
     @Serializable
     data object Posts : Routes
+
+    @Serializable
+    data object People : Routes
 }
 
 sealed class TopLevelRoute(
@@ -62,5 +67,12 @@ sealed class TopLevelRoute(
         route = Routes.Favourites,
         selectedIcon = Icons.Filled.Favorite,
         unselectedIcon = Icons.Outlined.FavoriteBorder
+    )
+
+    data object People : TopLevelRoute(
+        name = "People",
+        route = Routes.People,
+        selectedIcon = Icons.Filled.PeopleAlt,
+        unselectedIcon = Icons.Outlined.PeopleOutline
     )
 }
