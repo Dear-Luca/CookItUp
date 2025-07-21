@@ -7,4 +7,6 @@
     <string name="title_profile">Profile</string>
     <string name="title_settings">Settings</string>
     <string name="title_cook_recipe">Cook It Up</string>
+    <string name="title_people">People</string>
+    <string name="title_posts">Posts</string>
 </resources>

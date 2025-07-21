@@ -127,11 +127,11 @@ fun NavGraph(
         }
 
         composable<Routes.Posts> {
-            Posts()
+            Posts(navController)
         }
 
         composable<Routes.People> {
-            People()
+            People(navController)
         }
     }
 }
