@@ -123,5 +123,8 @@ fun NavGraph(
                 authViewModel.actions
             )
         }
+
+        composable<Routes.Posts> {
+        }
     }
 }

@@ -34,6 +34,9 @@ sealed interface Routes {
 
     @Serializable
     data class CookRecipe(val id: String) : Routes
+
+    @Serializable
+    data object Posts : Routes
 }
 
 sealed class TopLevelRoute(

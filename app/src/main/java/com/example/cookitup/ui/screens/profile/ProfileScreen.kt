@@ -90,7 +90,9 @@ fun Profile(
                 )
                 is ProfileState.Success -> UserCard(
                     profileState.user,
-                    actions
+                    actions,
+                    onNavigateToUserPosts = { navController.navigate(Routes.Posts) },
+                    onNavigateToSettings = { navController.navigate(Routes.Settings) }
                 )
             }
         }
