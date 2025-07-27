@@ -105,7 +105,7 @@ class ProfileViewModel(
                 try {
                     if (fileName != null) {
                         // Update the image in the repository
-                        repository.updateImage(fileName, imageBytes)
+                        repository.updateProfileImage(fileName, imageBytes)
 
                         // Refresh the user data to get the updated image path
                         val updatedUser = repository.getCurrentUser()

@@ -105,6 +105,9 @@ val koinModule = module {
     }
 
     viewModel {
-        CookRecipeViewModel(get())
+        CookRecipeViewModel(
+            supabaseRepository = get(),
+            cacheRepository = get()
+        )
     }
 }

@@ -46,8 +46,8 @@ import coil.request.ImageRequest
 import com.example.cookitup.domain.model.User
 import com.example.cookitup.utils.NetworkUtils
 import com.example.cookitup.utils.rememberCameraLauncher
-import com.example.cookitup.utils.saveImageToDB
 import com.example.cookitup.utils.saveImageToStorage
+import com.example.cookitup.utils.saveProfileImageToDB
 import kotlinx.coroutines.launch
 
 @Composable
@@ -70,7 +70,7 @@ fun UserCard(
                     context,
                     snackbarHostState
                 ) {
-                    saveImageToDB(imageUri, context.contentResolver, user.id, actions::updateProfileImage)
+                    saveProfileImageToDB(imageUri, context.contentResolver, user.id, actions::updateProfileImage)
                 }
             }
         }

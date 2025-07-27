@@ -17,6 +17,9 @@ interface SupabaseRepository {
     suspend fun checkUsername(username: String): Boolean
     suspend fun updateUsername(newUsername: String)
     suspend fun updatePassword(newPassword: String)
-    suspend fun updateImage(fileName: String, imageBytes: ByteArray)
+    suspend fun updateProfileImage(fileName: String, imageBytes: ByteArray)
     suspend fun getProfileImage(image: String): ByteArray
+
+    // recipes
+    suspend fun insertRecipePost(fileName: String, imageBytes: ByteArray, recipeId: String)
 }

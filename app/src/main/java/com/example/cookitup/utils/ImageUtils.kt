@@ -10,6 +10,8 @@ import android.os.SystemClock
 import android.provider.MediaStore
 import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 fun uriToBitmap(imageUri: Uri, contentResolver: ContentResolver): Bitmap {
     val bitmap = when {
@@ -47,7 +49,7 @@ fun saveImageToStorage(
     return savedImageUri
 }
 
-fun saveImageToDB(
+fun saveProfileImageToDB(
     imageUri: Uri,
     contentResolver: ContentResolver,
     userId: String,
@@ -59,4 +61,21 @@ fun saveImageToDB(
     val imageBytes = baos.toByteArray()
     val filePath = "$userId/profile.jpg"
     updateProfileImage(filePath, imageBytes)
+}
+
+@OptIn(ExperimentalUuidApi::class)
+fun saveRecipeImageToDB(
+    imageUri: Uri,
+    contentResolver: ContentResolver,
+    recipeId: String,
+    insertRecipeImage: (String, ByteArray, String) -> Unit
+) {
+    val bitmap = uriToBitmap(imageUri, contentResolver)
+    val baos = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+    val imageBytes = baos.toByteArray()
+    val uuid = Uuid.random()
+
+    val filePath = "$uuid.jpg"
+    insertRecipeImage(filePath, imageBytes, recipeId)
 }

@@ -4,6 +4,7 @@ import com.example.cookitup.data.remote.SUPABASE_SERVICE_ROLE_KEY
 import com.example.cookitup.data.remote.dto.MapperDto
 import com.example.cookitup.data.remote.dto.UserDto
 import com.example.cookitup.data.remote.supabase.Supabase
+import com.example.cookitup.domain.model.Post
 import com.example.cookitup.domain.model.User
 import com.example.cookitup.domain.repository.SupabaseRepository
 import io.github.jan.supabase.SupabaseClient
@@ -78,7 +79,7 @@ class SupabaseRepositoryImpl(
         }
     }
 
-    override suspend fun updateImage(fileName: String, imageBytes: ByteArray) {
+    override suspend fun updateProfileImage(fileName: String, imageBytes: ByteArray) {
         Supabase.client.storage.from("avatars").upload(fileName, imageBytes) {
             upsert = true
         }
@@ -98,6 +99,19 @@ class SupabaseRepositoryImpl(
     override suspend fun getProfileImage(image: String): ByteArray {
         val result = Supabase.client.storage.from("avatars").downloadAuthenticated(image)
         return result
+    }
+
+    override suspend fun insertRecipePost(fileName: String, imageBytes: ByteArray, recipeId: String) {
+        val currentUser = client.auth.currentUserOrNull()
+        val filePath = "${currentUser?.id}/$fileName"
+        Supabase.client.storage.from("posts").upload(filePath, imageBytes)
+
+        val publicUrlResult = Supabase.client
+            .storage
+            .from("posts").publicUrl(fileName)
+
+        val post = Post(fileName, publicUrlResult, recipeId, currentUser?.id.toString())
+        client.from("posts").insert(post)
     }
 
     override suspend fun checkEmail(email: String): Boolean {

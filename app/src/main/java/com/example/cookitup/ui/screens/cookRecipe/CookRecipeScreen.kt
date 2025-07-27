@@ -63,6 +63,7 @@ import com.example.cookitup.ui.screens.components.TopBar
 import com.example.cookitup.utils.NetworkUtils
 import com.example.cookitup.utils.rememberCameraLauncher
 import com.example.cookitup.utils.saveImageToStorage
+import com.example.cookitup.utils.saveRecipeImageToDB
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -312,9 +313,9 @@ fun CookRecipe(
                                 ctx,
                                 snackbarHostState
                             ) {
+                                saveRecipeImageToDB(imageUri, ctx.contentResolver, id, actions::saveRecipeImage)
                             }
                         }
-//                        saveImageToDB(imageUri, ctx.contentResolver, user.id, actions::saveRecipePhoto)
                     }
                 )
                 Button(

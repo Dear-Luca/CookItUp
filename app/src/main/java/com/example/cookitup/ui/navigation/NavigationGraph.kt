@@ -74,14 +74,15 @@ fun NavGraph(
 
         composable<Routes.CookRecipe> { navBackStackEntry ->
             val cookRecipeViewModel: CookRecipeViewModel = koinViewModel()
-
+            val cookRecipeState by cookRecipeViewModel.state.collectAsStateWithLifecycle()
             val route: Routes.CookRecipe = navBackStackEntry.toRoute()
             val id = route.id
 
             CookRecipe(
                 navController,
                 id,
-                cookRecipeViewModel.actions
+                cookRecipeViewModel.actions,
+                cookRecipeState
             )
         }
 

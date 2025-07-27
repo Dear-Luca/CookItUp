@@ -92,7 +92,8 @@ fun Profile(
                     profileState.user,
                     actions,
                     onNavigateToUserPosts = { navController.navigate(Routes.Posts) },
-                    onNavigateToSettings = { navController.navigate(Routes.Settings) }
+                    onNavigateToSettings = { navController.navigate(Routes.Settings) },
+                    onNavigateToFavourites = { navController.navigate(Routes.Favourites) }
                 )
             }
         }
