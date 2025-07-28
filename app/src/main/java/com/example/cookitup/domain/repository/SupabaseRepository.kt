@@ -21,5 +21,5 @@ interface SupabaseRepository {
     suspend fun getProfileImage(image: String): ByteArray
 
     // recipes
-    suspend fun insertRecipePost(fileName: String, imageBytes: ByteArray, recipeId: String)
+    suspend fun insertRecipePost(uuid: String, imageBytes: ByteArray, recipeId: String)
 }

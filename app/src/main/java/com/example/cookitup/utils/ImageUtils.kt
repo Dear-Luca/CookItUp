@@ -76,6 +76,5 @@ fun saveRecipeImageToDB(
     val imageBytes = baos.toByteArray()
     val uuid = Uuid.random()
 
-    val filePath = "$uuid.jpg"
-    insertRecipeImage(filePath, imageBytes, recipeId)
+    insertRecipeImage(uuid.toString(), imageBytes, recipeId)
 }

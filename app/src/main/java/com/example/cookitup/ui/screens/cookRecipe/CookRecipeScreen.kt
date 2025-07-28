@@ -1,5 +1,6 @@
 package com.example.cookitup.ui.screens.cookRecipe
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -81,6 +83,14 @@ fun CookRecipe(
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(state) {
+        when (state) {
+            is CookRecipeState.Error -> { Log.i("ERROR", state.message) }
+            CookRecipeState.Loading -> {}
+            CookRecipeState.Success -> snackbarHostState.showSnackbar("Operation completed successfully")
+        }
+    }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),

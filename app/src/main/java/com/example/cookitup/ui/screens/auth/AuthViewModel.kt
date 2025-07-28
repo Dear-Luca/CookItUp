@@ -58,7 +58,7 @@ class AuthViewModel(
                         }
                     }
                     is SessionStatus.RefreshFailure -> {
-                        _state.value = AuthState.Error("Session expired: ${status.cause}")
+                        _state.value = AuthState.Error("Session expired")
                     }
                 }
             }
@@ -88,7 +88,7 @@ class AuthViewModel(
                         _state.value = AuthState.Error("Email already registered")
                     }
                 } catch (e: Exception) {
-                    _state.value = AuthState.Error(e.message ?: "An error occurred")
+                    _state.value = AuthState.Error("An error occurred")
                 }
             }
         }

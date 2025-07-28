@@ -18,7 +18,7 @@ sealed class CookRecipeState {
 interface CookRecipeActions {
     fun getInstructions(id: String): RecipeInstructions?
 
-    fun saveRecipeImage(fileName: String?, imageBytes: ByteArray, recipeId: String)
+    fun saveRecipeImage(uuid: String, imageBytes: ByteArray, recipeId: String)
 }
 
 class CookRecipeViewModel(
@@ -34,17 +34,12 @@ class CookRecipeViewModel(
             return cacheRepository.getRecipeInstructions(id)
         }
 
-        override fun saveRecipeImage(fileName: String?, imageBytes: ByteArray, recipeId: String) {
+        override fun saveRecipeImage(uuid: String, imageBytes: ByteArray, recipeId: String) {
             viewModelScope.launch {
                 try {
-                    if (fileName != null) {
-                        // Update the image in the repository
-                        supabaseRepository.insertRecipePost(fileName, imageBytes, recipeId)
-
-                        // Refresh the user data to get the updated image path
-                        val updatedUser = supabaseRepository.getCurrentUser()
-                        _state.value = CookRecipeState.Success
-                    }
+                    // Insert the image
+                    supabaseRepository.insertRecipePost(uuid, imageBytes, recipeId)
+                    _state.value = CookRecipeState.Success
                 } catch (e: Exception) {
                     _state.value = CookRecipeState.Error(e.message ?: "An error occurred")
                 }

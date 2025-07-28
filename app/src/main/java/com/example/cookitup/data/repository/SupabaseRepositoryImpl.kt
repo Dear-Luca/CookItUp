@@ -2,9 +2,9 @@ package com.example.cookitup.data.repository
 
 import com.example.cookitup.data.remote.SUPABASE_SERVICE_ROLE_KEY
 import com.example.cookitup.data.remote.dto.MapperDto
+import com.example.cookitup.data.remote.dto.PostDto
 import com.example.cookitup.data.remote.dto.UserDto
 import com.example.cookitup.data.remote.supabase.Supabase
-import com.example.cookitup.domain.model.Post
 import com.example.cookitup.domain.model.User
 import com.example.cookitup.domain.repository.SupabaseRepository
 import io.github.jan.supabase.SupabaseClient
@@ -101,16 +101,16 @@ class SupabaseRepositoryImpl(
         return result
     }
 
-    override suspend fun insertRecipePost(fileName: String, imageBytes: ByteArray, recipeId: String) {
+    override suspend fun insertRecipePost(uuid: String, imageBytes: ByteArray, recipeId: String) {
         val currentUser = client.auth.currentUserOrNull()
-        val filePath = "${currentUser?.id}/$fileName"
+        val filePath = "${currentUser?.id}/$uuid.jpg"
         Supabase.client.storage.from("posts").upload(filePath, imageBytes)
 
         val publicUrlResult = Supabase.client
             .storage
-            .from("posts").publicUrl(fileName)
+            .from("posts").publicUrl(filePath)
 
-        val post = Post(fileName, publicUrlResult, recipeId, currentUser?.id.toString())
+        val post = PostDto(uuid, publicUrlResult, recipeId, currentUser?.id.toString())
         client.from("posts").insert(post)
     }
 
