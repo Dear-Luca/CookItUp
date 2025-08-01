@@ -95,7 +95,8 @@ fun NavGraph(
         composable<Routes.Profile> {
             val profileViewModel: ProfileViewModel = koinViewModel()
             val profileState by profileViewModel.state.collectAsStateWithLifecycle()
-            Profile(navController, profileState, profileViewModel.actions)
+            val postsState by profileViewModel.postsState.collectAsStateWithLifecycle()
+            Profile(navController, profileState, postsState, profileViewModel.actions)
         }
 
         composable<Routes.Auth> {

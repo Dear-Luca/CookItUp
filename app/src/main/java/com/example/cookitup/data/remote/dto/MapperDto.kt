@@ -5,6 +5,7 @@ import com.example.cookitup.data.remote.IMAGES_ENDPOINT
 import com.example.cookitup.domain.model.Ingredient
 import com.example.cookitup.domain.model.MeasureUnit
 import com.example.cookitup.domain.model.Measures
+import com.example.cookitup.domain.model.Post
 import com.example.cookitup.domain.model.Recipe
 import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.domain.model.RecipeInstructions
@@ -90,5 +91,9 @@ object MapperDto {
             username = dto.username,
             image = dto.image
         )
+    }
+
+    fun mapToDomain(dto: List<PostDto>): List<Post> {
+        return dto.map { it -> Post(it.id, it.image, it.recipe, it.userId) }
     }
 }

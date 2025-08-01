@@ -1,7 +1,9 @@
 package com.example.cookitup.ui.screens.profile
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cookitup.domain.model.Post
 import com.example.cookitup.domain.model.User
 import com.example.cookitup.domain.repository.SupabaseRepository
 import io.github.jan.supabase.exceptions.RestException
@@ -22,8 +24,15 @@ sealed class UpdateState {
     data class Error(val message: String) : UpdateState()
 }
 
+sealed class PostsState {
+    data class Success(val posts: List<Post>) : PostsState()
+    data object Loading : PostsState()
+    data class Error(val message: String) : PostsState()
+}
+
 interface ProfileActions {
     fun getCurrentUser()
+    fun getPosts(id: String)
     fun updateUsername(newUsername: String)
     fun updatePassword(newPassword: String)
     fun clearUpdateState()
@@ -40,6 +49,9 @@ class ProfileViewModel(
     private val _updateState = MutableStateFlow<UpdateState>(UpdateState.Idle)
     val updateState = _updateState.asStateFlow()
 
+    private val _postsState = MutableStateFlow<PostsState>(PostsState.Loading)
+    val postsState = _postsState.asStateFlow()
+
     val actions = object : ProfileActions {
         override fun getCurrentUser() {
             viewModelScope.launch {
@@ -49,6 +61,35 @@ class ProfileViewModel(
                     _state.value = ProfileState.Success(user)
                 } catch (e: Exception) {
                     _state.value = ProfileState.Error(e.message ?: "Error")
+                }
+            }
+        }
+
+        override fun getPosts(id: String) {
+            viewModelScope.launch {
+                try {
+                    val posts = repository.getPosts(id)
+                    Log.i("POSTS_VIEWMODEL", posts.toString())
+                    _postsState.value = PostsState.Success(posts)
+                } catch (e: Exception) {
+                    _postsState.value = PostsState.Error("Error: Failed loading posts")
+                }
+            }
+        }
+
+        override fun updateProfileImage(fileName: String?, imageBytes: ByteArray) {
+            viewModelScope.launch {
+                try {
+                    if (fileName != null) {
+                        // Update the image in the repository
+                        repository.updateProfileImage(fileName, imageBytes)
+
+                        // Refresh the user data to get the updated image path
+                        val updatedUser = repository.getCurrentUser()
+                        _state.value = ProfileState.Success(updatedUser)
+                    }
+                } catch (e: Exception) {
+                    _state.value = ProfileState.Error(e.message ?: "An error occurred")
                 }
             }
         }
@@ -96,23 +137,6 @@ class ProfileViewModel(
                     _updateState.value = UpdateState.Success
                 } catch (e: Exception) {
                     _state.value = ProfileState.Error("An error occurred")
-                }
-            }
-        }
-
-        override fun updateProfileImage(fileName: String?, imageBytes: ByteArray) {
-            viewModelScope.launch {
-                try {
-                    if (fileName != null) {
-                        // Update the image in the repository
-                        repository.updateProfileImage(fileName, imageBytes)
-
-                        // Refresh the user data to get the updated image path
-                        val updatedUser = repository.getCurrentUser()
-                        _state.value = ProfileState.Success(updatedUser)
-                    }
-                } catch (e: Exception) {
-                    _state.value = ProfileState.Error(e.message ?: "An error occurred")
                 }
             }
         }

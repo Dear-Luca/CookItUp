@@ -58,7 +58,7 @@ class AuthViewModel(
                         }
                     }
                     is SessionStatus.RefreshFailure -> {
-                        _state.value = AuthState.Error("Session expired")
+                        _state.value = AuthState.Error(status.cause.toString())
                     }
                 }
             }

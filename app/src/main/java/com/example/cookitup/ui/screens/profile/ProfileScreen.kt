@@ -3,8 +3,6 @@ package com.example.cookitup.ui.screens.profile
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -35,6 +33,7 @@ import com.example.cookitup.utils.NetworkUtils
 fun Profile(
     navController: NavHostController,
     profileState: ProfileState,
+    postsState: PostsState,
     actions: ProfileActions
 ) {
     val context = LocalContext.current
@@ -47,6 +46,12 @@ fun Profile(
             snackbarHostState
         ) {
             actions.getCurrentUser()
+        }
+    }
+
+    if (profileState is ProfileState.Success) {
+        LaunchedEffect(Unit) {
+            actions.getPosts(profileState.user.id)
         }
     }
 
@@ -75,7 +80,6 @@ fun Profile(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
         ) {
             when (profileState) {
                 is ProfileState.Loading ->
@@ -90,10 +94,8 @@ fun Profile(
                 )
                 is ProfileState.Success -> UserCard(
                     profileState.user,
-                    actions,
-                    onNavigateToUserPosts = { navController.navigate(Routes.Posts) },
-                    onNavigateToSettings = { navController.navigate(Routes.Settings) },
-                    onNavigateToFavourites = { navController.navigate(Routes.Favourites) }
+                    postsState,
+                    actions
                 )
             }
         }

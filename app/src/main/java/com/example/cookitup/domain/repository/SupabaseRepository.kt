@@ -1,5 +1,6 @@
 package com.example.cookitup.domain.repository
 
+import com.example.cookitup.domain.model.Post
 import com.example.cookitup.domain.model.User
 
 interface SupabaseRepository {
@@ -20,6 +21,7 @@ interface SupabaseRepository {
     suspend fun updateProfileImage(fileName: String, imageBytes: ByteArray)
     suspend fun getProfileImage(image: String): ByteArray
 
-    // recipes
+    // recipes/Post
     suspend fun insertRecipePost(uuid: String, imageBytes: ByteArray, recipeId: String)
+    suspend fun getPosts(id: String): List<Post>
 }

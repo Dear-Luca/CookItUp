@@ -1,10 +1,12 @@
 package com.example.cookitup.data.repository
 
+import android.util.Log
 import com.example.cookitup.data.remote.SUPABASE_SERVICE_ROLE_KEY
 import com.example.cookitup.data.remote.dto.MapperDto
 import com.example.cookitup.data.remote.dto.PostDto
 import com.example.cookitup.data.remote.dto.UserDto
 import com.example.cookitup.data.remote.supabase.Supabase
+import com.example.cookitup.domain.model.Post
 import com.example.cookitup.domain.model.User
 import com.example.cookitup.domain.repository.SupabaseRepository
 import io.github.jan.supabase.SupabaseClient
@@ -54,6 +56,17 @@ class SupabaseRepositoryImpl(
             }
         }.decodeSingle<UserDto>()
         return MapperDto.mapToDomain(userDto, currentUser.email)
+    }
+
+    override suspend fun getPosts(id: String): List<Post> {
+        val posts = client.from("posts")
+            .select() {
+                filter {
+                    eq("user_id", id)
+                }
+            }.decodeList<PostDto>()
+        Log.i("POSTS_QUERY", posts.toString())
+        return MapperDto.mapToDomain(posts)
     }
 
     override suspend fun checkUsername(username: String): Boolean {
