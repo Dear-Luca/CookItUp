@@ -334,6 +334,7 @@ fun PostItem(
                     text = recipe.title,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold,
                     lineHeight = MaterialTheme.typography.bodyMedium.lineHeight
                 )
             }
