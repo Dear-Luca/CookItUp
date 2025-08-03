@@ -2,6 +2,7 @@ package com.example.cookitup.ui.screens.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,11 +40,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.cookitup.domain.model.Post
+import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.domain.model.User
+import com.example.cookitup.ui.screens.recipes.onClick
 import com.example.cookitup.utils.NetworkUtils
 import com.example.cookitup.utils.rememberCameraLauncher
 import com.example.cookitup.utils.saveImageToStorage
@@ -54,7 +58,9 @@ import kotlinx.coroutines.launch
 fun UserCard(
     user: User,
     postsState: PostsState,
-    actions: ProfileActions
+    actions: ProfileActions,
+    navController: NavHostController
+
 ) {
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
@@ -229,7 +235,19 @@ fun UserCard(
                         key = { index -> postsState.posts[index].id }
                     ) { index ->
                         val post = postsState.posts[index]
-                        PostItem(post = post)
+                        val onRecipeClick = remember(navController, snackbarHostState, context, scope) {
+                            onClick(
+                                navController,
+                                scope,
+                                snackbarHostState,
+                                context
+                            )
+                        }
+                        PostItem(
+                            post = post,
+                            postsState.recipes[index],
+                            onRecipeClick
+                        )
                     }
                 } else {
                     item {
@@ -269,7 +287,11 @@ fun UserCard(
 }
 
 @Composable
-fun PostItem(post: Post) {
+fun PostItem(
+    post: Post,
+    recipe: RecipeDetail,
+    onClick: (String) -> Unit
+) {
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
@@ -297,6 +319,7 @@ fun PostItem(post: Post) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
+                    .clickable(onClick = { onClick(recipe.id) })
             ) {
                 Text(
                     text = "Recipe",
@@ -308,7 +331,7 @@ fun PostItem(post: Post) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = post.recipe,
+                    text = recipe.title,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     lineHeight = MaterialTheme.typography.bodyMedium.lineHeight

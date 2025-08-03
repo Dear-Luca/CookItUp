@@ -95,7 +95,8 @@ fun Profile(
                 is ProfileState.Success -> UserCard(
                     profileState.user,
                     postsState,
-                    actions
+                    actions,
+                    navController
                 )
             }
         }

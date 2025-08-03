@@ -1,10 +1,11 @@
 package com.example.cookitup.ui.screens.profile
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookitup.domain.model.Post
+import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.domain.model.User
+import com.example.cookitup.domain.repository.ApiRepository
 import com.example.cookitup.domain.repository.SupabaseRepository
 import io.github.jan.supabase.exceptions.RestException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +26,7 @@ sealed class UpdateState {
 }
 
 sealed class PostsState {
-    data class Success(val posts: List<Post>) : PostsState()
+    data class Success(val posts: List<Post>, val recipes: List<RecipeDetail>) : PostsState()
     data object Loading : PostsState()
     data class Error(val message: String) : PostsState()
 }
@@ -41,7 +42,8 @@ interface ProfileActions {
 }
 
 class ProfileViewModel(
-    private val repository: SupabaseRepository
+    private val repository: SupabaseRepository,
+    private val apiRepository: ApiRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow<ProfileState>(ProfileState.Loading)
     val state = _state.asStateFlow()
@@ -69,8 +71,10 @@ class ProfileViewModel(
             viewModelScope.launch {
                 try {
                     val posts = repository.getPosts(id)
-                    Log.i("POSTS_VIEWMODEL", posts.toString())
-                    _postsState.value = PostsState.Success(posts)
+                    val recipes: List<RecipeDetail> = posts.map { post ->
+                        apiRepository.getRecipeDetail(post.recipe)
+                    }
+                    _postsState.value = PostsState.Success(posts, recipes)
                 } catch (e: Exception) {
                     _postsState.value = PostsState.Error("Error: Failed loading posts")
                 }
