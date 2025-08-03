@@ -302,8 +302,8 @@ fun PostItem(
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(post.image)
-                    .diskCachePolicy(CachePolicy.DISABLED)
-                    .memoryCachePolicy(CachePolicy.DISABLED)
+                    .diskCachePolicy(CachePolicy.ENABLED)
+                    .memoryCachePolicy(CachePolicy.ENABLED)
                     .crossfade(true)
                     .build(),
                 contentDescription = "Recipe image",

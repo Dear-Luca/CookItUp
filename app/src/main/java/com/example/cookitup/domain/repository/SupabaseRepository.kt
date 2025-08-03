@@ -14,12 +14,13 @@ interface SupabaseRepository {
     suspend fun signOut()
     suspend fun deleteCurrentUser()
 
-    // update user
+    // user
     suspend fun checkUsername(username: String): Boolean
     suspend fun updateUsername(newUsername: String)
     suspend fun updatePassword(newPassword: String)
     suspend fun updateProfileImage(fileName: String, imageBytes: ByteArray)
     suspend fun getProfileImage(image: String): ByteArray
+    suspend fun getUsers(searchQuery: String): List<User>
 
     // recipes/Post
     suspend fun insertRecipePost(uuid: String, imageBytes: ByteArray, recipeId: String)

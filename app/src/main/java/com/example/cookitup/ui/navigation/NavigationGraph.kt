@@ -15,6 +15,7 @@ import com.example.cookitup.ui.screens.cookRecipe.CookRecipeViewModel
 import com.example.cookitup.ui.screens.favourites.Favourites
 import com.example.cookitup.ui.screens.favourites.FavouritesViewModel
 import com.example.cookitup.ui.screens.people.People
+import com.example.cookitup.ui.screens.people.PeopleViewModel
 import com.example.cookitup.ui.screens.posts.Posts
 import com.example.cookitup.ui.screens.profile.Profile
 import com.example.cookitup.ui.screens.profile.ProfileViewModel
@@ -133,7 +134,9 @@ fun NavGraph(
         }
 
         composable<Routes.People> {
-            People(navController)
+            val peopleViewModel: PeopleViewModel = koinViewModel()
+            val peopleState by peopleViewModel.state.collectAsStateWithLifecycle()
+            People(navController, peopleState, peopleViewModel.action)
         }
     }
 }

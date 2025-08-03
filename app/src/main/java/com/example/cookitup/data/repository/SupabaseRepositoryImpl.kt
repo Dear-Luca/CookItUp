@@ -1,6 +1,5 @@
 package com.example.cookitup.data.repository
 
-import android.util.Log
 import com.example.cookitup.data.remote.SUPABASE_SERVICE_ROLE_KEY
 import com.example.cookitup.data.remote.dto.MapperDto
 import com.example.cookitup.data.remote.dto.PostDto
@@ -55,7 +54,7 @@ class SupabaseRepositoryImpl(
                 eq("id", currentUser.id)
             }
         }.decodeSingle<UserDto>()
-        return MapperDto.mapToDomain(userDto, currentUser.email)
+        return MapperDto.mapToDomain(userDto)
     }
 
     override suspend fun getPosts(id: String): List<Post> {
@@ -65,7 +64,6 @@ class SupabaseRepositoryImpl(
                     eq("user_id", id)
                 }
             }.decodeList<PostDto>()
-        Log.i("POSTS_QUERY", posts.toString())
         return MapperDto.mapToDomain(posts)
     }
 
@@ -112,6 +110,15 @@ class SupabaseRepositoryImpl(
     override suspend fun getProfileImage(image: String): ByteArray {
         val result = Supabase.client.storage.from("avatars").downloadAuthenticated(image)
         return result
+    }
+
+    override suspend fun getUsers(searchQuery: String): List<User> {
+        val users = client.from("users").select {
+            filter {
+                ilike("username", "$searchQuery%")
+            }
+        }.decodeList<UserDto>()
+        return users.map { userDto -> MapperDto.mapToDomain(userDto) }
     }
 
     override suspend fun insertRecipePost(uuid: String, imageBytes: ByteArray, recipeId: String) {

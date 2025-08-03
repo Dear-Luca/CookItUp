@@ -18,6 +18,7 @@ import com.example.cookitup.domain.repository.SupabaseRepository
 import com.example.cookitup.ui.screens.auth.AuthViewModel
 import com.example.cookitup.ui.screens.cookRecipe.CookRecipeViewModel
 import com.example.cookitup.ui.screens.favourites.FavouritesViewModel
+import com.example.cookitup.ui.screens.people.PeopleViewModel
 import com.example.cookitup.ui.screens.profile.ProfileViewModel
 import com.example.cookitup.ui.screens.recipeDetail.RecipeDetailViewModel
 import com.example.cookitup.ui.screens.recipes.RecipesViewModel
@@ -111,6 +112,12 @@ val koinModule = module {
         CookRecipeViewModel(
             supabaseRepository = get(),
             cacheRepository = get()
+        )
+    }
+
+    viewModel {
+        PeopleViewModel(
+            repository = get()
         )
     }
 }

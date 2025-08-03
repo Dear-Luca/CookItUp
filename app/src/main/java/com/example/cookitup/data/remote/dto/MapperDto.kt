@@ -84,10 +84,10 @@ object MapperDto {
         )
     }
 
-    fun mapToDomain(dto: UserDto, email: String?): User {
+    fun mapToDomain(dto: UserDto): User {
         return User(
             id = dto.id,
-            email = email ?: "",
+            email = dto.email,
             username = dto.username,
             image = dto.image
         )
