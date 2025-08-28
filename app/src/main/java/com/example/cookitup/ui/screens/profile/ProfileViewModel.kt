@@ -29,6 +29,13 @@ sealed class PostsState {
     data class Error(val message: String) : PostsState()
 }
 
+sealed class ImageUpdateState {
+    data object Idle : ImageUpdateState()
+    data object Loading : ImageUpdateState()
+    data object Success : ImageUpdateState()
+    data class Error(val message: String) : ImageUpdateState()
+}
+
 interface ProfileActions {
     fun getCurrentUser()
     fun getPosts(id: String)
@@ -38,6 +45,7 @@ interface ProfileActions {
     fun deleteCurrentUser()
     fun updateProfileImage(fileName: String?, imageBytes: ByteArray)
     fun deletePost(postId: String)
+    fun clearImageUpdateState()
 }
 
 class ProfileViewModel(
@@ -51,6 +59,9 @@ class ProfileViewModel(
 
     private val _postsState = MutableStateFlow<PostsState>(PostsState.Loading)
     val postsState = _postsState.asStateFlow()
+
+    private val _imageUpdateState = MutableStateFlow<ImageUpdateState>(ImageUpdateState.Idle)
+    val imageUpdateState = _imageUpdateState.asStateFlow()
 
     val actions = object : ProfileActions {
         override fun getCurrentUser() {
@@ -79,6 +90,7 @@ class ProfileViewModel(
 
         override fun updateProfileImage(fileName: String?, imageBytes: ByteArray) {
             viewModelScope.launch {
+                _imageUpdateState.value = ImageUpdateState.Loading
                 try {
                     if (fileName != null) {
                         // Update the image in the repository
@@ -87,9 +99,10 @@ class ProfileViewModel(
                         // Refresh the user data to get the updated image path
                         val updatedUser = repository.getCurrentUser()
                         _state.value = ProfileState.Success(updatedUser)
+                        _imageUpdateState.value = ImageUpdateState.Success
                     }
                 } catch (e: Exception) {
-                    throw e // Re-throw to be caught in the UI
+                    _imageUpdateState.value = ImageUpdateState.Error(e.message ?: "Failed to update profile image")
                 }
             }
         }
@@ -157,6 +170,10 @@ class ProfileViewModel(
 
         override fun clearUpdateState() {
             _updateState.value = UpdateState.Idle
+        }
+
+        override fun clearImageUpdateState() {
+            _imageUpdateState.value = ImageUpdateState.Idle
         }
     }
 }

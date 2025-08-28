@@ -41,6 +41,7 @@ import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -71,6 +72,7 @@ import kotlinx.coroutines.launch
 fun UserCard(
     user: User,
     postsState: PostsState,
+    imageUpdateState: ImageUpdateState,
     actions: ProfileActions,
     navController: NavHostController
 
@@ -78,6 +80,31 @@ fun UserCard(
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
+    // Cache-busting timestamp for profile image
+    var imageCacheKey by remember { mutableStateOf(System.currentTimeMillis()) }
+
+    // Handle image update state changes
+    LaunchedEffect(imageUpdateState) {
+        when (imageUpdateState) {
+            is ImageUpdateState.Success -> {
+                imageCacheKey = System.currentTimeMillis() // Force cache refresh
+                snackbarHostState.showSnackbar(
+                    message = "Profile image updated successfully",
+                    duration = SnackbarDuration.Short
+                )
+                actions.clearImageUpdateState()
+            }
+            is ImageUpdateState.Error -> {
+                snackbarHostState.showSnackbar(
+                    message = imageUpdateState.message,
+                    duration = SnackbarDuration.Long
+                )
+                actions.clearImageUpdateState()
+            }
+            else -> { /* No action needed */ }
+        }
+    }
 
     val cameraLauncher = rememberCameraLauncher(
         onPictureTaken = { imageUri ->
@@ -87,7 +114,20 @@ fun UserCard(
                     context,
                     snackbarHostState
                 ) {
-                    saveProfileImageToDB(imageUri, context.contentResolver, user.id, actions::updateProfileImage)
+                    try {
+                        saveProfileImageToDB(imageUri, context.contentResolver, user.id) { fileName, imageBytes ->
+                            scope.launch {
+                                actions.updateProfileImage(fileName, imageBytes)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = "Failed to update profile image: ${e.message}",
+                                duration = SnackbarDuration.Long
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -111,9 +151,9 @@ fun UserCard(
                         if (user.image != null) {
                             AsyncImage(
                                 model = ImageRequest.Builder(LocalContext.current)
-                                    .data(user.image)
-                                    .diskCachePolicy(CachePolicy.ENABLED)
-                                    .memoryCachePolicy(CachePolicy.ENABLED)
+                                    .data("${user.image}?cache_bust=$imageCacheKey")
+                                    .diskCachePolicy(CachePolicy.DISABLED) // Disable disk cache for profile images
+                                    .memoryCachePolicy(CachePolicy.DISABLED) // Disable memory cache for profile images
                                     .crossfade(true)
                                     .build(),
                                 contentDescription = "Image profile",
@@ -150,18 +190,30 @@ fun UserCard(
                         }
 
                         FloatingActionButton(
-                            onClick = cameraLauncher::captureImage,
+                            onClick = {
+                                if (imageUpdateState != ImageUpdateState.Loading) {
+                                    cameraLauncher.captureImage()
+                                }
+                            },
                             modifier = Modifier
                                 .align(Alignment.BottomEnd)
                                 .size(40.dp),
                             containerColor = MaterialTheme.colorScheme.secondary,
                             contentColor = MaterialTheme.colorScheme.onSecondary
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.CameraAlt,
-                                contentDescription = "Edit profile picture",
-                                modifier = Modifier.size(20.dp)
-                            )
+                            if (imageUpdateState == ImageUpdateState.Loading) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(20.dp),
+                                    strokeWidth = 2.dp,
+                                    color = MaterialTheme.colorScheme.onSecondary
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.CameraAlt,
+                                    contentDescription = "Edit profile picture",
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
                         }
                     }
 

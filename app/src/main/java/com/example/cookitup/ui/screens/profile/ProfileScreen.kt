@@ -34,6 +34,7 @@ fun Profile(
     navController: NavHostController,
     profileState: ProfileState,
     postsState: PostsState,
+    imageUpdateState: ImageUpdateState,
     actions: ProfileActions
 ) {
     val context = LocalContext.current
@@ -95,6 +96,7 @@ fun Profile(
                 is ProfileState.Success -> UserCard(
                     profileState.user,
                     postsState,
+                    imageUpdateState,
                     actions,
                     navController
                 )
