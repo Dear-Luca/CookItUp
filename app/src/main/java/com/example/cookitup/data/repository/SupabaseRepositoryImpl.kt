@@ -67,6 +67,15 @@ class SupabaseRepositoryImpl(
         return MapperDto.mapToDomain(posts)
     }
 
+    override suspend fun deletePost(postId: String) {
+        client.from("posts")
+            .delete {
+                filter {
+                    eq("id", postId)
+                }
+            }
+    }
+
     override suspend fun checkUsername(username: String): Boolean {
         val response = client.from("users")
             .select(columns = Columns.list("username")) {

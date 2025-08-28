@@ -1,16 +1,20 @@
 package com.example.cookitup.ui.screens.profile
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,27 +22,44 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -81,12 +102,13 @@ fun UserCard(
     )
 
     // Use LazyColumn for the entire content to handle scrolling properly
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
         // Profile section
         item {
             Column(
@@ -98,8 +120,8 @@ fun UserCard(
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
                                 .data(user.image)
-                                .diskCachePolicy(CachePolicy.DISABLED)
-                                .memoryCachePolicy(CachePolicy.DISABLED)
+                                .diskCachePolicy(CachePolicy.ENABLED)
+                                .memoryCachePolicy(CachePolicy.ENABLED)
                                 .crossfade(true)
                                 .build(),
                             contentDescription = "Image profile",
@@ -232,9 +254,10 @@ fun UserCard(
                 if (postsState.posts.isNotEmpty()) {
                     items(
                         count = postsState.posts.size,
-                        key = { index -> postsState.posts[index].id }
+                        key = { index -> postsState.posts[postsState.posts.size - 1 - index].id }
                     ) { index ->
-                        val post = postsState.posts[index]
+                        val reversedIndex = postsState.posts.size - 1 - index
+                        val post = postsState.posts[reversedIndex]
                         val onRecipeClick = remember(navController, snackbarHostState, context, scope) {
                             onClick(
                                 navController,
@@ -245,8 +268,26 @@ fun UserCard(
                         }
                         PostItem(
                             post = post,
-                            postsState.recipes[index],
-                            onRecipeClick
+                            recipe = postsState.recipes[reversedIndex],
+                            onRecipeClick = onRecipeClick,
+                            onDeletePost = { postId ->
+                                scope.launch {
+                                    try {
+                                        actions.deletePost(postId)
+                                        snackbarHostState.showSnackbar(
+                                            message = "Post deleted successfully",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    } catch (e: Exception) {
+                                        snackbarHostState.showSnackbar(
+                                            message = "Failed to delete post",
+                                            duration = SnackbarDuration.Long
+                                        )
+                                        // If deletion failed, refresh to restore the correct state
+                                        actions.getPosts(user.id)
+                                    }
+                                }
+                            }
                         )
                     }
                 } else {
@@ -275,22 +316,133 @@ fun UserCard(
                 }
             }
         }
-
-        // SnackbarHost item
-        item {
-            SnackbarHost(
-                hostState = snackbarHostState,
-                modifier = Modifier.padding(16.dp)
-            )
         }
+
+        // SnackbarHost in overlay position
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp)
+        )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostItem(
     post: Post,
     recipe: RecipeDetail,
-    onClick: (String) -> Unit
+    onRecipeClick: (String) -> Unit,
+    onDeletePost: suspend (String) -> Unit
+) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    
+    val swipeState = rememberSwipeToDismissBoxState(
+        confirmValueChange = { dismissValue ->
+            when (dismissValue) {
+                SwipeToDismissBoxValue.EndToStart -> {
+                    showDeleteDialog = true
+                    false // Don't dismiss yet, wait for confirmation
+                }
+                else -> false // Disable StartToEnd swipe
+            }
+        }
+    )
+
+    // Delete confirmation dialog
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = {
+                Text(
+                    text = "Delete Post",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "Are you sure you want to delete this post? This action cannot be undone.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        scope.launch {
+                            onDeletePost(post.id)
+                        }
+                        showDeleteDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text("Delete")
+                }
+            },
+            dismissButton = {
+                OutlinedButton(
+                    onClick = { showDeleteDialog = false }
+                ) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
+    SwipeToDismissBox(
+        state = swipeState,
+        enableDismissFromStartToEnd = false, // Disable left-to-right swipe
+        enableDismissFromEndToStart = true,  // Enable right-to-left swipe only
+        backgroundContent = {
+            // Background shown when swiping - with rounded corners
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        color = MaterialTheme.colorScheme.error,
+                        shape = RoundedCornerShape(12.dp) // Match the card's rounded corners
+                    )
+                    .padding(16.dp),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete post",
+                        tint = MaterialTheme.colorScheme.onError,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Text(
+                        text = "Delete",
+                        color = MaterialTheme.colorScheme.onError,
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+        },
+        modifier = Modifier.padding(vertical = 4.dp)
+    ) {
+        PostContent(
+            post = post,
+            recipe = recipe,
+            onRecipeClick = onRecipeClick
+        )
+    }
+}
+
+@Composable
+private fun PostContent(
+    post: Post,
+    recipe: RecipeDetail,
+    onRecipeClick: (String) -> Unit
 ) {
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
@@ -319,7 +471,13 @@ fun PostItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .clickable(onClick = { onClick(recipe.id) })
+                    .then(
+                        if (recipe.title.contains("unavailable") || recipe.title.contains("Unable to load")) {
+                            Modifier // Don't make it clickable if recipe is unavailable
+                        } else {
+                            Modifier.clickable(onClick = { onRecipeClick(recipe.id) })
+                        }
+                    )
             ) {
                 Text(
                     text = "Recipe",
@@ -333,7 +491,11 @@ fun PostItem(
                 Text(
                     text = recipe.title,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = if (recipe.title.contains("unavailable") || recipe.title.contains("Unable to load")) {
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
                     fontWeight = FontWeight.Bold,
                     lineHeight = MaterialTheme.typography.bodyMedium.lineHeight
                 )

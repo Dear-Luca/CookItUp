@@ -25,4 +25,5 @@ interface SupabaseRepository {
     // recipes/Post
     suspend fun insertRecipePost(uuid: String, imageBytes: ByteArray, recipeId: String)
     suspend fun getPosts(id: String): List<Post>
+    suspend fun deletePost(postId: String)
 }

@@ -39,6 +39,7 @@ interface ProfileActions {
     fun clearUpdateState()
     fun deleteCurrentUser()
     fun updateProfileImage(fileName: String?, imageBytes: ByteArray)
+    fun deletePost(postId: String)
 }
 
 class ProfileViewModel(
@@ -69,6 +70,7 @@ class ProfileViewModel(
 
         override fun getPosts(id: String) {
             viewModelScope.launch {
+                _postsState.value = PostsState.Loading
                 try {
                     val posts = repository.getPosts(id)
                     val recipes: List<RecipeDetail> = posts.map { post ->
@@ -76,7 +78,7 @@ class ProfileViewModel(
                     }
                     _postsState.value = PostsState.Success(posts, recipes)
                 } catch (e: Exception) {
-                    _postsState.value = PostsState.Error("Error: Failed loading posts")
+                    _postsState.value = PostsState.Error("Failed to load posts: ${e.message}")
                 }
             }
         }
@@ -93,8 +95,26 @@ class ProfileViewModel(
                         _state.value = ProfileState.Success(updatedUser)
                     }
                 } catch (e: Exception) {
-                    _state.value = ProfileState.Error(e.message ?: "An error occurred")
+                    throw e // Re-throw to be caught in the UI
                 }
+            }
+        }
+
+        override fun deletePost(postId: String) {
+            viewModelScope.launch {
+                // First, remove the post locally for immediate UI update
+                val currentState = _postsState.value
+                if (currentState is PostsState.Success) {
+                    val updatedPosts = currentState.posts.filter { it.id != postId }
+                    val updatedRecipes = currentState.posts
+                        .mapIndexedNotNull { index, post ->
+                            if (post.id != postId) currentState.recipes[index] else null
+                        }
+                    _postsState.value = PostsState.Success(updatedPosts, updatedRecipes)
+                }
+                
+                // Then delete from backend
+                repository.deletePost(postId)
             }
         }
 
