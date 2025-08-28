@@ -112,7 +112,7 @@ class ProfileViewModel(
                         }
                     _postsState.value = PostsState.Success(updatedPosts, updatedRecipes)
                 }
-                
+
                 // Then delete from backend
                 repository.deletePost(postId)
             }

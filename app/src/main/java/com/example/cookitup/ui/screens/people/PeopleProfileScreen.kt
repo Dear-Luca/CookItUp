@@ -53,7 +53,6 @@ import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.ui.navigation.Routes
 import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.TopBar
-import com.example.cookitup.ui.screens.profile.PostItem
 import com.example.cookitup.ui.screens.profile.PostsState
 import com.example.cookitup.ui.screens.profile.ProfileActions
 import com.example.cookitup.ui.screens.recipes.onClick
@@ -243,7 +242,7 @@ fun PeopleProfile(
                                     context
                                 )
                             }
-                            PostItemPeople (
+                            PostItemPeople(
                                 post = post,
                                 postsState.recipes[index],
                                 onRecipeClick
