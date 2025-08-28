@@ -237,12 +237,10 @@ fun People(
                                     onClick = {
                                         val user = state.users[index]
                                         navController.navigate(
-                                            navController.navigate(
-                                                Routes.PeopleProfile(
-                                                    user.id,
-                                                    user.image,
-                                                    user.username
-                                                )
+                                            Routes.PeopleProfile(
+                                                user.id,
+                                                user.image,
+                                                user.username
                                             )
                                         )
                                     }
