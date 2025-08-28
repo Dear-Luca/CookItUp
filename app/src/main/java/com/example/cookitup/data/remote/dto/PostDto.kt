@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 data class PostDto(
     val id: String,
     val image: String,
-    val recipe: String,
-    @SerialName("user_id") val userId: String
+    @SerialName("recipe_id") val recipeId: String,
+    @SerialName("user_id") val userId: String,
+    val title: String
 )

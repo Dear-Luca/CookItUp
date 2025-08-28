@@ -244,7 +244,6 @@ fun PeopleProfile(
                             }
                             PostItemPeople(
                                 post = post,
-                                postsState.recipes[index],
                                 onRecipeClick
                             )
                         }
@@ -289,7 +288,6 @@ fun PeopleProfile(
 @Composable
 fun PostItemPeople(
     post: Post,
-    recipe: RecipeDetail,
     onClick: (String) -> Unit
 ) {
     ElevatedCard(
@@ -319,7 +317,7 @@ fun PostItemPeople(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .clickable(onClick = { onClick(recipe.id) })
+                    .clickable(onClick = { onClick(post.id) })
             ) {
                 Text(
                     text = "Recipe",
@@ -331,7 +329,7 @@ fun PostItemPeople(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = recipe.title,
+                    text = post.title,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,

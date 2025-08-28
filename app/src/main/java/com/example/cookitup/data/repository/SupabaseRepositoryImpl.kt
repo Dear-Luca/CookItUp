@@ -130,7 +130,7 @@ class SupabaseRepositoryImpl(
         return users.map { userDto -> MapperDto.mapToDomain(userDto) }
     }
 
-    override suspend fun insertRecipePost(uuid: String, imageBytes: ByteArray, recipeId: String) {
+    override suspend fun insertRecipePost(uuid: String, imageBytes: ByteArray, recipeId: String, title: String) {
         val currentUser = client.auth.currentUserOrNull()
         val filePath = "${currentUser?.id}/$uuid.jpg"
         Supabase.client.storage.from("posts").upload(filePath, imageBytes)
@@ -139,7 +139,7 @@ class SupabaseRepositoryImpl(
             .storage
             .from("posts").publicUrl(filePath)
 
-        val post = PostDto(uuid, publicUrlResult, recipeId, currentUser?.id.toString())
+        val post = PostDto(uuid, publicUrlResult, recipeId, currentUser?.id.toString(), title)
         client.from("posts").insert(post)
     }
 

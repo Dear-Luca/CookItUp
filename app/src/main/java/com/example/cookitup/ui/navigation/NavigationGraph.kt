@@ -79,10 +79,12 @@ fun NavGraph(
             val cookRecipeState by cookRecipeViewModel.state.collectAsStateWithLifecycle()
             val route: Routes.CookRecipe = navBackStackEntry.toRoute()
             val id = route.id
+            val title = route.title
 
             CookRecipe(
                 navController,
                 id,
+                title,
                 cookRecipeViewModel.actions,
                 cookRecipeState
             )

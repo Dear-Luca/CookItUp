@@ -100,7 +100,6 @@ val koinModule = module {
     viewModel {
         ProfileViewModel(
             get(),
-            apiRepository = get()
         )
     }
 

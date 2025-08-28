@@ -35,7 +35,7 @@ sealed interface Routes {
     data object Settings : Routes
 
     @Serializable
-    data class CookRecipe(val id: String) : Routes
+    data class CookRecipe(val id: String, val title: String) : Routes
 
     @Serializable
     data object Posts : Routes

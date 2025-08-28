@@ -73,6 +73,7 @@ import kotlinx.coroutines.launch
 fun CookRecipe(
     navController: NavHostController,
     id: String,
+    title: String,
     actions: CookRecipeActions,
     state: CookRecipeState
 ) {
@@ -323,7 +324,7 @@ fun CookRecipe(
                                 ctx,
                                 snackbarHostState
                             ) {
-                                saveRecipeImageToDB(imageUri, ctx.contentResolver, id, actions::saveRecipeImage)
+                                saveRecipeImageToDB(imageUri, ctx.contentResolver, id, title, actions::saveRecipeImage)
                             }
                         }
                     }

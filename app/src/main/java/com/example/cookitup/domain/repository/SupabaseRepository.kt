@@ -23,7 +23,7 @@ interface SupabaseRepository {
     suspend fun getUsers(searchQuery: String): List<User>
 
     // recipes/Post
-    suspend fun insertRecipePost(uuid: String, imageBytes: ByteArray, recipeId: String)
+    suspend fun insertRecipePost(uuid: String, imageBytes: ByteArray, recipeId: String, title: String)
     suspend fun getPosts(id: String): List<Post>
     suspend fun deletePost(postId: String)
 }

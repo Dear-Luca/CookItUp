@@ -94,6 +94,6 @@ object MapperDto {
     }
 
     fun mapToDomain(dto: List<PostDto>): List<Post> {
-        return dto.map { it -> Post(it.id, it.image, it.recipe, it.userId) }
+        return dto.map { it -> Post(it.id, it.image, it.recipeId, it.userId, it.title) }
     }
 }

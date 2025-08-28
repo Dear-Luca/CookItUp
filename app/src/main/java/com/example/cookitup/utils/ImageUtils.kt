@@ -68,7 +68,8 @@ fun saveRecipeImageToDB(
     imageUri: Uri,
     contentResolver: ContentResolver,
     recipeId: String,
-    insertRecipeImage: (String, ByteArray, String) -> Unit
+    title: String,
+    insertRecipeImage: (String, ByteArray, String, String) -> Unit
 ) {
     val bitmap = uriToBitmap(imageUri, contentResolver)
     val baos = ByteArrayOutputStream()
@@ -76,5 +77,5 @@ fun saveRecipeImageToDB(
     val imageBytes = baos.toByteArray()
     val uuid = Uuid.random()
 
-    insertRecipeImage(uuid.toString(), imageBytes, recipeId)
+    insertRecipeImage(uuid.toString(), imageBytes, recipeId, title)
 }

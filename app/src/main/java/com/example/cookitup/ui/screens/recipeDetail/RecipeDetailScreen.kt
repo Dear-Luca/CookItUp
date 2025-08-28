@@ -81,7 +81,7 @@ fun RecipeDetail(
                         }
                     },
                     onClickCook = {
-                        navController.navigate(Routes.CookRecipe(it.detail.id))
+                        navController.navigate(Routes.CookRecipe(it.detail.id, it.detail.title))
                     }
                 )
                 is RecipeDetailState.Error -> Text(
