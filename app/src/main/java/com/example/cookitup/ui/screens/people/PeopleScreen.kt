@@ -235,8 +235,16 @@ fun People(
                                 UserItem(
                                     user = state.users[index],
                                     onClick = {
-                                        // Handle user click
-                                        // navController.navigate("user_profile/${state.users[index].id}")
+                                        val user = state.users[index]
+                                        navController.navigate(
+                                            navController.navigate(
+                                                Routes.PeopleProfile(
+                                                    user.id,
+                                                    user.image,
+                                                    user.username
+                                                )
+                                            )
+                                        )
                                     }
                                 )
                             }

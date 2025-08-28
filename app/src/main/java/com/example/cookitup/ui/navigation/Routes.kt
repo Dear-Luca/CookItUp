@@ -42,6 +42,9 @@ sealed interface Routes {
 
     @Serializable
     data object People : Routes
+
+    @Serializable
+    data class PeopleProfile(val id: String, val image: String?, val username: String) : Routes
 }
 
 sealed class TopLevelRoute(

@@ -15,6 +15,7 @@ import com.example.cookitup.ui.screens.cookRecipe.CookRecipeViewModel
 import com.example.cookitup.ui.screens.favourites.Favourites
 import com.example.cookitup.ui.screens.favourites.FavouritesViewModel
 import com.example.cookitup.ui.screens.people.People
+import com.example.cookitup.ui.screens.people.PeopleProfile
 import com.example.cookitup.ui.screens.people.PeopleViewModel
 import com.example.cookitup.ui.screens.posts.Posts
 import com.example.cookitup.ui.screens.profile.Profile
@@ -84,6 +85,25 @@ fun NavGraph(
                 id,
                 cookRecipeViewModel.actions,
                 cookRecipeState
+            )
+        }
+
+        composable<Routes.PeopleProfile> { navBackStackEntry ->
+            val profileViewModel: ProfileViewModel = koinViewModel()
+            val profileState by profileViewModel.state.collectAsStateWithLifecycle()
+            val postsState by profileViewModel.postsState.collectAsStateWithLifecycle()
+            val route: Routes.PeopleProfile = navBackStackEntry.toRoute()
+            val id = route.id
+            val image = route.image
+            val username = route.username
+
+            PeopleProfile(
+                id,
+                image,
+                username,
+                profileViewModel.actions,
+                postsState,
+                navController
             )
         }
 

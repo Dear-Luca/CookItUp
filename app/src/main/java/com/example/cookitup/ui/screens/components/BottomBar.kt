@@ -15,7 +15,9 @@ import com.example.cookitup.ui.navigation.Routes
 import com.example.cookitup.ui.navigation.TopLevelRoute
 
 @Composable
-fun BottomBar(navController: NavHostController) {
+fun BottomBar(
+    navController: NavHostController
+) {
     val topLevelRoutes = listOf(
         TopLevelRoute.Home,
         TopLevelRoute.Favourites,
