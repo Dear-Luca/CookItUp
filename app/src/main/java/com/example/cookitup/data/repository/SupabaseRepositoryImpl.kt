@@ -74,6 +74,8 @@ class SupabaseRepositoryImpl(
                     eq("id", postId)
                 }
             }
+        val userId = client.auth.retrieveUserForCurrentSession().id
+        client.storage.from("posts").delete("$userId/$postId.jpg")
     }
 
     override suspend fun checkUsername(username: String): Boolean {
