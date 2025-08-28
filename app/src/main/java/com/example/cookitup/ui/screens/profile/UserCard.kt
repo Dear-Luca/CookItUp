@@ -1,10 +1,8 @@
 package com.example.cookitup.ui.screens.profile
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,7 +25,6 @@ import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
@@ -43,7 +39,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -54,19 +49,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.cookitup.domain.model.Post
-import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.domain.model.User
 import com.example.cookitup.ui.screens.recipes.onClick
 import com.example.cookitup.utils.NetworkUtils
@@ -109,188 +101,123 @@ fun UserCard(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-        // Profile section
-        item {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Box {
-                    if (user.image != null) {
-                        AsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(user.image)
-                                .diskCachePolicy(CachePolicy.ENABLED)
-                                .memoryCachePolicy(CachePolicy.ENABLED)
-                                .crossfade(true)
-                                .build(),
-                            contentDescription = "Image profile",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(120.dp)
-                                .clip(CircleShape)
-                                .border(
-                                    width = 3.dp,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    shape = CircleShape
+            // Profile section
+            item {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(top = 16.dp)
+                ) {
+                    Box {
+                        if (user.image != null) {
+                            AsyncImage(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(user.image)
+                                    .diskCachePolicy(CachePolicy.ENABLED)
+                                    .memoryCachePolicy(CachePolicy.ENABLED)
+                                    .crossfade(true)
+                                    .build(),
+                                contentDescription = "Image profile",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(120.dp)
+                                    .clip(CircleShape)
+                                    .border(
+                                        width = 3.dp,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        shape = CircleShape
+                                    )
+                            )
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .size(120.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
+                                    .border(
+                                        width = 3.dp,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        shape = CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Avatar Placeholder",
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(60.dp)
                                 )
-                        )
-                    } else {
-                        Box(
+                            }
+                        }
+
+                        FloatingActionButton(
+                            onClick = cameraLauncher::captureImage,
                             modifier = Modifier
-                                .size(120.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f))
-                                .border(
-                                    width = 3.dp,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    shape = CircleShape
-                                ),
-                            contentAlignment = Alignment.Center
+                                .align(Alignment.BottomEnd)
+                                .size(40.dp),
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                            contentColor = MaterialTheme.colorScheme.onSecondary
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = "Avatar Placeholder",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(60.dp)
+                                imageVector = Icons.Default.CameraAlt,
+                                contentDescription = "Edit profile picture",
+                                modifier = Modifier.size(20.dp)
                             )
                         }
                     }
 
-                    FloatingActionButton(
-                        onClick = cameraLauncher::captureImage,
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .size(40.dp),
-                        containerColor = MaterialTheme.colorScheme.secondary,
-                        contentColor = MaterialTheme.colorScheme.onSecondary
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.CameraAlt,
-                            contentDescription = "Edit profile picture",
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                }
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Text(
+                        text = user.username,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = TextAlign.Center
+                    )
 
-                Text(
-                    text = user.username,
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center
-                )
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = user.email,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                        textAlign = TextAlign.Center
+                    )
 
-                Text(
-                    text = user.email,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                    textAlign = TextAlign.Center
-                )
+                    Spacer(modifier = Modifier.height(32.dp))
 
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Text(
-                    text = "Recipes Posts",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-
-        // Posts section
-        when (postsState) {
-            is PostsState.Loading -> {
-                item {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(32.dp)
-                    ) {
-                        CircularProgressIndicator()
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Loading posts...",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                        )
-                    }
+                    Text(
+                        text = "Recipes Posts",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
 
-            is PostsState.Error -> {
-                item {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(32.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.PhotoLibrary,
-                            contentDescription = "Error loading posts",
-                            modifier = Modifier.size(48.dp),
-                            tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Failed to load posts",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.error,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-            }
-
-            is PostsState.Success -> {
-                if (postsState.posts.isNotEmpty()) {
-                    items(
-                        count = postsState.posts.size,
-                        key = { index -> postsState.posts[postsState.posts.size - 1 - index].id }
-                    ) { index ->
-                        val reversedIndex = postsState.posts.size - 1 - index
-                        val post = postsState.posts[reversedIndex]
-                        val onRecipeClick = remember(navController, snackbarHostState, context, scope) {
-                            onClick(
-                                navController,
-                                scope,
-                                snackbarHostState,
-                                context
+            // Posts section
+            when (postsState) {
+                is PostsState.Loading -> {
+                    item {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(32.dp)
+                        ) {
+                            CircularProgressIndicator()
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Loading posts...",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                             )
                         }
-                        PostItem(
-                            post = post,
-                            recipe = postsState.recipes[reversedIndex],
-                            onRecipeClick = onRecipeClick,
-                            onDeletePost = { postId ->
-                                scope.launch {
-                                    try {
-                                        actions.deletePost(postId)
-                                        snackbarHostState.showSnackbar(
-                                            message = "Post deleted successfully",
-                                            duration = SnackbarDuration.Short
-                                        )
-                                    } catch (e: Exception) {
-                                        snackbarHostState.showSnackbar(
-                                            message = "Failed to delete post",
-                                            duration = SnackbarDuration.Long
-                                        )
-                                        // If deletion failed, refresh to restore the correct state
-                                        actions.getPosts(user.id)
-                                    }
-                                }
-                            }
-                        )
                     }
-                } else {
+                }
+
+                is PostsState.Error -> {
                     item {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -300,22 +227,86 @@ fun UserCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.PhotoLibrary,
-                                contentDescription = "No posts",
+                                contentDescription = "Error loading posts",
                                 modifier = Modifier.size(48.dp),
-                                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                                tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = "No posts yet",
+                                text = "Failed to load posts",
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                                color = MaterialTheme.colorScheme.error,
                                 textAlign = TextAlign.Center
                             )
                         }
                     }
                 }
+
+                is PostsState.Success -> {
+                    if (postsState.posts.isNotEmpty()) {
+                        items(
+                            count = postsState.posts.size,
+                            key = { index -> postsState.posts[postsState.posts.size - 1 - index].id }
+                        ) { index ->
+                            val reversedIndex = postsState.posts.size - 1 - index
+                            val post = postsState.posts[reversedIndex]
+                            val onRecipeClick = remember(navController, snackbarHostState, context, scope) {
+                                onClick(
+                                    navController,
+                                    scope,
+                                    snackbarHostState,
+                                    context
+                                )
+                            }
+                            PostItem(
+                                post = post,
+                                onRecipeClick = onRecipeClick,
+                                onDeletePost = { postId ->
+                                    scope.launch {
+                                        try {
+                                            actions.deletePost(postId)
+                                            snackbarHostState.showSnackbar(
+                                                message = "Post deleted successfully",
+                                                duration = SnackbarDuration.Short
+                                            )
+                                        } catch (e: Exception) {
+                                            snackbarHostState.showSnackbar(
+                                                message = "Failed to delete post",
+                                                duration = SnackbarDuration.Long
+                                            )
+                                            // If deletion failed, refresh to restore the correct state
+                                            actions.getPosts(user.id)
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                    } else {
+                        item {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(32.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.PhotoLibrary,
+                                    contentDescription = "No posts",
+                                    modifier = Modifier.size(48.dp),
+                                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "No posts yet",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        }
+                    }
+                }
             }
-        }
         }
 
         // SnackbarHost in overlay position
@@ -332,13 +323,12 @@ fun UserCard(
 @Composable
 fun PostItem(
     post: Post,
-    recipe: RecipeDetail,
     onRecipeClick: (String) -> Unit,
     onDeletePost: suspend (String) -> Unit
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
-    
+
     val swipeState = rememberSwipeToDismissBoxState(
         confirmValueChange = { dismissValue ->
             when (dismissValue) {
@@ -396,7 +386,7 @@ fun PostItem(
     SwipeToDismissBox(
         state = swipeState,
         enableDismissFromStartToEnd = false, // Disable left-to-right swipe
-        enableDismissFromEndToStart = true,  // Enable right-to-left swipe only
+        enableDismissFromEndToStart = true, // Enable right-to-left swipe only
         backgroundContent = {
             // Background shown when swiping - with rounded corners
             Box(
@@ -432,7 +422,6 @@ fun PostItem(
     ) {
         PostContent(
             post = post,
-            recipe = recipe,
             onRecipeClick = onRecipeClick
         )
     }
@@ -441,7 +430,6 @@ fun PostItem(
 @Composable
 private fun PostContent(
     post: Post,
-    recipe: RecipeDetail,
     onRecipeClick: (String) -> Unit
 ) {
     ElevatedCard(
@@ -471,13 +459,9 @@ private fun PostContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .then(
-                        if (recipe.title.contains("unavailable") || recipe.title.contains("Unable to load")) {
-                            Modifier // Don't make it clickable if recipe is unavailable
-                        } else {
-                            Modifier.clickable(onClick = { onRecipeClick(recipe.id) })
-                        }
-                    )
+                    .clickable {
+                        onRecipeClick(post.recipeId)
+                    }
             ) {
                 Text(
                     text = "Recipe",
@@ -489,13 +473,10 @@ private fun PostContent(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = recipe.title,
+                    text = post.title,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (recipe.title.contains("unavailable") || recipe.title.contains("Unable to load")) {
-                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                    } else {
-                        MaterialTheme.colorScheme.onSurface
-                    },
+                    color =
+                    MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
                     lineHeight = MaterialTheme.typography.bodyMedium.lineHeight
                 )

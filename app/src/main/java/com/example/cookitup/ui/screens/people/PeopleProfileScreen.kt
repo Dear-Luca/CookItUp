@@ -49,7 +49,6 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.cookitup.domain.model.Post
-import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.ui.navigation.Routes
 import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.TopBar
@@ -317,7 +316,7 @@ fun PostItemPeople(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .clickable(onClick = { onClick(post.id) })
+                    .clickable(onClick = { onClick(post.recipeId) })
             ) {
                 Text(
                     text = "Recipe",

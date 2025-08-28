@@ -3,9 +3,7 @@ package com.example.cookitup.ui.screens.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cookitup.domain.model.Post
-import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.domain.model.User
-import com.example.cookitup.domain.repository.ApiRepository
 import com.example.cookitup.domain.repository.SupabaseRepository
 import io.github.jan.supabase.exceptions.RestException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +24,7 @@ sealed class UpdateState {
 }
 
 sealed class PostsState {
-    data class Success(val posts: List<Post>, val recipes: List<RecipeDetail>) : PostsState()
+    data class Success(val posts: List<Post>) : PostsState()
     data object Loading : PostsState()
     data class Error(val message: String) : PostsState()
 }
@@ -43,8 +41,7 @@ interface ProfileActions {
 }
 
 class ProfileViewModel(
-    private val repository: SupabaseRepository,
-    private val apiRepository: ApiRepository
+    private val repository: SupabaseRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow<ProfileState>(ProfileState.Loading)
     val state = _state.asStateFlow()
@@ -73,10 +70,7 @@ class ProfileViewModel(
                 _postsState.value = PostsState.Loading
                 try {
                     val posts = repository.getPosts(id)
-                    val recipes: List<RecipeDetail> = posts.map { post ->
-                        apiRepository.getRecipeDetail(post.recipe)
-                    }
-                    _postsState.value = PostsState.Success(posts, recipes)
+                    _postsState.value = PostsState.Success(posts)
                 } catch (e: Exception) {
                     _postsState.value = PostsState.Error("Failed to load posts: ${e.message}")
                 }
@@ -106,13 +100,9 @@ class ProfileViewModel(
                 val currentState = _postsState.value
                 if (currentState is PostsState.Success) {
                     val updatedPosts = currentState.posts.filter { it.id != postId }
-                    val updatedRecipes = currentState.posts
-                        .mapIndexedNotNull { index, post ->
-                            if (post.id != postId) currentState.recipes[index] else null
-                        }
-                    _postsState.value = PostsState.Success(updatedPosts, updatedRecipes)
+                    _postsState.value = PostsState.Success(updatedPosts)
                 }
-                
+
                 // Then delete from backend
                 repository.deletePost(postId)
             }

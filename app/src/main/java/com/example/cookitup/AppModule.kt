@@ -99,7 +99,7 @@ val koinModule = module {
 
     viewModel {
         ProfileViewModel(
-            get(),
+            get()
         )
     }
 

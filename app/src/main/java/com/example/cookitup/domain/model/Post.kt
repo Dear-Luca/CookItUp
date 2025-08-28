@@ -5,5 +5,5 @@ data class Post(
     val image: String,
     val recipeId: String,
     val userId: String,
-    val title: String,
+    val title: String
 )
