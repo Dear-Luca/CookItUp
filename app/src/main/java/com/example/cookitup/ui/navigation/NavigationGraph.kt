@@ -90,7 +90,6 @@ fun NavGraph(
 
         composable<Routes.PeopleProfile> { navBackStackEntry ->
             val profileViewModel: ProfileViewModel = koinViewModel()
-            val profileState by profileViewModel.state.collectAsStateWithLifecycle()
             val postsState by profileViewModel.postsState.collectAsStateWithLifecycle()
             val route: Routes.PeopleProfile = navBackStackEntry.toRoute()
             val id = route.id

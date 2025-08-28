@@ -78,7 +78,10 @@ fun AuthForm(
     var password by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
+    var emailError by remember { mutableStateOf<String?>(null) }
+    var passwordError by remember { mutableStateOf<String?>(null) }
+    var usernameError by remember { mutableStateOf<String?>(null) }
+    var generalError by remember { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(false) }
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -92,16 +95,19 @@ fun AuthForm(
     LaunchedEffect(state) {
         when (state) {
             is AuthState.Error -> {
-                errorMessage = state.message
+                generalError = state.message
                 isLoading = false
             }
             AuthState.Loading -> {
                 isLoading = true
-                errorMessage = null
+                generalError = null
+                emailError = null
+                passwordError = null
+                usernameError = null
             }
             else -> {
                 isLoading = false
-                errorMessage = null
+                generalError = null
             }
         }
     }
@@ -232,7 +238,7 @@ fun AuthForm(
                                     value = email,
                                     onValueChange = {
                                         email = it
-                                        errorMessage = null
+                                        emailError = null
                                     },
                                     label = { Text("Email") },
                                     singleLine = true,
@@ -245,11 +251,19 @@ fun AuthForm(
                                         )
                                     },
                                     supportingText = {
-                                        errorMessage?.let { Text(it) }
+                                        emailError?.let {
+                                            Text(
+                                                text = it,
+                                                color = MaterialTheme.colorScheme.error
+                                            )
+                                        }
                                     },
+                                    isError = emailError != null,
                                     colors = OutlinedTextFieldDefaults.colors(
                                         focusedBorderColor = MaterialTheme.colorScheme.primary,
-                                        focusedLabelColor = MaterialTheme.colorScheme.primary
+                                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                                        errorBorderColor = MaterialTheme.colorScheme.error,
+                                        errorLabelColor = MaterialTheme.colorScheme.error
                                     ),
                                     shape = RoundedCornerShape(12.dp),
                                     modifier = Modifier.fillMaxWidth()
@@ -260,7 +274,7 @@ fun AuthForm(
                                     value = password,
                                     onValueChange = {
                                         password = it
-                                        errorMessage = null
+                                        passwordError = null
                                     },
                                     label = { Text("Password") },
                                     singleLine = true,
@@ -270,8 +284,14 @@ fun AuthForm(
                                         PasswordVisualTransformation()
                                     },
                                     supportingText = {
-                                        errorMessage?.let { Text(it) }
+                                        passwordError?.let {
+                                            Text(
+                                                text = it,
+                                                color = MaterialTheme.colorScheme.error
+                                            )
+                                        }
                                     },
+                                    isError = passwordError != null,
                                     leadingIcon = {
                                         Icon(
                                             Icons.Default.Lock,
@@ -297,7 +317,9 @@ fun AuthForm(
                                     },
                                     colors = OutlinedTextFieldDefaults.colors(
                                         focusedBorderColor = MaterialTheme.colorScheme.primary,
-                                        focusedLabelColor = MaterialTheme.colorScheme.primary
+                                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                                        errorBorderColor = MaterialTheme.colorScheme.error,
+                                        errorLabelColor = MaterialTheme.colorScheme.error
                                     ),
                                     shape = RoundedCornerShape(12.dp),
                                     modifier = Modifier.fillMaxWidth()
@@ -313,7 +335,7 @@ fun AuthForm(
                                         value = username,
                                         onValueChange = {
                                             username = it
-                                            errorMessage = null
+                                            usernameError = null
                                         },
                                         label = { Text("Username") },
                                         singleLine = true,
@@ -325,11 +347,19 @@ fun AuthForm(
                                             )
                                         },
                                         supportingText = {
-                                            errorMessage?.let { Text(it) }
+                                            usernameError?.let {
+                                                Text(
+                                                    text = it,
+                                                    color = MaterialTheme.colorScheme.error
+                                                )
+                                            }
                                         },
+                                        isError = usernameError != null,
                                         colors = OutlinedTextFieldDefaults.colors(
                                             focusedBorderColor = MaterialTheme.colorScheme.primary,
-                                            focusedLabelColor = MaterialTheme.colorScheme.primary
+                                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                                            errorBorderColor = MaterialTheme.colorScheme.error,
+                                            errorLabelColor = MaterialTheme.colorScheme.error
                                         ),
                                         shape = RoundedCornerShape(12.dp),
                                         modifier = Modifier.fillMaxWidth()
@@ -337,9 +367,9 @@ fun AuthForm(
                                 }
                             }
 
-                            // Error Message
+                            // General Error Message
                             AnimatedVisibility(
-                                visible = errorMessage != null,
+                                visible = generalError != null,
                                 enter = slideInVertically(animationSpec = tween(300)) + fadeIn(),
                                 exit = slideOutVertically(animationSpec = tween(300)) + fadeOut()
                             ) {
@@ -350,7 +380,7 @@ fun AuthForm(
                                     shape = RoundedCornerShape(8.dp)
                                 ) {
                                     Text(
-                                        text = errorMessage.orEmpty(),
+                                        text = generalError.orEmpty(),
                                         color = MaterialTheme.colorScheme.onErrorContainer,
                                         style = MaterialTheme.typography.bodyMedium,
                                         modifier = Modifier.padding(12.dp)
@@ -362,63 +392,99 @@ fun AuthForm(
                             Button(
                                 onClick = {
                                     keyboardController?.hide()
+                                    // Clear all errors before validation
+                                    emailError = null
+                                    passwordError = null
+                                    usernameError = null
+                                    generalError = null
+
+                                    var hasErrors = false
+
                                     when (isLoginMode) {
                                         true -> {
-                                            when {
-                                                email.isBlank() || !emailPattern.matcher(email).matches() ->
-                                                    errorMessage = "Insert a valid email"
-                                                password.isBlank() -> errorMessage = "Insert a valid password"
-                                                else -> {
-                                                    scope.launch {
-                                                        NetworkUtils.checkConnectivity(
-                                                            context,
-                                                            snackbarHostState
-                                                        ) {
-                                                            actions.signInUser(email.trim(), password.trim())
-                                                        }
+                                            // Validate email
+                                            if (email.isBlank()) {
+                                                emailError = "Email is required"
+                                                hasErrors = true
+                                            } else if (!emailPattern.matcher(email).matches()) {
+                                                emailError = "Please enter a valid email"
+                                                hasErrors = true
+                                            }
+
+                                            // Validate password
+                                            if (password.isBlank()) {
+                                                passwordError = "Password is required"
+                                                hasErrors = true
+                                            }
+
+                                            if (!hasErrors) {
+                                                scope.launch {
+                                                    NetworkUtils.checkConnectivity(
+                                                        context,
+                                                        snackbarHostState
+                                                    ) {
+                                                        actions.signInUser(
+                                                            email.trim(),
+                                                            password.trim()
+                                                        )
                                                     }
                                                 }
                                             }
                                         }
                                         false -> {
+                                            // Validate email
+                                            if (email.isBlank()) {
+                                                emailError = "Email is required"
+                                                hasErrors = true
+                                            } else if (!emailPattern.matcher(email).matches()) {
+                                                emailError = "Please enter a valid email"
+                                                hasErrors = true
+                                            }
+
+                                            // Validate password
                                             when {
-                                                email.isBlank() || !emailPattern.matcher(email).matches() ->
-                                                    errorMessage = "Insert a valid email"
-
                                                 password.length < 6 -> {
-                                                    errorMessage = "Password must be at least 6 characters"
+                                                    passwordError = "Password must be at least 6 characters"
+                                                    hasErrors = true
                                                 }
-
                                                 !password.any { it.isDigit() } -> {
-                                                    errorMessage = "Password must contain at least one number"
+                                                    passwordError = "Password must contain at least one number"
+                                                    hasErrors = true
                                                 }
-
                                                 !password.any { it.isLetter() } -> {
-                                                    errorMessage = "Password must contain at least one letter"
+                                                    passwordError = "Password must contain at least one letter"
+                                                    hasErrors = true
                                                 }
-
                                                 !password.any { it.isUpperCase() } -> {
-                                                    errorMessage = "Password must contain at " +
-                                                        "least one upper case letter"
+                                                    passwordError = "Password must contain" +
+                                                        " at least one uppercase letter"
+                                                    hasErrors = true
                                                 }
+                                            }
 
-                                                username.isEmpty() -> errorMessage = "Insert a username"
+                                            // Validate username
+                                            when {
+                                                username.isEmpty() -> {
+                                                    usernameError = "Username is required"
+                                                    hasErrors = true
+                                                }
+                                                username.length > 20 -> {
+                                                    usernameError = "Username must be less than 20 characters"
+                                                    hasErrors = true
+                                                }
+                                            }
 
-                                                username.length > 20 ->
-                                                    errorMessage = "Username must be less than 20 characters"
-
-                                                else -> {
-                                                    scope.launch {
-                                                        NetworkUtils.checkConnectivity(
-                                                            context,
-                                                            snackbarHostState
-                                                        ) {
-                                                            actions.signUpUser(
-                                                                email.trim(),
-                                                                password.trim(),
-                                                                username.trim()
-                                                            )
-                                                        }
+                                            if (!hasErrors) {
+                                                scope.launch {
+                                                    NetworkUtils.checkConnectivity(
+                                                        context,
+                                                        snackbarHostState
+                                                    ) {
+                                                        actions.signUpUser(
+                                                            email.trim(),
+                                                            password.trim(),
+                                                            username.trim()
+                                                        )
                                                     }
                                                 }
                                             }
@@ -464,8 +530,12 @@ fun AuthForm(
                             TextButton(
                                 onClick = {
                                     isLoginMode = !isLoginMode
-                                    errorMessage = null
-                                    // Reset when change mode
+                                    // Reset all errors when changing mode
+                                    emailError = null
+                                    passwordError = null
+                                    usernameError = null
+                                    generalError = null
+                                    // Reset form fields
                                     email = ""
                                     password = ""
                                     username = ""
