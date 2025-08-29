@@ -13,7 +13,6 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Scale
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -145,27 +144,6 @@ fun Settings(
                                 onThemeSelected = { themeActions.changeTheme(it) }
                             )
                         }
-                        SettingsItem(
-                            icon = Icons.Default.Notifications,
-                            title = "Push Notifications",
-                            subtitle = "Get notified about new recipes and updates"
-                        ) {
-                            Switch(
-                                checked = notificationsEnabled,
-                                onCheckedChange = { notificationsEnabled = it },
-                                colors = SwitchDefaults.colors(
-                                    checkedThumbColor = MaterialTheme.colorScheme.primary,
-                                    checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-                                )
-                            )
-                        }
-                        SettingsItem(
-                            icon = Icons.Default.Scale,
-                            title = "Units of Measurement",
-                            subtitle = "Metric",
-                            onClick = { /* Handle units change */ },
-                            isLast = true
-                        )
                     }
                 }
 
