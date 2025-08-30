@@ -9,7 +9,7 @@ import androidx.room.Index
     primaryKeys = ["recipeId", "ingredientId"],
     indices = [
         Index(value = ["ingredientId"]),
-        Index(value = ["recipeId"]) 
+        Index(value = ["recipeId"])
     ],
     foreignKeys = [
         ForeignKey(
