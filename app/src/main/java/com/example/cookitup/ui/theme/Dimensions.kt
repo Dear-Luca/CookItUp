@@ -22,7 +22,7 @@ fun getScreenHeight(): Dp {
 @Composable
 fun isSmallScreen(): Boolean {
     val screenWidth = getScreenWidth()
-    return screenWidth < 450.dp
+    return screenWidth < 400.dp
 }
 
 // Responsive text sizes

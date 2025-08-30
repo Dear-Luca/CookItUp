@@ -232,6 +232,7 @@ fun People(
                                 count = state.users.size,
                                 key = { index -> state.users[index].id }
                             ) { index ->
+
                                 UserItem(
                                     user = state.users[index],
                                     onClick = {
@@ -243,7 +244,8 @@ fun People(
                                                 user.username
                                             )
                                         )
-                                    }
+                                    },
+
                                 )
                             }
                         }
@@ -321,11 +323,6 @@ fun UserItem(
                     text = user.username,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "Recipes cooked: ",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 

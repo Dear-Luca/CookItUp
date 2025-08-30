@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <!-- Permissions to use Internet, used in API request, Supabase-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Permissions to read and write to external storage (useful for images with Coil) -->
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -11,6 +13,7 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
 
+    <!-- Intent for opening Wifi settings if there is no internet connection -->
     <queries>
         <intent>
             <action android:name="android.settings.WIRELESS_SETTINGS"/>
@@ -33,11 +36,13 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.CookItUp">
+            <!-- Launcher of the app and its main activity -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- Intent filter DEEP-LINK used for the callback of Supabase authentication -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
