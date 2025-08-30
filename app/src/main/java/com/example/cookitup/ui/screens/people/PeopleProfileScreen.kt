@@ -52,6 +52,7 @@ import com.example.cookitup.domain.model.Post
 import com.example.cookitup.ui.navigation.Routes
 import com.example.cookitup.ui.screens.components.BottomBar
 import com.example.cookitup.ui.screens.components.TopBar
+import com.example.cookitup.ui.screens.profile.GamificationSection
 import com.example.cookitup.ui.screens.profile.PostsState
 import com.example.cookitup.ui.screens.profile.ProfileActions
 import com.example.cookitup.ui.screens.recipes.onClick
@@ -169,6 +170,23 @@ fun PeopleProfile(
                     )
 
                     Spacer(modifier = Modifier.height(32.dp))
+
+                    // Gamification Section
+                    when (postsState) {
+                        is PostsState.Success -> {
+                            GamificationSection(
+                                postCount = postsState.posts.size,
+                                modifier = Modifier.padding(bottom = 16.dp)
+                            )
+                        }
+                        else -> {
+                            // Show placeholder gamification with 0 posts during loading/error
+                            GamificationSection(
+                                postCount = 0,
+                                modifier = Modifier.padding(bottom = 16.dp)
+                            )
+                        }
+                    }
 
                     Text(
                         text = "Recipes Posts",

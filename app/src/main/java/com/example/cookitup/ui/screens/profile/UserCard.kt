@@ -20,8 +20,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -61,12 +64,14 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.cookitup.domain.model.Post
 import com.example.cookitup.domain.model.User
+import com.example.cookitup.ui.screens.people.getChefLevel
 import com.example.cookitup.ui.screens.recipes.onClick
 import com.example.cookitup.utils.NetworkUtils
 import com.example.cookitup.utils.rememberCameraLauncher
 import com.example.cookitup.utils.saveImageToStorage
 import com.example.cookitup.utils.saveProfileImageToDB
 import kotlinx.coroutines.launch
+
 
 @Composable
 fun UserCard(
@@ -237,6 +242,25 @@ fun UserCard(
                     )
 
                     Spacer(modifier = Modifier.height(32.dp))
+
+                    // Gamification Section
+                    when (postsState) {
+                        is PostsState.Success -> {
+                            GamificationSection(
+                                postCount = postsState.posts.size,
+                                modifier = Modifier.padding(bottom = 16.dp)
+                            )
+                        }
+                        else -> {
+                            // Show placeholder gamification with 0 posts during loading/error
+                            GamificationSection(
+                                postCount = 0,
+                                modifier = Modifier.padding(bottom = 16.dp)
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
                         text = "Recipes Posts",
@@ -476,6 +500,118 @@ fun PostItem(
             post = post,
             onRecipeClick = onRecipeClick
         )
+    }
+}
+
+@Composable
+fun GamificationSection(
+    postCount: Int,
+    modifier: Modifier = Modifier
+) {
+    val currentLevel = getChefLevel(postCount)
+    val nextLevel = when {
+        postCount == 0 -> getChefLevel(1)
+        postCount < 10 -> getChefLevel(10)
+        postCount < 50 -> getChefLevel(50)
+        postCount < 100 -> getChefLevel(100)
+        else -> null
+    }
+
+    ElevatedCard(
+        modifier = modifier.fillMaxWidth(),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Current Level
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+
+                Column {
+                    Text(
+                        text = currentLevel.title,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = currentLevel.color
+                    )
+                    Text(
+                        text = currentLevel.description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Post count
+            Text(
+                text = "$postCount Recipe${if (postCount != 1) "s" else ""} Shared",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            // Progress to next level
+            if (nextLevel != null) {
+                Spacer(modifier = Modifier.height(12.dp))
+                
+                val progress = when {
+                    postCount == 0 -> 0f
+                    postCount < 10 -> postCount / 10f
+                    postCount < 50 -> (postCount - 10) / 40f
+                    postCount < 100 -> (postCount - 50) / 50f
+                    else -> 1f
+                }
+
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Next: ${nextLevel.title}",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                        )
+                        Text(
+                            text = "${nextLevel.minPosts - postCount} more recipes",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    // Progress bar
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(8.dp)
+                            .background(
+                                MaterialTheme.colorScheme.surfaceVariant,
+                                RoundedCornerShape(4.dp)
+                            )
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(progress)
+                                .height(8.dp)
+                                .background(
+                                    currentLevel.color,
+                                    RoundedCornerShape(4.dp)
+                                )
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
