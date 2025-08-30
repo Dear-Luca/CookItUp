@@ -1,6 +1,6 @@
 package com.example.cookitup.data.repository
 
-import com.example.cookitup.data.remote.SUPABASE_SERVICE_ROLE_KEY
+import android.util.Log
 import com.example.cookitup.data.remote.dto.MapperDto
 import com.example.cookitup.data.remote.dto.PostDto
 import com.example.cookitup.data.remote.dto.UserDto
@@ -14,6 +14,10 @@ import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.storage.storage
+import io.ktor.client.request.headers
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
@@ -42,14 +46,46 @@ class SupabaseRepositoryImpl(
     }
 
     override suspend fun deleteCurrentUser() {
-        val uuid = client.auth.retrieveUserForCurrentSession().id
-        client.auth.importAuthToken(SUPABASE_SERVICE_ROLE_KEY)
-        client.auth.admin.deleteUser(uuid)
+        try {
+            val uuid = client.auth.retrieveUserForCurrentSession().id
+            val session = client.auth.currentSessionOrNull()
+            val accessToken = session?.accessToken ?: throw IllegalStateException("No active session found")
+
+            // Use Ktor HttpClient with proper resource management
+            val httpClient = io.ktor.client.HttpClient()
+            try {
+                val response = httpClient.post(
+                    "https://isdawhtoaacrzsmzxuwi.supabase.co/functions/v1/delete-auth-user"
+                ) {
+                    headers {
+                        append("Authorization", "Bearer $accessToken")
+                        append("Content-Type", "application/json")
+                    }
+                    setBody("""{"user_id": "$uuid"}""")
+                }
+
+                if (response.status.value !in 200..299) {
+                    val errorBody = response.bodyAsText()
+                    Log.e("SupabaseRepository", "Failed to delete user: ${response.status} - $errorBody")
+                    throw Exception("Failed to delete user: ${response.status}")
+                }
+
+                Log.i("SupabaseRepository", "User deleted successfully")
+
+                // Sign out after successful deletion
+                client.auth.signOut()
+            } finally {
+                httpClient.close() // Important: close the client
+            }
+        } catch (e: Exception) {
+            Log.e("SupabaseRepository", "Error deleting user", e)
+            throw e
+        }
     }
 
     override suspend fun getCurrentUser(): User {
         val currentUser = client.auth.retrieveUserForCurrentSession()
-        val userDto = client.from("users").select() {
+        val userDto = client.from("users").select {
             filter {
                 eq("id", currentUser.id)
             }
@@ -59,7 +95,7 @@ class SupabaseRepositoryImpl(
 
     override suspend fun getPosts(id: String): List<Post> {
         val posts = client.from("posts")
-            .select() {
+            .select {
                 filter {
                     eq("user_id", id)
                 }

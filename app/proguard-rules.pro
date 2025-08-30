@@ -20,6 +20,23 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+# ===== IGNORE MISSING OPTIONAL DEPENDENCIES =====
+# These classes are optional and not available on Android
+-dontwarn javax.lang.model.**
+-dontwarn javax.annotation.processing.**
+-dontwarn javax.tools.**
+-dontwarn com.google.j2objc.annotations.**
+-dontwarn java.sql.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.conscrypt.**
+-dontwarn org.openjsse.**
+
+# Ignore missing annotation processors (compile-time only)
+-dontwarn com.google.auto.common.**
+-dontwarn com.squareup.javapoet.**
+-dontwarn com.squareup.kotlinpoet.**
+#-renamesourcefileattribute SourceFile
+
 # Keep attributes needed for reflection
 -keepattributes *Annotation*
 -keepattributes Signature
