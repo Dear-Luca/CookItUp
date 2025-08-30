@@ -527,7 +527,7 @@ fun GamificationSection(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         text = currentLevel.title,

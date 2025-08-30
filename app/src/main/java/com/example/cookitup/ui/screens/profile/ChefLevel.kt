@@ -1,6 +1,5 @@
 package com.example.cookitup.ui.screens.profile
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 
 // Gamification data classes and functions

@@ -244,7 +244,7 @@ fun People(
                                                 user.username
                                             )
                                         )
-                                    },
+                                    }
 
                                 )
                             }
