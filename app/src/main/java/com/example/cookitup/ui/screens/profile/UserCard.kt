@@ -517,7 +517,7 @@ private fun PostContent(
             ) {
                 Text(
                     text = "Recipe",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )

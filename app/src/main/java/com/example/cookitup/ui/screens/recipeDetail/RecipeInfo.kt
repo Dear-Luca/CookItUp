@@ -66,6 +66,7 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.cookitup.domain.model.Ingredient
 import com.example.cookitup.domain.model.Step
+import com.example.cookitup.ui.theme.isSmallScreen
 
 @Composable
 fun RecipeInfo(
@@ -159,7 +160,7 @@ fun RecipeInfo(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Similar Recipes")
+                    Text(if (isSmallScreen()) "Similar" else "Similar Recipes")
                 }
                 VerticalDivider(
                     color = MaterialTheme.colorScheme.secondary,

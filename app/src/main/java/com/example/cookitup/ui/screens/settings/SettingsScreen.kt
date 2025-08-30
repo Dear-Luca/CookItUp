@@ -5,15 +5,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -136,13 +141,49 @@ fun Settings(
                     SettingsSection(title = "APP PREFERENCES") {
                         SettingsItem(
                             icon = Icons.Default.Palette,
-                            title = "Theme",
-                            subtitle = "Choose your preferred theme"
+                            title = "System Theme",
+                            subtitle = "Follow system appearance",
+                            onClick = { themeActions.changeTheme(Theme.System) }
                         ) {
-                            ThemeSelector(
-                                selectedTheme = currentTheme.theme,
-                                onThemeSelected = { themeActions.changeTheme(it) }
-                            )
+                            if (currentTheme.theme == Theme.System) {
+                                Icon(
+                                    imageVector = Icons.Default.Settings,
+                                    contentDescription = "Selected",
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                        SettingsItem(
+                            icon = Icons.Default.Palette,
+                            title = "Light Theme",
+                            subtitle = "Always use light appearance",
+                            onClick = { themeActions.changeTheme(Theme.Light) }
+                        ) {
+                            if (currentTheme.theme == Theme.Light) {
+                                Icon(
+                                    imageVector = Icons.Default.LightMode,
+                                    contentDescription = "Selected",
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                        SettingsItem(
+                            icon = Icons.Default.Palette,
+                            title = "Dark Theme",
+                            subtitle = "Always use dark appearance",
+                            onClick = { themeActions.changeTheme(Theme.Dark) },
+                            isLast = true
+                        ) {
+                            if (currentTheme.theme == Theme.Dark) {
+                                Icon(
+                                    imageVector = Icons.Default.DarkMode,
+                                    contentDescription = "Selected",
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
                         }
                     }
                 }

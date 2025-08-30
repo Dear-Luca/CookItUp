@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.cookitup.ui.navigation.Routes
 import com.example.cookitup.ui.navigation.TopLevelRoute
+import com.example.cookitup.ui.theme.getBottomBarTextSize
 
 @Composable
 fun BottomBar(
@@ -46,7 +47,7 @@ fun BottomBar(
                 label = {
                     Text(
                         text = topLevelRoute.name,
-                        style = MaterialTheme.typography.bodyMedium,
+                        fontSize = getBottomBarTextSize(),
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                         color = if (isSelected) {
                             MaterialTheme.colorScheme.onSurface
