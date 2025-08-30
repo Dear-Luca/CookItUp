@@ -20,11 +20,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PhotoLibrary
-import androidx.compose.material.icons.filled.Restaurant
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -71,7 +68,6 @@ import com.example.cookitup.utils.rememberCameraLauncher
 import com.example.cookitup.utils.saveImageToStorage
 import com.example.cookitup.utils.saveProfileImageToDB
 import kotlinx.coroutines.launch
-
 
 @Composable
 fun UserCard(
@@ -531,7 +527,6 @@ fun GamificationSection(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-
                 Column {
                     Text(
                         text = currentLevel.title,
@@ -560,7 +555,7 @@ fun GamificationSection(
             // Progress to next level
             if (nextLevel != null) {
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 val progress = when {
                     postCount == 0 -> 0f
                     postCount < 10 -> postCount / 10f
@@ -586,9 +581,9 @@ fun GamificationSection(
                             color = MaterialTheme.colorScheme.primary
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     // Progress bar
                     Box(
                         modifier = Modifier
