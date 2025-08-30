@@ -61,7 +61,6 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.example.cookitup.domain.model.Post
 import com.example.cookitup.domain.model.User
-import com.example.cookitup.ui.screens.people.getChefLevel
 import com.example.cookitup.ui.screens.recipes.onClick
 import com.example.cookitup.utils.NetworkUtils
 import com.example.cookitup.utils.rememberCameraLauncher
