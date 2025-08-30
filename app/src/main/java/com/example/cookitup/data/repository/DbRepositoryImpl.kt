@@ -12,7 +12,9 @@ import com.example.cookitup.domain.model.Recipe
 import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.domain.model.RecipeInstructions
 import com.example.cookitup.domain.repository.DbRepository
+import com.example.cookitup.utils.SafeConversions.toLongSafe
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 
 class DbRepositoryImpl(
@@ -31,15 +33,29 @@ class DbRepositoryImpl(
     }
 
     override fun isFavourite(id: String): Flow<Boolean> {
-        return recipeDAO.isFavourite(id.toLong())
+        return try {
+            recipeDAO.isFavourite(id.toLongSafe())
+        } catch (e: Exception) {
+            flowOf(false)
+        }
     }
 
     override suspend fun upsertRecipe(recipe: RecipeDetail) {
-        return recipeDAO.upsertRecipe(MapperEntity.mapToEntity(recipe))
+        try {
+            return recipeDAO.upsertRecipe(MapperEntity.mapToEntity(recipe))
+        } catch (e: Exception) {
+            // Log error but don't crash the app
+            e.printStackTrace()
+        }
     }
 
     override suspend fun deleteRecipe(recipe: RecipeDetail) {
-        recipeDAO.deleteRecipe(MapperEntity.mapToEntity(recipe))
+        try {
+            recipeDAO.deleteRecipe(MapperEntity.mapToEntity(recipe))
+        } catch (e: Exception) {
+            // Log error but don't crash the app
+            e.printStackTrace()
+        }
     }
 
     override suspend fun getRecipeFull(id: String): RecipeDetail {
@@ -72,6 +88,11 @@ class DbRepositoryImpl(
     }
 
     override suspend fun upsertCrossRef(recipeId: String, ingredientId: String) {
-        crossRefDao.upsertCrossRef(RecipeIngredientCrossRef(recipeId.toLong(), ingredientId.toLong()))
+        try {
+            crossRefDao.upsertCrossRef(RecipeIngredientCrossRef(recipeId.toLongSafe(), ingredientId.toLongSafe()))
+        } catch (e: Exception) {
+            // Log error but don't crash the app
+            e.printStackTrace()
+        }
     }
 }

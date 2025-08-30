@@ -19,3 +19,25 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Room specific ProGuard rules
+-keepattributes *Annotation*
+-keep class * extends androidx.room.RoomDatabase
+-keep @androidx.room.Entity class *
+-keep @androidx.room.Dao class *
+-keep class androidx.room.** { *; }
+
+# Keep all Room entities
+-keep class com.example.cookitup.data.local.entity.** { *; }
+-keep class com.example.cookitup.data.local.dao.** { *; }
+
+# Keep Room database
+-keep class com.example.cookitup.data.local.db.AppDatabase { *; }
+
+# Keep Kotlin coroutines
+-keep class kotlinx.coroutines.** { *; }
+-dontwarn kotlinx.coroutines.**
+
+# Keep Koin injection
+-keep class org.koin.** { *; }
+-dontwarn org.koin.**

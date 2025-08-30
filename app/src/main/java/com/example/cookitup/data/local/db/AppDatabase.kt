@@ -20,7 +20,7 @@ import com.example.cookitup.data.local.entity.RecipeIngredientCrossRef
         RecipeIngredientCrossRef::class
     ],
     version = 1,
-    exportSchema = true
+    exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun recipeEntityDao(): RecipeDao

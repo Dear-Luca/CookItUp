@@ -46,7 +46,9 @@ val koinModule = module {
             get(),
             AppDatabase::class.java,
             AppDatabase.DB_NAME
-        ).fallbackToDestructiveMigration(false).build()
+        )
+            .fallbackToDestructiveMigration(true)
+            .build()
     }
 
     single<ApiRepository> {

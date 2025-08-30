@@ -65,15 +65,20 @@ class RecipeDetailViewModel(
             val currentState = _state.value
             if (currentState is RecipeDetailState.Success) {
                 viewModelScope.launch {
-                    if (currentState.isFavourite) {
-                        dbRepository.deleteRecipe(currentState.detail)
-                    } else {
-                        dbRepository.upsertRecipe(currentState.detail)
-                        dbRepository.upsertInstructions(currentState.detail.instructions, currentState.detail.id)
-                        dbRepository.upsertIngredients(currentState.detail.ingredients)
-                        currentState.detail.ingredients.forEach {
-                            dbRepository.upsertCrossRef(currentState.detail.id, it.id)
+                    try {
+                        if (currentState.isFavourite) {
+                            dbRepository.deleteRecipe(currentState.detail)
+                        } else {
+                            dbRepository.upsertRecipe(currentState.detail)
+                            dbRepository.upsertInstructions(currentState.detail.instructions, currentState.detail.id)
+                            dbRepository.upsertIngredients(currentState.detail.ingredients)
+                            currentState.detail.ingredients.forEach {
+                                dbRepository.upsertCrossRef(currentState.detail.id, it.id)
+                            }
                         }
+                    } catch (e: Exception) {
+                        // Log error and update state
+                        _state.value = RecipeDetailState.Error("Error while saving to favourites")
                     }
                 }
             }

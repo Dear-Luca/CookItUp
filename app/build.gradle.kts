@@ -50,12 +50,18 @@ android {
         )
     }
     buildTypes {
+        debug {
+            isDebuggable = true
+            applicationIdSuffix = ".debug"
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Keep debugging info for release builds to help with crash reports
+            isDebuggable = false
         }
     }
     compileOptions {

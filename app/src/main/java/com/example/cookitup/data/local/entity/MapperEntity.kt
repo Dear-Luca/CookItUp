@@ -7,6 +7,8 @@ import com.example.cookitup.domain.model.Recipe
 import com.example.cookitup.domain.model.RecipeDetail
 import com.example.cookitup.domain.model.RecipeInstructions
 import com.example.cookitup.domain.model.Step
+import com.example.cookitup.utils.SafeConversions.toDoubleSafe
+import com.example.cookitup.utils.SafeConversions.toLongSafe
 
 object MapperEntity {
     fun mapToDomain(entity: RecipeEntity): Recipe {
@@ -52,7 +54,7 @@ object MapperEntity {
 
     fun mapToEntity(domain: RecipeDetail): RecipeEntity {
         return RecipeEntity(
-            id = domain.id.toLong(),
+            id = domain.id.toLongSafe(),
             name = domain.title,
             image = domain.image,
             time = domain.time,
@@ -63,7 +65,7 @@ object MapperEntity {
 
     fun mapToEntity(domain: Step, recipeId: String): InstructionEntity {
         return InstructionEntity(
-            recipeId.toLong(),
+            recipeId.toLongSafe(),
             domain.num.toInt(),
             domain.instruction
         )
@@ -71,9 +73,9 @@ object MapperEntity {
 
     fun mapToEntity(domain: Ingredient): IngredientEntity {
         return IngredientEntity(
-            id = domain.id.toLong(),
+            id = domain.id.toLongSafe(),
             name = domain.name,
-            amount = domain.measures.metric.amount.toDouble(),
+            amount = domain.measures.metric.amount.toDoubleSafe(),
             unit = domain.measures.metric.unit
         )
     }
